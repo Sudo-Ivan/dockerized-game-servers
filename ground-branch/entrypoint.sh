@@ -28,8 +28,10 @@ install_server() {
     export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
     while true; do
-        "${STEAM_DIR}/linux32/steamcmd" \
+        # shellcheck disable=SC2086
+        "${STEAM_DIR}/steamcmd.sh" \
             +@sSteamCmdForcePlatformType windows \
+            +@sSteamCmdForcePlatformBitness 64 \
             +force_install_dir "${GB_INSTALL_DIR}" \
             +login ${steam_login} \
             +app_update "${GB_APP_ID}" validate \
