@@ -1,0 +1,9 @@
+**/.git
+**/data
+**/.gitignore
+**/.gitkeep
+**/*.md
+**/docker-compose.yml
+**/.env
+**/*.env
+**/LICENSE

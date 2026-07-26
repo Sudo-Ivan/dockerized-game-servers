@@ -1,0 +1,18 @@
+# Runtime volumes (keep dirs via .gitkeep)
+**/data/*
+!**/data/.gitkeep
+
+arma/arma-3/server/*
+!arma/arma-3/server/.gitkeep
+arma/arma-3/configs/*
+!arma/arma-3/configs/.gitkeep
+arma/arma-3/profiles/*
+!arma/arma-3/profiles/.gitkeep
+arma/arma-3/cache/*
+!arma/arma-3/cache/.gitkeep
+
+.env
+*.env
+!.env.example
+*.log
+.DS_Store

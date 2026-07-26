@@ -1,0 +1,40 @@
+services:
+  arma3:
+    image: ghcr.io/sudo-ivan/dockerized-game-servers/arma-3:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
+    pull_policy: missing
+    container_name: arma3
+    restart: unless-stopped
+    ports:
+      - "2302:2302/udp"
+      - "2303:2303/udp"
+      - "2304:2304/udp"
+      - "2305:2305/udp"
+      - "2306:2306/udp"
+    volumes:
+      - ./server:/home/arma3/server
+      - ./configs:/home/arma3/configs
+      - ./profiles:/home/arma3/profiles
+      - ./cache:/home/arma3/cache
+    environment:
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+      ARMA_APP_ID: "233780"
+      MODLIST_FILE: "/home/arma3/server/modlist.html"
+      CDLC: ""
+      EXTRA_MODS: ""
+      ARMA_DOWNLOAD_MAX_WORKERS: "4"
+      ARMA_DOWNLOAD_CHUNK_SIZE: "4194304"
+      ARMA_DOWNLOAD_PROGRESS_INTERVAL: "60"
+      ARMA_CDN_CLIENT_RETRIES: "3"
+      ARMA_CDN_CLIENT_BASE_DELAY: "1.5"
+      ARMA_CDN_OP_RETRIES: "3"
+      ARMA_CDN_OP_BASE_DELAY: "1.5"
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 8192M

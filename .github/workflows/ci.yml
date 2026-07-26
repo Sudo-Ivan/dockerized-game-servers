@@ -1,0 +1,24 @@
+name: ci
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Run checks
+        run: |
+          chmod +x ci/ci-check.sh ci/image-matrix.sh ci/build-image.sh
+          ./ci/ci-check.sh

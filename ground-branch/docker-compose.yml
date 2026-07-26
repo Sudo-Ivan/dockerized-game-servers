@@ -1,0 +1,39 @@
+services:
+  ground-branch:
+    image: ghcr.io/sudo-ivan/dockerized-game-servers/ground-branch:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
+    pull_policy: missing
+    container_name: ground-branch
+    restart: unless-stopped
+    stop_grace_period: 60s
+    init: true
+    ports:
+      - "7777:7777/udp"
+      - "27015:27015/udp"
+    volumes:
+      - ./data:/opt/groundbranch
+    environment:
+      STEAM_USERNAME: "anonymous"
+      STEAM_PASSWORD: ""
+      GB_APP_ID: "476400"
+      GB_STEAM_APP_ID: "16900"
+      GB_FORCE_UPDATE: "false"
+      GB_PORT: "7777"
+      GB_QUERY_PORT: "27015"
+      GB_MULTIHOME: "0.0.0.0"
+      GB_MAX_PLAYERS: "8"
+      GB_MAX_AI: "30"
+      GB_MAP: ""
+      GB_MISSION: ""
+      GB_EXTRA_ARGS: ""
+      WINEPREFIX: "/opt/groundbranch/.wine"
+      WINEARCH: "win64"
+      WINEDEBUG: "-all"
+      SteamAppId: "16900"
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 4096M

@@ -1,0 +1,4 @@
+**/data
+**/.gitignore
+**/.gitkeep
+**/docker-compose.yml

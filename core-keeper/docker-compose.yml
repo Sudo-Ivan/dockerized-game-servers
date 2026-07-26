@@ -1,0 +1,42 @@
+services:
+  core-keeper:
+    image: ghcr.io/sudo-ivan/dockerized-game-servers/core-keeper:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
+    pull_policy: missing
+    container_name: core-keeper
+    restart: unless-stopped
+    stop_grace_period: 2m
+    init: true
+    # Uncomment for direct connect mode and set SERVER_PORT below.
+    # ports:
+    #   - "27015:27015/udp"
+    volumes:
+      - ./data:/opt/corekeeper
+    environment:
+      STEAM_USERNAME: "anonymous"
+      STEAM_PASSWORD: ""
+      CK_APP_ID: "1963720"
+      CK_STEAMWORKS_APP_ID: "1007"
+      CK_FORCE_UPDATE: "false"
+      WORLD_INDEX: "0"
+      WORLD_NAME: "Core Keeper Server"
+      WORLD_SEED: ""
+      HASHED_WORLD_SEED: ""
+      WORLD_MODE: "0"
+      GAME_ID: ""
+      MAX_PLAYERS: "10"
+      SEASON: ""
+      SERVER_IP: ""
+      SERVER_PORT: ""
+      PASSWORD: ""
+      ACTIVATE_CONTENT: ""
+      ACTIVATE_ALL_CONTENT: "false"
+      ALLOW_ONLY_PLATFORM: ""
+      CK_EXTRA_ARGS: ""
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 4096M

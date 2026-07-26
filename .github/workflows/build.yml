@@ -1,0 +1,133 @@
+name: build
+
+on:
+  workflow_dispatch:
+    inputs:
+      push:
+        description: Push images to GHCR
+        type: boolean
+        default: true
+      tag:
+        description: Image tag
+        type: string
+        default: latest
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_OWNER: sudo-ivan/dockerized-game-servers
+  TAG: ${{ inputs.tag }}
+  PUSH: ${{ inputs.push }}
+  PLATFORM: linux/amd64
+
+jobs:
+  bases:
+    name: base / ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: minecraft-base
+            context: bases/minecraft
+            dockerfile: bases/minecraft/Dockerfile
+          - name: steam-base
+            context: bases/steam
+            dockerfile: bases/steam/Dockerfile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Log in to GHCR
+        uses: docker/login-action@abd2ef45e78c5afb21d64d4ca52ee8550d9572c7 # v4.5.1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push base
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+          PUSH: "true"
+        run: |
+          chmod +x ci/build-image.sh
+          ./ci/build-image.sh \
+            "${{ matrix.name }}" \
+            "${{ matrix.context }}" \
+            "${{ matrix.dockerfile }}"
+
+  images:
+    name: image / ${{ matrix.name }}
+    needs: bases
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: minecraft-fabric
+            context: minecraft
+            dockerfile: minecraft/fabric/Dockerfile
+            base: minecraft-base
+          - name: minecraft-vanilla
+            context: minecraft
+            dockerfile: minecraft/vanilla/Dockerfile
+            base: minecraft-base
+          - name: minecraft-forge
+            context: minecraft
+            dockerfile: minecraft/forge/Dockerfile
+            base: minecraft-base
+          - name: valheim
+            context: valheim/vanilla
+            dockerfile: valheim/vanilla/Dockerfile
+            base: steam-base
+          - name: valheim-plus
+            context: valheim/plus
+            dockerfile: valheim/plus/Dockerfile
+            base: steam-base
+          - name: ground-branch
+            context: ground-branch
+            dockerfile: ground-branch/Dockerfile
+            base: steam-base
+          - name: core-keeper
+            context: core-keeper
+            dockerfile: core-keeper/Dockerfile
+            base: steam-base
+          - name: arma-3
+            context: arma/arma-3
+            dockerfile: arma/arma-3/Dockerfile
+            base: steam-base
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Log in to GHCR
+        uses: docker/login-action@abd2ef45e78c5afb21d64d4ca52ee8550d9572c7 # v4.5.1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          chmod +x ci/build-image.sh
+          base_image="${REGISTRY}/${IMAGE_OWNER}/${{ matrix.base }}:${TAG}"
+          ./ci/build-image.sh \
+            "${{ matrix.name }}" \
+            "${{ matrix.context }}" \
+            "${{ matrix.dockerfile }}" \
+            "${base_image}"
