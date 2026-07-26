@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 mkdir -p "${ARMA_DIR}/keys"
 
@@ -16,7 +17,14 @@ if [ ! -f "${ARMA_DIR}/arma3server_x64" ]; then
     if [ -n "${STEAM_GUARD_CODE}" ]; then
         STEAM_LOGIN="${STEAM_LOGIN} ${STEAM_GUARD_CODE}"
     fi
+    # shellcheck disable=SC2086
     ${STEAM_DIR}/steamcmd.sh +force_install_dir ${ARMA_DIR} +login ${STEAM_LOGIN} +app_update ${ARMA_APP_ID} validate +quit
+fi
+
+if [ ! -f "${ARMA_DIR}/arma3server_x64" ]; then
+    echo "Arma 3 server binary not found at ${ARMA_DIR}/arma3server_x64" >&2
+    echo "Anonymous Steam login cannot download Arma 3. Set STEAM_USERNAME and STEAM_PASSWORD for an account that owns the server." >&2
+    exit 1
 fi
 
 MOD_LIST=""
@@ -44,7 +52,7 @@ if [ -f "${MODLIST_FILE}" ]; then
     done
 fi
 
-if [ ! -z "$CDLC" ]; then
+if [ -n "${CDLC:-}" ]; then
     echo "--- Adding Creator DLCs: $CDLC ---"
     if [ -z "$MOD_LIST" ]; then
         MOD_LIST="${CDLC}"
@@ -53,7 +61,7 @@ if [ ! -z "$CDLC" ]; then
     fi
 fi
 
-if [ ! -z "$EXTRA_MODS" ]; then
+if [ -n "${EXTRA_MODS:-}" ]; then
     if [ -z "$MOD_LIST" ]; then
         MOD_LIST="${EXTRA_MODS}"
     else
@@ -65,7 +73,8 @@ echo "--- Starting Arma 3 with mods: $MOD_LIST ---"
 
 chmod +x "${ARMA_DIR}/arma3server_x64"
 
-./arma3server_x64 \
+cd "${ARMA_DIR}"
+exec ./arma3server_x64 \
     -config=/home/arma3/configs/server.cfg \
     -port=2302 \
     -name=server \

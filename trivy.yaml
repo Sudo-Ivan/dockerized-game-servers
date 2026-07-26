@@ -1,0 +1,14 @@
+# Shared Trivy settings for CI and local scans.
+
+severity:
+  - HIGH
+  - CRITICAL
+
+scan:
+  skip-dirs:
+    - "**/data"
+    - "**/.git"
+
+misconfiguration:
+  scanners:
+    - dockerfile

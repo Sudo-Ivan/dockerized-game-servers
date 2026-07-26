@@ -1,6 +1,7 @@
 name: ci
 
 on:
+  push:
   workflow_dispatch:
 
 concurrency:
@@ -20,5 +21,17 @@ jobs:
 
       - name: Run checks
         run: |
-          chmod +x ci/ci-check.sh ci/image-matrix.sh ci/build-image.sh
+          chmod +x ci/*.sh
           ./ci/ci-check.sh
+
+  trivy-config:
+    name: trivy / dockerfiles
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Scan Dockerfiles with pinned Trivy CLI
+        run: |
+          chmod +x ci/install-trivy.sh ci/trivy-config.sh
+          ./ci/trivy-config.sh

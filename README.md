@@ -179,12 +179,12 @@ docker pull ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
 
 ## CI
 
-Workflows are manual (`workflow_dispatch`):
+- `ci` runs on every push (and manually): `ci/ci-check.sh` plus Trivy Dockerfile config scans
+- `build` runs after a successful `ci` (`workflow_run`), and manually: builds/pushes GHCR images then Trivy-scans them
 
-- `ci` runs `ci/ci-check.sh`
-- `build` builds base images concurrently, then game images in a matrix, and pushes to GHCR
+Trivy is installed from a pinned GitHub release tarball with SHA-256 verification (`ci/install-trivy.sh`). This repo does not use `aquasecurity/trivy-action` after the March 2026 supply-chain compromise. Shared scan settings live in `trivy.yaml`.
 
-Base images are always pushed so matrix jobs can reuse them. Game image push is controlled by the workflow `push` input.
+Base images are always pushed so matrix jobs can reuse them. Manual builds can set the `push` input for game images.
 
 After the first publish, set GHCR package visibility to public if the repo is public.
 
