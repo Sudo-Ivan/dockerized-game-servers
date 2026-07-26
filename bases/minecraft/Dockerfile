@@ -1,8 +1,9 @@
 FROM alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40 AS temurin
 
 ARG TARGETARCH
+ARG TEMURIN_MAJOR=25
 ARG TEMURIN_VERSION=25.0.3_9
-ARG TEMURIN_RELEASE=jdk-25.0.3%2B9
+ARG TEMURIN_RELEASE=jdk-25.0.3+9
 
 RUN apk add --no-cache ca-certificates curl tar \
   && case "${TARGETARCH:-amd64}" in \
@@ -10,14 +11,17 @@ RUN apk add --no-cache ca-certificates curl tar \
     arm64) temurin_arch="aarch64" ;; \
     *) echo "Unsupported TARGETARCH: ${TARGETARCH}" >&2; exit 1 ;; \
   esac \
-  && curl -fsSL "https://github.com/adoptium/temurin25-binaries/releases/download/${TEMURIN_RELEASE}/OpenJDK25U-jre_${temurin_arch}_alpine-linux_hotspot_${TEMURIN_VERSION}.tar.gz" -o /tmp/temurin.tar.gz \
-  && curl -fsSL "https://github.com/adoptium/temurin25-binaries/releases/download/${TEMURIN_RELEASE}/OpenJDK25U-jre_${temurin_arch}_alpine-linux_hotspot_${TEMURIN_VERSION}.tar.gz.sha256.txt" -o /tmp/temurin.sha256.txt \
+  && release_path="$(printf '%s' "${TEMURIN_RELEASE}" | sed 's/+/%2B/g')" \
+  && curl -fsSL "https://github.com/adoptium/temurin${TEMURIN_MAJOR}-binaries/releases/download/${release_path}/OpenJDK${TEMURIN_MAJOR}U-jre_${temurin_arch}_alpine-linux_hotspot_${TEMURIN_VERSION}.tar.gz" -o /tmp/temurin.tar.gz \
+  && curl -fsSL "https://github.com/adoptium/temurin${TEMURIN_MAJOR}-binaries/releases/download/${release_path}/OpenJDK${TEMURIN_MAJOR}U-jre_${temurin_arch}_alpine-linux_hotspot_${TEMURIN_VERSION}.tar.gz.sha256.txt" -o /tmp/temurin.sha256.txt \
   && echo "$(awk '{print $1}' /tmp/temurin.sha256.txt)  /tmp/temurin.tar.gz" | sha256sum -c - \
   && mkdir -p /opt/java \
   && tar -xzf /tmp/temurin.tar.gz -C /opt/java --strip-components=1 \
   && rm /tmp/temurin.tar.gz /tmp/temurin.sha256.txt
 
 FROM alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
+
+ARG TEMURIN_MAJOR=25
 
 RUN apk add --no-cache ca-certificates curl jq shadow \
   && addgroup -g 1000 minecraft \
@@ -34,6 +38,7 @@ EXPOSE 25565
 
 ENV JAVA_HOME="/opt/java" \
     PATH="/opt/java/bin:${PATH}" \
-    HOME="/data"
+    HOME="/data" \
+    MC_JAVA_MAJOR="${TEMURIN_MAJOR}"
 
 USER minecraft

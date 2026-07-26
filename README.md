@@ -181,6 +181,22 @@ docker pull ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
 
 - `ci` runs on push, pull request, and manually: `ci/ci-check.sh` plus Trivy Dockerfile config scans (HIGH+CRITICAL)
 - `build` runs weekly (Sunday 06:00 UTC), on Dockerfile/base/`ci` path changes to `master`/`main`, and manually: builds/pushes GHCR images then Trivy-scans them (CRITICAL fail)
+- `build-minecraft` is manual only: pick Fabric/Vanilla/Forge + a Minecraft version. Java is resolved from Mojang's `javaVersion`, Temurin Alpine JRE is pinned from Adoptium, Fabric loader/installer and Forge promos auto-fill when left blank. Publishes `minecraft-base:javaN` and `minecraft-<flavor>:<tag>` (tag defaults to the MC version, or `mc-forge` for Forge)
+
+Example tags after a versioned Fabric build for `26.2`:
+
+```text
+ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-base:java25
+ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:26.2
+```
+
+Local resolve preview:
+
+```bash
+./ci/resolve-minecraft-build.sh --flavor fabric --minecraft-version 26.2
+./ci/resolve-minecraft-build.sh --flavor vanilla --minecraft-version 1.20.4
+./ci/resolve-minecraft-build.sh --flavor forge --minecraft-version 1.21.8 --forge-channel latest
+```
 
 Trivy is installed from a pinned GitHub release tarball with SHA-256 verification (`ci/install-trivy.sh`). This repo does not use `aquasecurity/trivy-action` after the March 2026 supply-chain compromise. Shared scan settings live in `trivy.yaml`.
 

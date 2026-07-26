@@ -77,6 +77,12 @@ while IFS= read -r script; do
 done <"${tmp}"
 rm -f "${tmp}"
 
+echo "==> Python syntax"
+if ! python3 -m py_compile ci/resolve-minecraft-build.py; then
+  echo "python syntax error: ci/resolve-minecraft-build.py" >&2
+  fail=1
+fi
+
 if [ "${fail}" -ne 0 ]; then
   echo "ci-check failed" >&2
   exit 1
