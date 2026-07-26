@@ -1,4 +1,4 @@
-FROM alpine:3.23 AS temurin
+FROM alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40 AS temurin
 
 ARG TARGETARCH
 ARG TEMURIN_VERSION=25.0.3_9
@@ -17,7 +17,7 @@ RUN apk add --no-cache ca-certificates curl tar \
   && tar -xzf /tmp/temurin.tar.gz -C /opt/java --strip-components=1 \
   && rm /tmp/temurin.tar.gz /tmp/temurin.sha256.txt
 
-FROM alpine:3.23
+FROM alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
 
 RUN apk add --no-cache ca-certificates curl jq shadow \
   && addgroup -g 1000 minecraft \

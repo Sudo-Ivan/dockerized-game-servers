@@ -1,9 +1,9 @@
 ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
 FROM ${BASE_IMAGE}
 
-RUN pacman -Sy --noconfirm --needed \
+# NTSYNC-MODULE is a host kernel feature. Do not pull the linux package into the image.
+RUN pacman -Sy --noconfirm --needed --assume-installed NTSYNC-MODULE \
     wine \
-    samba \
   && pacman -Scc --noconfirm \
   && useradd -m -u 1000 groundbranch \
   && mkdir -p /opt/groundbranch /home/groundbranch/steamcmd \

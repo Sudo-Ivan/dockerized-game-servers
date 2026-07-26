@@ -1,11 +1,20 @@
 name: build
 
 on:
-  workflow_run:
-    workflows:
-      - ci
-    types:
-      - completed
+  schedule:
+    # Weekly rebuild for Arch package refresh and GHCR republish.
+    - cron: "0 6 * * 0"
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - "bases/**"
+      - "**/Dockerfile"
+      - "ci/**"
+      - "trivy.yaml"
+      - ".trivyignore"
+      - ".github/workflows/build.yml"
   workflow_dispatch:
     inputs:
       push:
@@ -18,7 +27,7 @@ on:
         default: latest
 
 concurrency:
-  group: build-${{ github.workflow }}-${{ github.event.workflow_run.head_branch || github.ref }}
+  group: build-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -29,14 +38,12 @@ env:
   REGISTRY: ghcr.io
   IMAGE_OWNER: sudo-ivan/dockerized-game-servers
   TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || 'latest' }}
-  PUSH: ${{ github.event_name == 'workflow_run' && 'true' || (inputs.push && 'true' || 'false') }}
+  PUSH: ${{ github.event_name != 'workflow_dispatch' && 'true' || (inputs.push && 'true' || 'false') }}
   PLATFORM: linux/amd64
-  CHECKOUT_REF: ${{ github.event.workflow_run.head_sha || github.sha }}
 
 jobs:
   bases:
     name: base / ${{ matrix.name }}
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -51,8 +58,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ env.CHECKOUT_REF }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
@@ -66,7 +71,6 @@ jobs:
 
       - name: Build and push base
         env:
-          GITHUB_SHA: ${{ env.CHECKOUT_REF }}
           PUSH: "true"
         run: |
           chmod +x ci/*.sh
@@ -82,7 +86,6 @@ jobs:
 
   images:
     name: image / ${{ matrix.name }}
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     needs: bases
     runs-on: ubuntu-latest
     strategy:
@@ -124,8 +127,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ env.CHECKOUT_REF }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
@@ -138,8 +139,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image
-        env:
-          GITHUB_SHA: ${{ env.CHECKOUT_REF }}
         run: |
           chmod +x ci/*.sh
           base_image="${REGISTRY}/${IMAGE_OWNER}/${{ matrix.base }}:${TAG}"

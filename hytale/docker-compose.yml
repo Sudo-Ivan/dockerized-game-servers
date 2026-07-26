@@ -13,8 +13,11 @@ services:
     restart: unless-stopped
     ports:
       - "5520:5520/udp"
+    init: true
     security_opt:
       - no-new-privileges:true
+    cap_drop:
+      - ALL
     volumes:
       - ./data:/home/container
       - /etc/machine-id:/etc/machine-id:ro

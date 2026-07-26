@@ -9,6 +9,7 @@ services:
     pull_policy: missing
     container_name: arma3
     restart: unless-stopped
+    init: true
     ports:
       - "2302:2302/udp"
       - "2303:2303/udp"
@@ -37,4 +38,6 @@ services:
       ARMA_CDN_OP_BASE_DELAY: "1.5"
     security_opt:
       - no-new-privileges:true
+    cap_drop:
+      - ALL
     mem_limit: 8192M

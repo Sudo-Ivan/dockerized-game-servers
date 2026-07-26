@@ -8,6 +8,9 @@ scan:
   skip-dirs:
     - "**/data"
     - "**/.git"
+  skip-files:
+    # Arch libcap diagnostic binary. Unused by game servers. Go stdlib HIGH noise.
+    - "**/usr/bin/captree"
 
 misconfiguration:
   scanners:

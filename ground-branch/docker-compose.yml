@@ -36,4 +36,6 @@ services:
       SteamAppId: "16900"
     security_opt:
       - no-new-privileges:true
+    cap_drop:
+      - ALL
     mem_limit: 4096M

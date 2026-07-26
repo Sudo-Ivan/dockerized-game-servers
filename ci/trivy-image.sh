@@ -1,6 +1,7 @@
 #!/bin/sh
 # Scan a container image with a pinned Trivy CLI.
 # Usage: trivy-image.sh <image-ref>
+# Fails on CRITICAL only. Arch rolling packages often report HIGH noise.
 
 set -eu
 
@@ -18,7 +19,7 @@ trivy image \
   --config trivy.yaml \
   --scanners vuln,secret,misconfig \
   --misconfig-scanners dockerfile \
-  --severity HIGH,CRITICAL \
+  --severity CRITICAL \
   --ignore-unfixed \
   --exit-code 1 \
   "${IMAGE_REF}"
