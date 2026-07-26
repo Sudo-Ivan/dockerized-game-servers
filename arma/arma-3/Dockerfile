@@ -23,10 +23,10 @@ WORKDIR /home/arma3
 
 RUN python -m venv /home/arma3/venv \
   && /home/arma3/venv/bin/pip install --no-cache-dir -U pip zstandard \
-    "git+https://github.com/brettmayson/valvepythonsteam#egg=steam[client]" \
+    "steam[client] @ git+https://github.com/brettmayson/valvepythonsteam" \
   && mkdir -p "${STEAM_DIR}" /home/arma3/profiles /home/arma3/configs /home/arma3/cache \
   && cp -a /opt/steamcmd/. "${STEAM_DIR}/" \
-  && "${STEAM_DIR}/steamcmd.sh" +quit || true
+  && ("${STEAM_DIR}/steamcmd.sh" +quit || true)
 
 COPY --chown=arma3:arma3 sync_mods.py /home/arma3/sync_mods.py
 COPY --chown=arma3:arma3 api/ /home/arma3/api/
