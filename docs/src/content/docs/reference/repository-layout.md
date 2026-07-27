@@ -13,6 +13,9 @@ valheim/         Vanilla and Plus
 ground-branch/   Ground Branch
 core-keeper/     Core Keeper
 factorio/         Factorio
+7-days-to-die/    7 Days to Die
+project-zomboid/  Project Zomboid
+terraria/         Terraria
 openmohaa/       OpenMoHAA (BYO game assets)
 arma/arma-3/     Arma 3
 hytale/          external image compose

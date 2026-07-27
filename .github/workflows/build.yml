@@ -128,6 +128,18 @@ jobs:
             context: factorio
             dockerfile: factorio/Dockerfile
             base: steam-base
+          - name: 7-days-to-die
+            context: 7-days-to-die
+            dockerfile: 7-days-to-die/Dockerfile
+            base: steam-base
+          - name: project-zomboid
+            context: project-zomboid
+            dockerfile: project-zomboid/Dockerfile
+            base: steam-base
+          - name: terraria
+            context: terraria
+            dockerfile: terraria/Dockerfile
+            base: steam-base
           - name: openmohaa
             context: openmohaa
             dockerfile: openmohaa/Dockerfile

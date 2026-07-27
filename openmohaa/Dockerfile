@@ -13,6 +13,7 @@ RUN pacman -Sy --noconfirm --needed \
     "https://github.com/openmoh/openmohaa/releases/download/${OPENMOHAA_VERSION}/openmohaa-${OPENMOHAA_VERSION}-linux-amd64.zip" \
   && unzip -q /tmp/openmohaa.zip -d /opt/openmohaa/lib/openmohaa \
   && chmod +x /opt/openmohaa/lib/openmohaa/omohaaded \
+  && printf '%s\n' "${OPENMOHAA_VERSION}" > /opt/openmohaa/.installed-version \
   && rm -f /tmp/openmohaa.zip \
   && pacman -Scc --noconfirm \
   && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/*
@@ -26,8 +27,11 @@ LABEL org.opencontainers.image.title="openmohaa" \
       org.opencontainers.image.description="OpenMoHAA dedicated server" \
       org.opencontainers.image.licenses="ISC"
 
+# curl/unzip kept for OPENMOHAA_FORCE_UPDATE reinstalls at runtime.
 RUN pacman -Sy --noconfirm --needed \
     socat \
+    curl \
+    unzip \
   && pacman -Scc --noconfirm \
   && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/* \
   && useradd -m -u 1000 openmohaa \

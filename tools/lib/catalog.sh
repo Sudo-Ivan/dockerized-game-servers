@@ -11,14 +11,26 @@ gs_catalog_print() {
 gs_catalog_lookup() {
   want="$1"
   found=0
-  while IFS="$(printf '\t')" read -r id compose container volumes update_envs health first_party; do
+  while IFS= read -r line || [ -n "${line}" ]; do
+    [ -n "${line}" ] || continue
+    id="$(printf '%s\n' "${line}" | awk -F'\t' '{print $1}')"
+    compose="$(printf '%s\n' "${line}" | awk -F'\t' '{print $2}')"
+    container="$(printf '%s\n' "${line}" | awk -F'\t' '{print $3}')"
+    volumes="$(printf '%s\n' "${line}" | awk -F'\t' '{print $4}')"
+    update_envs="$(printf '%s\n' "${line}" | awk -F'\t' '{print $5}')"
+    health="$(printf '%s\n' "${line}" | awk -F'\t' '{print $6}')"
+    first_party="$(printf '%s\n' "${line}" | awk -F'\t' '{print $7}')"
     [ -n "${id}" ] || continue
     if [ "${id}" = "${want}" ]; then
       GS_ID="${id}"
       GS_COMPOSE="${compose}"
       GS_CONTAINER="${container}"
       GS_VOLUMES="${volumes}"
-      GS_UPDATE_ENVS="${update_envs}"
+      if [ "${update_envs}" = "-" ]; then
+        GS_UPDATE_ENVS=""
+      else
+        GS_UPDATE_ENVS="${update_envs}"
+      fi
       GS_HEALTH="${health}"
       GS_FIRST_PARTY="${first_party}"
       found=1

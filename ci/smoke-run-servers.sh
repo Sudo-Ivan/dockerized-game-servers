@@ -4,6 +4,7 @@
 #
 # Optional env:
 #   SMOKE_TIMEOUT_SEC  max seconds to wait for healthy/running (default 240)
+#   SMOKE_ONLY         comma-separated server ids to test (default all first-party)
 
 set -eu
 
@@ -16,6 +17,7 @@ export IMAGE_OWNER
 export REGISTRY="${REGISTRY:-ghcr.io}"
 
 SMOKE_TIMEOUT_SEC="${SMOKE_TIMEOUT_SEC:-240}"
+SMOKE_ONLY="${SMOKE_ONLY:-}"
 REPORT="/tmp/gs-smoke-report.txt"
 : >"${REPORT}"
 
@@ -27,6 +29,15 @@ cleanup_one() {
   container="$2"
   docker compose -f "${compose}" down --remove-orphans >/dev/null 2>&1 || true
   docker rm -f "${container}" >/dev/null 2>&1 || true
+}
+
+in_smoke_only() {
+  id="$1"
+  [ -z "${SMOKE_ONLY}" ] && return 0
+  case ",${SMOKE_ONLY}," in
+    *",${id},"*) return 0 ;;
+    *) return 1 ;;
+  esac
 }
 
 wait_success() {
@@ -66,7 +77,12 @@ wait_success() {
         fi
         ;;
       process|gameid)
-        if docker logs "${container}" 2>&1 | grep -Eqi 'server ready|Status: server ready|Hosting world|Game Server version|Dedicated server running|Hosting at|Factorio.*Server|Listening on|SteamGameServer_Init|World generation finished|omohaaded'; then
+        if docker logs "${container}" 2>&1 | grep -Eqi 'server ready|Status: server ready|Hosting world|Game Server version|Dedicated server running|Hosting at|Factorio.*Server|Listening on|SteamGameServer_Init|World generation finished|omohaaded|Anonymous Steam login cannot download|SERVER STARTED|7 Days to Die|Terraria Server|StartGame done'; then
+          # Arma missing owned server is a clear expected failure path.
+          if docker logs "${container}" 2>&1 | grep -q 'Anonymous Steam login cannot download'; then
+            echo "arma-needs-steam-login" >&2
+            return 1
+          fi
           echo "log-ready"
           return 0
         fi
@@ -93,9 +109,17 @@ echo "image_owner=${IMAGE_OWNER}"
 tmp_catalog="$(mktemp)"
 ./ci/server-catalog.sh >"${tmp_catalog}"
 
-while IFS="$(printf '\t')" read -r id compose container _volumes _update_envs health first_party; do
+while IFS= read -r line || [ -n "${line}" ]; do
+  [ -n "${line}" ] || continue
+  id="$(printf '%s\n' "${line}" | awk -F'\t' '{print $1}')"
+  compose="$(printf '%s\n' "${line}" | awk -F'\t' '{print $2}')"
+  container="$(printf '%s\n' "${line}" | awk -F'\t' '{print $3}')"
+  health="$(printf '%s\n' "${line}" | awk -F'\t' '{print $6}')"
+  first_party="$(printf '%s\n' "${line}" | awk -F'\t' '{print $7}')"
+
   [ -n "${id}" ] || continue
   [ "${first_party}" = "1" ] || continue
+  in_smoke_only "${id}" || continue
 
   printf '\n======== %s ========\n' "${id}"
   cleanup_one "${compose}" "${container}"

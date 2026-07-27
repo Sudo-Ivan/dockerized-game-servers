@@ -1,0 +1,41 @@
+services:
+  terraria:
+    image: ghcr.io/${IMAGE_OWNER}/terraria:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: terraria
+    restart: unless-stopped
+    stop_grace_period: 90s
+    init: true
+    ports:
+      - "7777:7777/tcp"
+    volumes:
+      - ./data:/opt/terraria
+    environment:
+      STEAM_USERNAME: "anonymous"
+      STEAM_PASSWORD: ""
+      TERRARIA_APP_ID: "105600"
+      TERRARIA_FORCE_UPDATE: "${TERRARIA_FORCE_UPDATE:-false}"
+      WORLD_NAME: "world"
+      WORLD_PATH: "Worlds"
+      SERVER_PORT: "7777"
+      MAX_PLAYERS: "8"
+      SERVER_PASSWORD: ""
+      MOTD: "Welcome"
+      DIFFICULTY: "0"
+      TERRARIA_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 300s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 2048M

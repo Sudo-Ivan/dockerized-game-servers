@@ -1,0 +1,38 @@
+services:
+  project-zomboid:
+    image: ghcr.io/${IMAGE_OWNER}/project-zomboid:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: project-zomboid
+    restart: unless-stopped
+    stop_grace_period: 120s
+    init: true
+    ports:
+      - "16261:16261/udp"
+      - "16262:16262/udp"
+    volumes:
+      - ./data:/opt/zomboid
+    environment:
+      STEAM_USERNAME: "anonymous"
+      STEAM_PASSWORD: ""
+      PZ_APP_ID: "380870"
+      PZ_FORCE_UPDATE: "${PZ_FORCE_UPDATE:-false}"
+      PZ_SERVER_NAME: "servertest"
+      PZ_ADMIN_PASSWORD: "${PZ_ADMIN_PASSWORD:-changeme}"
+      PZ_NO_STEAM: "false"
+      PZ_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 600s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 6144M

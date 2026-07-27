@@ -18,6 +18,9 @@ Images publish to GHCR under `ghcr.io/$IMAGE_OWNER/` where IMAGE_OWNER is `owner
 | Ground Branch | `ground-branch` | `ground-branch` |
 | Core Keeper | `core-keeper` | `core-keeper` |
 | Factorio | `factorio` | `factorio` |
+| 7 Days to Die | `7-days-to-die` | `7-days-to-die` |
+| Project Zomboid | `project-zomboid` | `project-zomboid` |
+| Terraria | `terraria` | `terraria` |
 | OpenMoHAA | `openmohaa` | `openmohaa` |
 | Arma 3 | `arma/arma-3` | `arma-3` |
 | Hytale | `hytale` | external (`deinfreu/hytale-server`) |
@@ -127,6 +130,35 @@ docker run -d --name factorio --restart unless-stopped --init \
   ghcr.io/$IMAGE_OWNER/factorio:latest
 ```
 
+7 Days to Die:
+
+```bash
+docker run -d --name 7-days-to-die --restart unless-stopped --init \
+  -p 26900:26900/tcp -p 26900:26900/udp \
+  -p 26901-26903:26901-26903/udp \
+  -v "$PWD/7-days-to-die/data:/opt/7dtd" \
+  ghcr.io/$IMAGE_OWNER/7-days-to-die:latest
+```
+
+Project Zomboid:
+
+```bash
+docker run -d --name project-zomboid --restart unless-stopped --init \
+  -p 16261:16261/udp -p 16262:16262/udp \
+  -v "$PWD/project-zomboid/data:/opt/zomboid" \
+  -e PZ_ADMIN_PASSWORD=changeme \
+  ghcr.io/$IMAGE_OWNER/project-zomboid:latest
+```
+
+Terraria:
+
+```bash
+docker run -d --name terraria --restart unless-stopped --init \
+  -p 7777:7777/tcp \
+  -v "$PWD/terraria/data:/opt/terraria" \
+  ghcr.io/$IMAGE_OWNER/terraria:latest
+```
+
 OpenMoHAA (copy your owned MOHAA `main` / `mainta` / `maintt` PK3s into `openmohaa/data` first):
 
 ```bash
@@ -199,6 +231,18 @@ export IMAGE_OWNER="$(./ci/repo-meta.sh | sed -n 's/^IMAGE_OWNER=//p')"
 
 Downloads the official headless package from factorio.com (`FACTORIO_VERSION`, default `stable`). Creates `saves/<SAVE_NAME>.zip` on first start and writes `config/server-settings.json` if missing. Game traffic is UDP `34197`. Set `RCON_PASSWORD` to enable RCON on TCP `27015`. Edit settings under `factorio/data/config/` after the first run.
 
+### 7 Days to Die
+
+Steam App 294420 via anonymous login. Persist `/opt/7dtd` (world, `Saves/`, config). Default `serverconfig.xml` is created on first start if missing. Game ports TCP/UDP 26900 and UDP 26901-26903.
+
+### Project Zomboid
+
+Steam App 380870. Server binaries under `project-zomboid/data/server`. Saves and ini files under `project-zomboid/data/home/Zomboid/`. Set `PZ_ADMIN_PASSWORD` before the first launch.
+
+### Terraria
+
+Steam App 105600. Official dedicated server binary and `serverconfig.txt` under `terraria/data`. Default TCP port 7777.
+
 ### OpenMoHAA
 
 Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You must copy licensed Allied Assault game data** (`main`, and optionally `mainta` / `maintt` PK3s) into `openmohaa/data/` before the server can run. Defaults: UDP `12203` (game) and UDP `12300` (GameSpy). Server config: `openmohaa/data/home/main/settings/server.cfg` (a default is created on first start). See [OpenMoHAA docs](https://docs.openmohaa.org/).
@@ -217,6 +261,9 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 | `ground-branch` | Ground Branch (Wine) |
 | `core-keeper` | Core Keeper dedicated |
 | `factorio` | Factorio dedicated |
+| `7-days-to-die` | 7 Days to Die dedicated |
+| `project-zomboid` | Project Zomboid dedicated |
+| `terraria` | Terraria dedicated |
 | `openmohaa` | OpenMoHAA (BYO MOHAA assets) |
 | `arma-3` | Arma 3 dedicated |
 
@@ -263,6 +310,9 @@ valheim/         Vanilla and Plus
 ground-branch/   Ground Branch
 core-keeper/     Core Keeper
 factorio/         Factorio
+7-days-to-die/    7 Days to Die
+project-zomboid/  Project Zomboid
+terraria/         Terraria
 openmohaa/       OpenMoHAA
 arma/arma-3/     Arma 3
 hytale/          external image compose

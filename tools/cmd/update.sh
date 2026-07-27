@@ -29,7 +29,7 @@ gs_cmd_update() {
   gs_catalog_lookup "${game}"
   gs_load_repo_meta
 
-  if [ -z "${GS_UPDATE_ENVS}" ]; then
+  if [ -z "${GS_UPDATE_ENVS}" ] || [ "${GS_UPDATE_ENVS}" = "-" ]; then
     gs_die "${GS_ID} has no update_envs in the server catalog"
   fi
 

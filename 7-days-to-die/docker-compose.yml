@@ -1,0 +1,39 @@
+services:
+  7-days-to-die:
+    image: ghcr.io/${IMAGE_OWNER}/7-days-to-die:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: 7-days-to-die
+    restart: unless-stopped
+    stop_grace_period: 120s
+    init: true
+    ports:
+      - "26900:26900/tcp"
+      - "26900:26900/udp"
+      - "26901:26901/udp"
+      - "26902:26902/udp"
+      - "26903:26903/udp"
+    volumes:
+      - ./data:/opt/7dtd
+    environment:
+      STEAM_USERNAME: "anonymous"
+      STEAM_PASSWORD: ""
+      SEVENDTD_APP_ID: "294420"
+      SEVENDTD_FORCE_UPDATE: "${SEVENDTD_FORCE_UPDATE:-false}"
+      CONFIG_FILE: "serverconfig.xml"
+      SEVENDTD_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 600s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 6144M
