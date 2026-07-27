@@ -4,6 +4,7 @@ set -eu
 export WINEARCH="${WINEARCH:-win64}"
 export WINEDEBUG="${WINEDEBUG:--all}"
 export WINEPREFIX="${WINEPREFIX:?WINEPREFIX required}"
+export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-mscoree=d}"
 
 xvfb_pid=""
 cleanup() {

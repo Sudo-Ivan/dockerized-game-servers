@@ -14,7 +14,9 @@ services:
     ports:
       - "27016:27016/udp"
     volumes:
-      - ./data:/opt/spaceengineers
+      - ./data/dedicated:/opt/spaceengineers/dedicated
+      - ./data/instances:/opt/spaceengineers/instances
+      - ./data/plugins:/opt/spaceengineers/plugins
     environment:
       STEAM_USERNAME: "anonymous"
       STEAM_PASSWORD: ""
@@ -27,7 +29,7 @@ services:
       SE_PUBLIC_IP: ""
       SE_PORT: "27016"
       SE_EXTRA_ARGS: ""
-      WINEPREFIX: "/opt/spaceengineers/.wine"
+      WINEPREFIX: "/home/spaceengineers/.wine"
       WINEARCH: "win64"
       WINEDEBUG: "-all"
       SteamAppId: "244850"

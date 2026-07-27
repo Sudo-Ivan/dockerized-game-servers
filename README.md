@@ -122,7 +122,9 @@ Space Engineers:
 ```bash
 docker run -d --name space-engineers --restart unless-stopped --init \
   -p 27016:27016/udp \
-  -v "$PWD/space-engineers/data:/opt/spaceengineers" \
+  -v "$PWD/space-engineers/data/dedicated:/opt/spaceengineers/dedicated" \
+  -v "$PWD/space-engineers/data/instances:/opt/spaceengineers/instances" \
+  -v "$PWD/space-engineers/data/plugins:/opt/spaceengineers/plugins" \
   -e SE_INSTANCE_NAME=Default \
   ghcr.io/$IMAGE_OWNER/space-engineers:latest
 ```
@@ -250,7 +252,7 @@ Server config appears under `ground-branch/data/GroundBranch/ServerConfig/` afte
 
 ### Space Engineers
 
-Steam App 298740 (Windows dedicated server via Wine). Persist `space-engineers/data` at `/opt/spaceengineers` (dedicated binaries, instances, plugins, Wine prefix). Default instance `Default`, config `space-engineers/data/instances/Default/SpaceEngineers-Dedicated.cfg`. First start installs dotnet48 into the Wine prefix and downloads server files (allow several minutes). UDP game port 27016. Set `SE_PUBLIC_IP` when the container cannot infer a reachable address for the dedicated config.
+Steam App 298740 (Windows dedicated server via Wine). Persist `space-engineers/data/dedicated`, `instances`, and `plugins` (Wine/dotnet is baked into the image). Default instance `Default`, config `space-engineers/data/instances/Default/SpaceEngineers-Dedicated.cfg`. First start downloads server files into `data/dedicated` (allow several minutes). UDP game port 27016. Set `SE_PUBLIC_IP` when the container cannot infer a reachable address for the dedicated config.
 
 ### Core Keeper
 

@@ -32,7 +32,7 @@ ENV SE_ROOT="/opt/spaceengineers" \
     SE_INSTANCES_DIR="/opt/spaceengineers/instances" \
     SE_PLUGINS_DIR="/opt/spaceengineers/plugins" \
     STEAM_DIR="/home/spaceengineers/steamcmd" \
-    WINEPREFIX="/opt/spaceengineers/.wine" \
+    WINEPREFIX="/home/spaceengineers/.wine" \
     WINEARCH="win64" \
     WINEDEBUG="-all" \
     SteamAppId="244850"
@@ -40,6 +40,9 @@ ENV SE_ROOT="/opt/spaceengineers" \
 COPY --chown=spaceengineers:spaceengineers --chmod=755 wine-setup.sh /home/spaceengineers/wine-setup.sh
 COPY --chown=spaceengineers:spaceengineers --chmod=755 entrypoint.sh /home/spaceengineers/entrypoint.sh
 COPY --chmod=755 healthcheck.sh /healthcheck.sh
+
+RUN su -s /bin/bash spaceengineers -c \
+    'WINEPREFIX=/home/spaceengineers/.wine WINEARCH=win64 WINEDEBUG=-all WINEDLLOVERRIDES=mscoree=d /home/spaceengineers/wine-setup.sh'
 
 USER spaceengineers
 WORKDIR ${SE_ROOT}

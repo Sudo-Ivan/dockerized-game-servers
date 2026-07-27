@@ -11,7 +11,7 @@ SE_SERVER_NAME="${SE_SERVER_NAME:-Space Engineers}"
 SE_WORLD_NAME="${SE_WORLD_NAME:-DedicatedWorld}"
 SE_PUBLIC_IP="${SE_PUBLIC_IP:-}"
 SE_PORT="${SE_PORT:-27016}"
-SE_EXTRA_ARGS="${SE_EXTRA_ARGS:-}"
+SE_PREMADE_CHECKPOINT="${SE_PREMADE_CHECKPOINT:-${SE_DEDICATED_DIR}/Content/CustomWorlds/Earth Planet/PC}"
 
 SERVER_EXE="${SE_DEDICATED_DIR}/DedicatedServer64/SpaceEngineersDedicated.exe"
 INSTANCE_DIR="${SE_INSTANCES_DIR}/${SE_INSTANCE_NAME}"
@@ -22,6 +22,15 @@ wine_path() {
     local rest="${linux_path#/}"
     rest="${rest//\//\\\\}"
     printf 'Z:\\%s' "${rest}"
+}
+
+sed_replace_xml() {
+    local pattern="$1"
+    local value="$2"
+    local file="$3"
+    local escaped
+    escaped="$(printf '%s' "${value}" | sed -e 's/[\\&|]/\\&/g')"
+    sed -i -E "s|${pattern}|${escaped}|g" "${file}"
 }
 
 install_server() {
@@ -72,7 +81,7 @@ write_default_config() {
     mkdir -p "${INSTANCE_DIR}/Saves/${SE_WORLD_NAME}"
     cat > "${CONFIG_PATH}" <<EOF
 <?xml version="1.0"?>
-<MyObjectBuilder_ConfigDedicated xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<MyConfigDedicated xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SessionSettings>
     <GameMode>Survival</GameMode>
     <InventorySize>3</InventorySize>
@@ -87,19 +96,29 @@ write_default_config() {
     <EnableSaving>true</EnableSaving>
     <MaxPlayers>4</MaxPlayers>
   </SessionSettings>
-  <ServerName>${SE_SERVER_NAME}</ServerName>
-  <WorldName>${SE_WORLD_NAME}</WorldName>
+  <Scenario>
+    <TypeId>MyObjectBuilder_ScenarioDefinition</TypeId>
+    <SubtypeId>EarthEasyStart</SubtypeId>
+  </Scenario>
   <LoadWorld />
+  <PremadeCheckpointPath>$(wine_path "${SE_PREMADE_CHECKPOINT}")</PremadeCheckpointPath>
   <IP>0.0.0.0</IP>
   <SteamPort>${SE_PORT}</SteamPort>
   <ServerPort>${SE_PORT}</ServerPort>
+  <ServerName>${SE_SERVER_NAME}</ServerName>
+  <WorldName>${SE_WORLD_NAME}</WorldName>
+  <PauseGameWhenEmpty>false</PauseGameWhenEmpty>
+  <IgnoreLastSession>true</IgnoreLastSession>
   <Plugins />
-</MyObjectBuilder_ConfigDedicated>
+</MyConfigDedicated>
 EOF
 }
 
 sync_instance_config() {
     if [ ! -f "${CONFIG_PATH}" ]; then
+        write_default_config
+    elif grep -q 'MyObjectBuilder_ConfigDedicated' "${CONFIG_PATH}" || ! grep -q 'PremadeCheckpointPath' "${CONFIG_PATH}"; then
+        echo "--- Refreshing dedicated config at ${CONFIG_PATH} ---"
         write_default_config
     fi
 
@@ -108,12 +127,17 @@ sync_instance_config() {
         instance_ip="$(hostname -I 2>/dev/null | awk '{print $1}')"
     fi
     if [ -n "${instance_ip}" ]; then
-        sed -i -E "s=<IP>.*</IP>=<IP>${instance_ip}</IP>=g" "${CONFIG_PATH}"
+        sed_replace_xml '<IP>[^<]*</IP>' "<IP>${instance_ip}</IP>" "${CONFIG_PATH}"
     fi
 
-    local save_path
-    save_path="$(wine_path "${INSTANCE_DIR}/Saves/${SE_WORLD_NAME}")"
-    sed -i -E "s=<LoadWorld />|<LoadWorld>.*</LoadWorld>=<LoadWorld>${save_path}</LoadWorld>=g" "${CONFIG_PATH}"
+    local save_dir="${INSTANCE_DIR}/Saves/${SE_WORLD_NAME}"
+    if [ -f "${save_dir}/Sandbox.sbc" ] || find "${save_dir}" -maxdepth 2 -name '*.sbc' -print -quit 2>/dev/null | grep -q .; then
+        local save_path
+        save_path="$(wine_path "${save_dir}")"
+        sed_replace_xml '<LoadWorld[^>]*/?>|<LoadWorld>[^<]*</LoadWorld>' "<LoadWorld>${save_path}</LoadWorld>" "${CONFIG_PATH}"
+    else
+        sed_replace_xml '<LoadWorld>[^<]*</LoadWorld>' '<LoadWorld />' "${CONFIG_PATH}"
+    fi
 
     if [ -d "${SE_PLUGINS_DIR}" ]; then
         local plugin_count=0
@@ -128,7 +152,7 @@ sync_instance_config() {
                 plugins_xml="${plugins_xml}<string>${wine_dll}</string>"
             done
             plugins_xml="${plugins_xml}</Plugins>"
-            sed -i -E "s=<Plugins />|<Plugins>.*</Plugins>=${plugins_xml}=g" "${CONFIG_PATH}"
+            sed_replace_xml '<Plugins[^>]*/?>|<Plugins>.*</Plugins>' "${plugins_xml}" "${CONFIG_PATH}"
         fi
     fi
 }
