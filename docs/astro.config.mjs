@@ -64,6 +64,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'servers' } }],
 				},
 				{
+					label: 'Tools',
+					items: [{ autogenerate: { directory: 'tools' } }],
+				},
+				{
 					label: 'Reference',
 					items: [{ autogenerate: { directory: 'reference' } }],
 				},

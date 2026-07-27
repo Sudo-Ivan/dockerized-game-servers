@@ -32,11 +32,22 @@ The default `docker-compose.yml` files load pinned versions from [`minecraft/def
 
 Vanilla resolves `VANILLA_VERSION` from the Mojang version manifest (same id string Fabric uses for current releases, for example `26.2`). [NeoForge](https://neoforged.net/) uses a single Maven version string (for example `26.2.0.35-beta` for Minecraft `26.2`). Pick releases from the [NeoForged installer files](https://neoforged.net/) or `ci/resolve-minecraft-build.sh --flavor neoforge --minecraft-version 26.2`.
 
-After changing game files, set the matching force flag so the entrypoint re-downloads or re-installs: `VANILLA_FORCE_DOWNLOAD`, `FABRIC_FORCE_DOWNLOAD`, `FORGE_FORCE_INSTALL`, or `NEOFORGE_FORCE_INSTALL`.
+After changing game files, set the matching force flag so the entrypoint re-downloads or re-installs: `VANILLA_FORCE_DOWNLOAD`, `FABRIC_FORCE_DOWNLOAD`, `FORGE_FORCE_INSTALL`, or `NEOFORGE_FORCE_INSTALL`. These are the same env vars `./tools/gs update` sets to `true` for a one-shot recreate, see [Ops](/guides/ops/).
+
+## Memory and JVM flags
+
+Each Dockerfile bakes a default `JVM_FLAGS` (G1GC tuning) and each compose file sets a `mem_limit`. Override `JVM_FLAGS` in the compose `environment:` block or with `docker run -e JVM_FLAGS=...` to change heap size.
+
+| Flavor | Default heap | Compose `mem_limit` |
+| --- | --- | --- |
+| Fabric | `-Xms2G -Xmx2G` | `3072M` |
+| Vanilla | `-Xms2G -Xmx2G` | `3072M` |
+| Forge | `-Xms3G -Xmx3G` | `4096M` |
+| NeoForge | `-Xms3G -Xmx3G` | `4096M` |
 
 ## World data and permissions
 
-The process runs with working directory `/data` (your compose `./data` mount). Use `PUID` and `PGID` so files on the host match your user. First start creates `eula.txt` when `EULA=true`.
+The process runs with working directory `/data` (your compose `./data` mount). Use `PUID` and `PGID` so files on the host match your user. Every start writes `eula.txt` when `EULA=true`.
 
 Common paths under `/data`:
 
@@ -153,6 +164,16 @@ docker run -d --name neoforge --restart unless-stopped --init \
 
 Optional overrides: `VANILLA_JAR_URL` (Mojang hosts only), `FORGE_INSTALLER_URL` (Maven Forge host only), `NEOFORGE_INSTALLER_URL` (`maven.neoforged.net` only).
 
+## Healthcheck
+
+`healthcheck.sh` probes for a listening TCP socket on `SERVER_PORT` (default `25565`). If you change `server-port` in `server.properties` and remap the compose ports, also set `SERVER_PORT` to match so the healthcheck keeps working.
+
 ## Versioned image builds
 
 The manual `build-minecraft` workflow can publish tags for a chosen Minecraft version. See [CI](/reference/ci/).
+
+## See also
+
+- [All servers](/reference/servers/) for compose paths and image names
+- [Images](/reference/images/) for the shared `minecraft-base` image
+- [Ops](/guides/ops/) for `./tools/gs backup`, `restore`, and `update`

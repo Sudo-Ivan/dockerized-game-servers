@@ -56,7 +56,11 @@ function resolveMarkdownTarget(fromFile, href) {
 	if (h.startsWith('/')) {
 		h = h.replace(/^\//, '').replace(/\/$/, '')
 		if (!h) return path.join(contentRoot, 'index.md')
-		return path.join(contentRoot, `${h}.md`)
+		const sibling = path.join(contentRoot, `${h}.md`)
+		if (existsSync(sibling)) return sibling
+		const dirIndex = path.join(contentRoot, h, 'index.md')
+		if (existsSync(dirIndex)) return dirIndex
+		return sibling
 	}
 
 	let resolved = path.normalize(path.join(path.dirname(fromFile), h))
@@ -66,6 +70,8 @@ function resolveMarkdownTarget(fromFile, href) {
 	if (!resolved.endsWith('.md') && !resolved.endsWith('.mdx')) {
 		if (existsSync(`${resolved}.md`)) resolved = `${resolved}.md`
 		else if (existsSync(`${resolved}.mdx`)) resolved = `${resolved}.mdx`
+		else if (existsSync(path.join(resolved, 'index.md'))) resolved = path.join(resolved, 'index.md')
+		else if (existsSync(path.join(resolved, 'index.mdx'))) resolved = path.join(resolved, 'index.mdx')
 		else resolved = `${resolved}.md`
 	}
 	return resolved
@@ -99,8 +105,9 @@ for (const file of walkMd(contentRoot)) {
 
 if (existsSync(distRoot)) {
 	for (const file of walkMd(contentRoot)) {
-		const rel = path.relative(contentRoot, file).replace(/\.mdx?$/, '')
-		const slug = rel === 'index' ? '' : rel.replace(/\\/g, '/')
+		const rel = path.relative(contentRoot, file).replace(/\.mdx?$/, '').replace(/\\/g, '/')
+		// A directory's `index.md` (nested or top-level) maps to the directory itself.
+		const slug = rel === 'index' ? '' : rel.replace(/\/index$/, '')
 		const htmlPath = distHtmlForSlug(slug)
 		if (!existsSync(htmlPath)) {
 			errors.push(`dist missing page for ${rel || 'index'} (expected ${path.relative(docsDir, htmlPath)})`)

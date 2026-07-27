@@ -1,35 +1,58 @@
 ---
 title: Home
-description: Dockerized dedicated game servers with small images and compose files.
+description: Run a game server for you and your friends in one command, no manual installs.
 template: splash
 editUrl: false
 lastUpdated: false
 hero:
   title: Dockerized Game Servers
-  tagline: Small container images and Compose files for dedicated game servers.
+  tagline: Run a dedicated server for you and your friends in one command. Minecraft, Valheim, Palworld, DayZ, and 30+ more.
   actions:
     - text: Quick start
       link: /guides/quick-start/
       icon: right-arrow
-    - text: All servers
+    - text: Browse all servers
       link: /reference/servers/
       variant: minimal
 ---
 
-Published images live on GHCR at `{{IMAGE_PREFIX}}/`. Set `IMAGE_OWNER` when you fork and publish your own packages.
+Want to host your own game server without fighting SteamCMD, missing libraries, or a wiki page from five years ago? Pick a game, copy one command, and you have a server running. Everything needed to download and run the actual game server software is already packaged up for you.
 
-- Compose-first workflows with optional local builds
-- Shared bases for Minecraft (Java), SteamCMD, and glibc runtimes
-- Static documentation that works without JavaScript, plus optional search
+## Why this instead of doing it by hand
 
-## Shared bases
+- **One command to start.** Every server uses the same `docker compose up` or `docker run` pattern, so learning one game's setup gets you most of the way to every other one.
+- **You keep your data.** Worlds, saves, and configs live in a folder on your machine (`./data` next to each server), so updating or restarting the container never wipes progress.
+- **Updates and backups without guesswork.** A single [ops tool](guides/ops/) can back up, restore, and update most servers with one command each.
+- **Runs anywhere Docker runs.** Your own PC, a home server, or a cheap VPS, no subscription and no vendor lock-in.
+- **Free and open.** Everything here is 0BSD licensed. Fork it, self-host it, publish your own copies.
 
-- **minecraft-base**: Temurin JRE on Alpine
-- **steam-base**: SteamCMD on Arch Linux
-- **runtime-base**: Debian slim for non-Steam, non-Java servers (i386 and legacy libs for LinuxGSM binaries)
+## Popular picks
 
-## Learn more
+| Game | Guide |
+| --- | --- |
+| Minecraft (Vanilla, Fabric, Forge, NeoForge) | [Guide](servers/minecraft/) |
+| Valheim | [Guide](servers/valheim/) |
+| Palworld | [Guide](servers/palworld/) |
+| 7 Days to Die | [Guide](servers/7-days-to-die/) |
+| Project Zomboid | [Guide](servers/project-zomboid/) |
+| DayZ | [Guide](servers/dayz/) |
+| Terraria | [Guide](servers/terraria/) |
+| Factorio | [Guide](servers/factorio/) |
 
-1. [Quick start](guides/quick-start/) to run a server with Compose or Docker.
-2. [All servers](reference/servers/) for compose paths, image names, and doc links.
-3. [Images](reference/images/) and [CI](reference/ci/) when you build or publish.
+Those are just the familiar names. See [All servers](reference/servers/) for the full list, over 35 games and counting.
+
+## No terminal? No problem
+
+The [Tools](tools/) page has browser-based generators that build a `server.properties`, `server.cfg`, or a ready-to-paste `docker run` command for you, no command line knowledge required to get started.
+
+## How it works, in three steps
+
+1. Pick a game from [All servers](reference/servers/).
+2. Copy the `docker compose` command from that game's guide.
+3. Run it. Your friends connect using your address and the port shown on the same page.
+
+Full walkthrough: [Quick start](guides/quick-start/).
+
+## Curious how it is built
+
+Every image is small on purpose and shares a handful of common bases (a Java runtime for Minecraft, SteamCMD for Steam-downloaded games, a slim Linux runtime for everything else) so they are easy to keep secure and up to date. That side of things lives in [Images](reference/images/) and [CI](reference/ci/) if you want to build your own copies or contribute.
