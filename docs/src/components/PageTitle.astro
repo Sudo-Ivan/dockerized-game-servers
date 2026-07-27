@@ -31,7 +31,9 @@ const iconFit = serverSlug ? gameIconFit[serverSlug] ?? 'cover' : 'cover'
 			</span>
 		)
 	}
-	<h1 id="_top">{title}</h1>
+	<span class="page-title-text">
+		<h1 id="_top">{title}</h1>
+	</span>
 </div>
 
 <style>
@@ -39,17 +41,16 @@ const iconFit = serverSlug ? gameIconFit[serverSlug] ?? 'cover' : 'cover'
 		position: relative;
 		display: flex;
 		align-items: center;
-		gap: 0.85rem;
 		margin-top: 0.5rem;
 	}
 
 	.page-title.has-game-icon {
-		padding: 0.65rem 0.9rem;
 		border-radius: 0.85rem;
 		border: 1px solid var(--sl-color-hairline);
 		overflow: hidden;
 		isolation: isolate;
 		background: #0c0c0c;
+		height: 5.5rem;
 	}
 
 	.page-title-backdrop {
@@ -77,32 +78,33 @@ const iconFit = serverSlug ? gameIconFit[serverSlug] ?? 'cover' : 'cover'
 		position: relative;
 		display: block;
 		flex-shrink: 0;
-		height: 3.25rem;
+		height: 100%;
 		aspect-ratio: 2 / 3;
-		border-radius: 0.55rem;
 		overflow: hidden;
 		background: #141414;
-		box-shadow:
-			0 8px 16px -6px rgb(0 0 0 / 0.65),
-			0 0 0 1px rgb(255 255 255 / 0.08) inset,
-			0 1px 0 rgb(255 255 255 / 0.05) inset;
-	}
-
-	.game-title-icon-wrap::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		background: linear-gradient(180deg, rgb(255 255 255 / 0.16) 0%, rgb(255 255 255 / 0) 30%);
-		pointer-events: none;
+		border-right: 1px solid rgb(255 255 255 / 0.08);
+		box-shadow: 1px 0 0 rgb(0 0 0 / 0.35);
 	}
 
 	.game-title-icon-wrap.fit-contain {
-		padding: 0.35rem;
+		padding: 0.5rem;
 		background: #101010;
 	}
 
+	.game-title-icon-wrap.fit-contain::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image: var(--icon-bg);
+		background-size: cover;
+		background-position: center;
+		filter: blur(12px) saturate(1.5) brightness(0.42);
+		transform: scale(1.2);
+	}
+
 	.game-title-icon-wrap.fit-contain .game-title-icon {
+		position: relative;
+		z-index: 1;
 		object-fit: contain;
 		object-position: center;
 	}
@@ -113,6 +115,13 @@ const iconFit = serverSlug ? gameIconFit[serverSlug] ?? 'cover' : 'cover'
 		height: 100%;
 		object-fit: cover;
 		object-position: center;
+	}
+
+	.page-title-text {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		padding: 0.75rem 1.15rem;
 	}
 
 	h1 {
@@ -128,13 +137,12 @@ const iconFit = serverSlug ? gameIconFit[serverSlug] ?? 'cover' : 'cover'
 	}
 
 	@media (min-width: 50rem) {
-		.game-title-icon-wrap {
-			height: 4rem;
-			border-radius: 0.65rem;
+		.page-title.has-game-icon {
+			height: 7rem;
 		}
 
-		.page-title.has-game-icon {
-			padding: 0.85rem 1.1rem;
+		.page-title-text {
+			padding: 0.9rem 1.4rem;
 		}
 	}
 </style>
