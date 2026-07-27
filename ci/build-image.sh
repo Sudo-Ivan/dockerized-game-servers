@@ -14,7 +14,7 @@
 
 set -eu
 
-NAME="${1:?name required}"
+IMAGE_NAME="${1:?name required}"
 CONTEXT="${2:?context required}"
 DOCKERFILE="${3:?dockerfile required}"
 BASE_IMAGE="${4:-}"
@@ -22,6 +22,8 @@ BASE_IMAGE="${4:-}"
 ROOT="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
 # shellcheck disable=SC1090
 eval "$("${ROOT}/ci/repo-meta.sh")"
+# repo-meta exports NAME as the git repo name. Keep the image name separate.
+NAME="${IMAGE_NAME}"
 
 REGISTRY="${REGISTRY:-ghcr.io}"
 TAG="${TAG:-latest}"
