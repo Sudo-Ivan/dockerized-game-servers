@@ -64,7 +64,7 @@ printf '%s\n' "${plain}" | grep -q 'Game ID: ABC123XYZ' || {
   echo "ready helper missing Game ID line" >&2
   fail=1
 }
-printf '%s\n' "${plain}" | grep -q 'Status: server ready and ready for players!' || {
+printf '%s\n' "${plain}" | grep -q 'Status: server is up and ready for players!' || {
   echo "ready helper missing status line" >&2
   fail=1
 }

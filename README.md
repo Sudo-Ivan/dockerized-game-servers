@@ -262,7 +262,7 @@ Steam App 298740 (Windows dedicated server via Wine). Persist `space-engineers/d
 
 ### Core Keeper
 
-Defaults to Steam Datagram Relay (SDR). No published ports are required. When ready, `docker logs` prints the Game ID and `Status: server ready and ready for players!`. Fallback:
+Defaults to Steam Datagram Relay (SDR). No published ports are required. When ready, `docker logs` prints the Game ID and `Status: server is up and ready for players!`. Fallback:
 
 ```bash
 docker exec -it core-keeper cat /opt/corekeeper/server/GameID.txt

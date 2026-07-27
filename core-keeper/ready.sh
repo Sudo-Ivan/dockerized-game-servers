@@ -19,7 +19,7 @@ ck_print_game_id() {
 }
 
 ck_print_ready_status() {
-    ck_ready_bold_green "Status: server ready and ready for players!"
+    ck_ready_bold_green "Status: server is up and ready for players!"
 }
 
 # Poll GameID.txt until non-empty. Args: path, timeout_seconds, optional pid to watch.

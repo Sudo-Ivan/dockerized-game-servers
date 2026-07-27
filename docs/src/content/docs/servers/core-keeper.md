@@ -12,7 +12,7 @@ Defaults to Steam Datagram Relay (SDR). No published ports are required. World d
 When the session is ready, `docker logs` prints a colored **Game ID** line and:
 
 ```text
-Status: server ready and ready for players!
+Status: server is up and ready for players!
 ```
 
 Example:
