@@ -65,7 +65,9 @@ function parseMarkdownDoc(raw) {
  */
 function fileToHref(filePath, base) {
 	const rel = path.relative(docsRoot, filePath).split(path.sep).join('/')
-	if (rel === '404.md') return null
+	if (rel === '404.md' || rel === 'offline.md' || rel === 'error.md' || rel === 'gone.md') {
+		return null
+	}
 	const withoutExt = rel.replace(/\.mdx?$/, '')
 	const slug = withoutExt === 'index' ? '' : withoutExt.replace(/\/index$/, '')
 	const prefix = base.endsWith('/') ? base.slice(0, -1) : base

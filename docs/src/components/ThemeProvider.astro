@@ -1,3 +1,7 @@
 ---
 ---
-{/* No client theme script. Starlight defaults to dark tokens without data-theme. */}
+{/* Force dark tokens. Theme switching is disabled. */}
+<script is:inline>
+	document.documentElement.dataset.theme = 'dark'
+	document.documentElement.style.colorScheme = 'dark'
+</script>

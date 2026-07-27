@@ -1,0 +1,138 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro'
+import { site as repo } from '../generated/site.mjs'
+import {
+	buildPageMeta,
+	escapeJsonForScript,
+	getBreadcrumbJsonLd,
+	getSoftwareApplicationJsonLd,
+	getWebPageJsonLd,
+	getWebSiteJsonLd,
+} from '../lib/seo.mjs'
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+	? import.meta.env.BASE_URL
+	: `${import.meta.env.BASE_URL}/`
+const route = Astro.locals.starlightRoute
+const entry = route.entry.data
+const author = entry.author || 'Sudo-Ivan'
+const lastUpdated = route.lastUpdated
+const title = entry.title
+const description =
+	entry.description || 'Dockerized dedicated game servers with small images and compose files.'
+const siteOrigin = Astro.site ?? new URL(repo.siteUrl)
+const pageUrl = new URL(Astro.url.pathname, siteOrigin).href
+const logoUrl = new URL(`${base}icon.svg`, siteOrigin).href
+const downloadUrl = new URL(`${base}dgs-docs.zip`, siteOrigin).href
+const meta = buildPageMeta({
+	title,
+	description,
+	canonicalUrl: pageUrl,
+	author,
+	imageUrl: logoUrl,
+	dateModified: lastUpdated ? lastUpdated.toISOString() : null,
+	themeColor: '#0a0a0a',
+})
+
+const siteLd = getWebSiteJsonLd({
+	name: 'Dockerized Game Servers',
+	description: meta.description,
+	url: repo.docsUrl,
+	docsUrl: repo.docsUrl,
+	githubUrl: repo.githubUrl,
+	logoUrl,
+	authorName: author,
+})
+const appLd = getSoftwareApplicationJsonLd({
+	name: 'Dockerized Game Servers',
+	description: meta.description,
+	docsUrl: repo.docsUrl,
+	githubUrl: repo.githubUrl,
+	logoUrl,
+	downloadUrl,
+	authorName: author,
+})
+const pageLd = getWebPageJsonLd({
+	title: `${title} | Dockerized Game Servers`,
+	description,
+	url: pageUrl,
+	docsUrl: repo.docsUrl,
+	authorName: author,
+	dateModified: meta.dateModified || undefined,
+})
+
+const crumbs = [{ name: 'Docs', url: repo.docsUrl }]
+const slug = route.entry.id === 'index' ? '' : String(route.entry.id || '')
+if (slug) {
+	const parts = slug.split('/')
+	let path = ''
+	for (const part of parts) {
+		path += `${path ? '/' : ''}${part}`
+		crumbs.push({
+			name: part.replace(/-/g, ' '),
+			url: new URL(`${base}${path}/`, siteOrigin).href,
+		})
+	}
+}
+const breadcrumbLd = getBreadcrumbJsonLd(crumbs)
+---
+
+<Default><slot /></Default>
+<link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+<link rel="apple-touch-icon" href={`${base}icon.svg`} />
+<link rel="manifest" href={`${base}manifest.webmanifest`} />
+<meta name="theme-color" content={meta.themeColor} />
+<meta name="author" content={meta.author} />
+<meta name="license" content={meta.license} />
+<meta name="robots" content={meta.robots} />
+{meta.dateModified && <meta property="article:modified_time" content={meta.dateModified} />}
+<meta property="og:site_name" content={meta.siteName} />
+<meta property="og:image" content={logoUrl} />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content={logoUrl} />
+<link rel="license" href={`${base}reference/license/`} />
+<script type="application/ld+json" set:html={escapeJsonForScript(siteLd)} />
+<script type="application/ld+json" set:html={escapeJsonForScript(appLd)} />
+<script type="application/ld+json" set:html={escapeJsonForScript(pageLd)} />
+<script type="application/ld+json" set:html={escapeJsonForScript(breadcrumbLd)} />
+
+<script is:inline define:vars={{ base, swUrl: `${base}sw.js` }}>
+	(() => {
+		if (!('serviceWorker' in navigator)) return
+		let refreshing = false
+		const register = async () => {
+			try {
+				const reg = await navigator.serviceWorker.register(swUrl, {
+					scope: base,
+					updateViaCache: 'none',
+				})
+				const askUpdate = () => {
+					if (reg.waiting) reg.waiting.postMessage({ type: 'DGS_SKIP_WAITING' })
+				}
+				reg.addEventListener('updatefound', () => {
+					const worker = reg.installing
+					if (!worker) return
+					worker.addEventListener('statechange', () => {
+						if (worker.state === 'installed' && navigator.serviceWorker.controller) askUpdate()
+					})
+				})
+				navigator.serviceWorker.addEventListener('controllerchange', () => {
+					if (refreshing) return
+					refreshing = true
+					location.reload()
+				})
+				document.addEventListener('visibilitychange', () => {
+					if (document.visibilityState === 'visible') reg.update().catch(() => {})
+				})
+				window.addEventListener('focus', () => {
+					reg.update().catch(() => {})
+				})
+				setInterval(() => {
+					reg.update().catch(() => {})
+				}, 5 * 60 * 1000)
+			} catch (_) {}
+		}
+		if (document.readyState === 'complete') register()
+		else window.addEventListener('load', register)
+	})()
+</script>

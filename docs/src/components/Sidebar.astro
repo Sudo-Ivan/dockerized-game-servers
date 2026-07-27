@@ -1,0 +1,84 @@
+---
+import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter'
+import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro'
+import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro'
+
+const { sidebar } = Astro.locals.starlightRoute
+const base = import.meta.env.BASE_URL.endsWith('/')
+	? import.meta.env.BASE_URL
+	: `${import.meta.env.BASE_URL}/`
+const downloadHref = `${base}dgs-docs.zip`
+const licenseHref = `${base}reference/license/`
+---
+
+<div class="sidebar-stack">
+	<SidebarPersister>
+		<SidebarSublist sublist={sidebar} />
+	</SidebarPersister>
+
+	<div class="sidebar-end">
+		<a class="download-docs" href={downloadHref} download="dgs-docs.zip">Download Docs</a>
+		<p class="license-note">
+			license: <a href={licenseHref}>0BSD</a>
+		</p>
+	</div>
+</div>
+
+<div class="md:sl-hidden">
+	<MobileMenuFooter />
+</div>
+
+<style>
+	.sidebar-stack {
+		display: flex;
+		flex-direction: column;
+		min-height: 100%;
+		gap: 1.25rem;
+	}
+
+	.sidebar-end {
+		margin-top: auto;
+		padding: 1rem var(--sl-sidebar-pad-x, 1rem) 1.25rem;
+		border-top: 1px solid var(--sl-color-hairline);
+		display: grid;
+		gap: 0.5rem;
+	}
+
+	.download-docs {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		padding: 0.55rem 0.85rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		background: #141414;
+		color: var(--sl-color-white);
+		font-size: var(--sl-text-sm);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.download-docs:hover {
+		border-color: var(--sl-color-gray-3);
+		background: #1a1a1a;
+		color: #ffffff;
+	}
+
+	.license-note {
+		margin: 0;
+		font-size: 0.75rem;
+		line-height: 1.4;
+		color: var(--sl-color-gray-4);
+		text-align: center;
+	}
+
+	.license-note a {
+		color: var(--sl-color-gray-3);
+		text-decoration: none;
+	}
+
+	.license-note a:hover {
+		color: var(--sl-color-gray-1);
+	}
+</style>

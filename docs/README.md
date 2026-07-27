@@ -26,4 +26,12 @@ pnpm audit --prod
 pnpm run build
 ```
 
-Build writes a Fuse.js search index to public/search-index.json, then emits static HTML to dist/. Search UI loads only for JavaScript clients. GitHub Pages deploys from .github/workflows/docs.yml.
+Build writes public assets then emits static HTML to dist/:
+
+- Fuse.js search index (search-index.json)
+- Markdown export zip (dgs-docs.zip)
+- robots.txt and generated site identity for SEO/JSON-LD
+- Web app manifest and service worker (network-first HTML so docs do not stay stale)
+- SVG favicon and app icon
+
+Search UI and the PWA service worker load only for JavaScript clients. GitHub Pages deploys from .github/workflows/docs.yml with full git history so last-updated dates resolve.

@@ -24,15 +24,23 @@ export default defineConfig({
 			title: 'Dockerized Game Servers',
 			description:
 				'Dockerized dedicated game servers with small images and compose files.',
-			// Static HTML first. Search needs client JS, so it stays off.
 			pagefind: false,
-			customCss: ['./src/styles/no-js.css'],
+			lastUpdated: true,
+			editLink: {
+				baseUrl: `${repo.githubUrl}/edit/master/docs/`,
+			},
+			customCss: ['./src/styles/theme.css', './src/styles/no-js.css'],
 			components: {
 				ThemeProvider: './src/components/ThemeProvider.astro',
 				ThemeSelect: './src/components/Empty.astro',
 				TableOfContents: './src/components/TableOfContents.astro',
 				MobileTableOfContents: './src/components/MobileTableOfContents.astro',
 				Search: './src/components/Search.astro',
+				Head: './src/components/Head.astro',
+				Header: './src/components/Header.astro',
+				Sidebar: './src/components/Sidebar.astro',
+				Footer: './src/components/Footer.astro',
+				Hero: './src/components/Hero.astro',
 			},
 			social: [
 				{

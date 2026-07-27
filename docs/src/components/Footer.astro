@@ -1,0 +1,81 @@
+---
+import EditLink from '@astrojs/starlight/components/EditLink.astro'
+import Pagination from '@astrojs/starlight/components/Pagination.astro'
+
+const { entry, lastUpdated, lang } = Astro.locals.starlightRoute
+const author = entry.data.author || 'Sudo-Ivan'
+const base = import.meta.env.BASE_URL.endsWith('/')
+	? import.meta.env.BASE_URL
+	: `${import.meta.env.BASE_URL}/`
+---
+
+<footer class="sl-flex page-footer">
+	<div class="doc-meta">
+		<p>
+			<span>Author</span>
+			{author}
+		</p>
+		{
+			lastUpdated && (
+				<p>
+					<span>Last updated</span>
+					<time datetime={lastUpdated.toISOString()}>
+						{lastUpdated.toLocaleDateString(lang, {
+							dateStyle: 'medium',
+							timeZone: 'UTC',
+						})}
+					</time>
+				</p>
+			)
+		}
+		<p>
+			<span>License</span>
+			<a href={`${base}reference/license/`}>0BSD</a>
+		</p>
+	</div>
+
+	<div class="meta sl-flex">
+		<EditLink />
+	</div>
+	<Pagination />
+</footer>
+
+<style>
+	.page-footer {
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+	.doc-meta {
+		display: grid;
+		gap: 0.5rem;
+		margin-top: 2.5rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--sl-color-hairline);
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-2);
+	}
+	.doc-meta p {
+		margin: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 0.75rem;
+	}
+	.doc-meta span {
+		color: var(--sl-color-gray-3);
+		min-width: 7rem;
+	}
+	.doc-meta a {
+		color: var(--sl-color-text-accent);
+		text-decoration: none;
+	}
+	.doc-meta a:hover {
+		color: var(--sl-color-white);
+	}
+	.meta {
+		gap: 0.75rem 3rem;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+</style>
