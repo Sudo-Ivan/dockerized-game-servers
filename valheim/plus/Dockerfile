@@ -27,8 +27,6 @@ WORKDIR ${VALHEIM_DIR}
 
 EXPOSE 2456/udp 2457/udp 2458/udp
 
-USER valheim
-
 HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
   CMD ["/healthcheck.sh"]
 

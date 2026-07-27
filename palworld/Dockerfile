@@ -26,8 +26,6 @@ WORKDIR ${PALWORLD_DIR}
 
 EXPOSE 8211/udp
 
-USER palworld
-
 HEALTHCHECK --interval=30s --timeout=5s --start-period=900s --retries=3 \
   CMD ["/healthcheck.sh"]
 

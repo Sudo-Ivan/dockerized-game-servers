@@ -25,8 +25,6 @@ WORKDIR ${PZ_INSTALL_DIR}
 
 EXPOSE 16261/udp 16262/udp
 
-USER zomboid
-
 HEALTHCHECK --interval=30s --timeout=5s --start-period=600s --retries=3 \
   CMD ["/healthcheck.sh"]
 

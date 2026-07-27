@@ -53,9 +53,9 @@ COPY --from=builder --chown=arma3:arma3 /home/arma3/steamcmd /home/arma3/steamcm
 COPY --chown=arma3:arma3 sync_mods.py /home/arma3/sync_mods.py
 COPY --chown=arma3:arma3 api/ /home/arma3/api/
 COPY --chown=arma3:arma3 --chmod=755 entrypoint.sh /home/arma3/entrypoint.sh
+COPY --chmod=755 docker-entrypoint.sh /docker-entrypoint.sh
 COPY --chmod=755 healthcheck.sh /healthcheck.sh
 
-USER arma3
 WORKDIR ${ARMA_DIR}
 
 EXPOSE 2302/udp 2303/udp 2304/udp 2305/udp 2306/udp
@@ -65,4 +65,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
 
 STOPSIGNAL SIGTERM
 
-ENTRYPOINT ["/bin/bash", "/home/arma3/entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

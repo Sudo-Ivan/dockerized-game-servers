@@ -39,12 +39,12 @@ ENV SE_ROOT="/opt/spaceengineers" \
 
 COPY --chown=spaceengineers:spaceengineers --chmod=755 wine-setup.sh /home/spaceengineers/wine-setup.sh
 COPY --chown=spaceengineers:spaceengineers --chmod=755 entrypoint.sh /home/spaceengineers/entrypoint.sh
+COPY --chmod=755 docker-entrypoint.sh /docker-entrypoint.sh
 COPY --chmod=755 healthcheck.sh /healthcheck.sh
 
 RUN su -s /bin/bash spaceengineers -c \
     'WINEPREFIX=/home/spaceengineers/.wine WINEARCH=win64 WINEDEBUG=-all WINEDLLOVERRIDES=mscoree=d /home/spaceengineers/wine-setup.sh'
 
-USER spaceengineers
 WORKDIR ${SE_ROOT}
 
 EXPOSE 27016/udp
@@ -54,4 +54,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=900s --retries=3 \
 
 STOPSIGNAL SIGTERM
 
-ENTRYPOINT ["/bin/bash", "/home/spaceengineers/entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

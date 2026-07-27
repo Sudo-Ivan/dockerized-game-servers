@@ -23,9 +23,9 @@ ENV GB_INSTALL_DIR="/opt/groundbranch" \
     SteamAppId="16900"
 
 COPY --chown=groundbranch:groundbranch --chmod=755 entrypoint.sh /home/groundbranch/entrypoint.sh
+COPY --chmod=755 docker-entrypoint.sh /docker-entrypoint.sh
 COPY --chmod=755 healthcheck.sh /healthcheck.sh
 
-USER groundbranch
 WORKDIR ${GB_INSTALL_DIR}
 
 EXPOSE 7777/udp 27015/udp
@@ -35,4 +35,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
 
 STOPSIGNAL SIGTERM
 
-ENTRYPOINT ["/bin/bash", "/home/groundbranch/entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

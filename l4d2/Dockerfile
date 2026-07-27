@@ -23,8 +23,6 @@ WORKDIR ${L4D2_DIR}
 
 EXPOSE 27015/tcp 27015/udp 27005/udp
 
-USER l4d2
-
 HEALTHCHECK --interval=30s --timeout=5s --start-period=600s --retries=3 \
   CMD ["/healthcheck.sh"]
 

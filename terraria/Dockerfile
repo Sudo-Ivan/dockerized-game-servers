@@ -23,8 +23,6 @@ WORKDIR ${TERRARIA_DIR}
 
 EXPOSE 7777/tcp
 
-USER terraria
-
 HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
   CMD ["/healthcheck.sh"]
 

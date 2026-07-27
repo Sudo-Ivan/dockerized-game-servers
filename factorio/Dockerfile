@@ -20,8 +20,6 @@ WORKDIR ${FACTORIO_DIR}
 
 EXPOSE 34197/udp 27015/tcp
 
-USER factorio
-
 HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
   CMD ["/healthcheck.sh"]
 

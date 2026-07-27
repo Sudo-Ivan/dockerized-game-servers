@@ -23,8 +23,6 @@ WORKDIR ${STARBOUND_DIR}
 
 EXPOSE 21025/tcp
 
-USER starbound
-
 HEALTHCHECK --interval=30s --timeout=5s --start-period=600s --retries=3 \
   CMD ["/healthcheck.sh"]
 

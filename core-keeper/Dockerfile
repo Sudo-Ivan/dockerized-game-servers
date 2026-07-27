@@ -37,8 +37,6 @@ COPY --chmod=755 healthcheck.sh /healthcheck.sh
 
 WORKDIR /opt/corekeeper
 
-USER corekeeper
-
 HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
   CMD ["/healthcheck.sh"]
 

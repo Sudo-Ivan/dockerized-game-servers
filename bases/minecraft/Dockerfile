@@ -45,6 +45,4 @@ ENV JAVA_HOME="/opt/java" \
     HOME="/data" \
     MC_JAVA_MAJOR="${TEMURIN_MAJOR}"
 
-USER minecraft
-
 STOPSIGNAL SIGTERM

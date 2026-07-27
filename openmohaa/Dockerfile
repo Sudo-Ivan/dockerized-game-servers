@@ -47,8 +47,6 @@ WORKDIR ${MOHAA_DATA_DIR}
 
 EXPOSE 12203/udp 12300/udp
 
-USER openmohaa
-
 HEALTHCHECK --interval=30s --timeout=20s --start-period=60s --retries=3 \
   CMD ["/healthcheck.sh"]
 

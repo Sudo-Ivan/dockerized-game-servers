@@ -26,8 +26,6 @@ WORKDIR ${SEVENDTD_DIR}
 
 EXPOSE 26900/tcp 26900/udp 26901/udp 26902/udp 26903/udp
 
-USER sevendtd
-
 HEALTHCHECK --interval=30s --timeout=5s --start-period=600s --retries=3 \
   CMD ["/healthcheck.sh"]
 
