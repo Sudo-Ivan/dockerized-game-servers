@@ -78,20 +78,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Resolve versions and Java
         id: resolve
+        env:
+          INPUT_FLAVOR: ${{ inputs.flavor }}
+          INPUT_MINECRAFT_VERSION: ${{ inputs.minecraft_version }}
+          INPUT_FABRIC_LOADER_VERSION: ${{ inputs.fabric_loader_version }}
+          INPUT_FABRIC_INSTALLER_VERSION: ${{ inputs.fabric_installer_version }}
+          INPUT_FORGE_VERSION: ${{ inputs.forge_version }}
+          INPUT_FORGE_CHANNEL: ${{ inputs.forge_channel }}
+          INPUT_JAVA_MAJOR: ${{ inputs.java_major }}
+          INPUT_TAG: ${{ inputs.tag }}
         run: |
           chmod +x ci/resolve-minecraft-build.sh
           ./ci/resolve-minecraft-build.sh \
-            --flavor "${{ inputs.flavor }}" \
-            --minecraft-version "${{ inputs.minecraft_version }}" \
-            --fabric-loader-version "${{ inputs.fabric_loader_version }}" \
-            --fabric-installer-version "${{ inputs.fabric_installer_version }}" \
-            --forge-version "${{ inputs.forge_version }}" \
-            --forge-channel "${{ inputs.forge_channel }}" \
-            --java-major "${{ inputs.java_major }}" \
-            --tag "${{ inputs.tag }}" \
+            --flavor "${INPUT_FLAVOR}" \
+            --minecraft-version "${INPUT_MINECRAFT_VERSION}" \
+            --fabric-loader-version "${INPUT_FABRIC_LOADER_VERSION}" \
+            --fabric-installer-version "${INPUT_FABRIC_INSTALLER_VERSION}" \
+            --forge-version "${INPUT_FORGE_VERSION}" \
+            --forge-channel "${INPUT_FORGE_CHANNEL}" \
+            --java-major "${INPUT_JAVA_MAJOR}" \
+            --tag "${INPUT_TAG}" \
             --github-output "${GITHUB_OUTPUT}"
 
       - name: Set up Docker Buildx
@@ -106,11 +117,15 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Write Temurin build args
+        env:
+          TEMURIN_MAJOR: ${{ steps.resolve.outputs.TEMURIN_MAJOR }}
+          TEMURIN_VERSION: ${{ steps.resolve.outputs.TEMURIN_VERSION }}
+          TEMURIN_RELEASE: ${{ steps.resolve.outputs.TEMURIN_RELEASE }}
         run: |
           {
-            echo "TEMURIN_MAJOR=${{ steps.resolve.outputs.TEMURIN_MAJOR }}"
-            echo "TEMURIN_VERSION=${{ steps.resolve.outputs.TEMURIN_VERSION }}"
-            echo "TEMURIN_RELEASE=${{ steps.resolve.outputs.TEMURIN_RELEASE }}"
+            echo "TEMURIN_MAJOR=${TEMURIN_MAJOR}"
+            echo "TEMURIN_VERSION=${TEMURIN_VERSION}"
+            echo "TEMURIN_RELEASE=${TEMURIN_RELEASE}"
           } > /tmp/mc-base.args
 
       - name: Build minecraft-base
@@ -125,32 +140,37 @@ jobs:
             bases/minecraft/Dockerfile
 
       - name: Write game build args
+        env:
+          FLAVOR: ${{ steps.resolve.outputs.FLAVOR }}
+          MINECRAFT_VERSION: ${{ steps.resolve.outputs.MINECRAFT_VERSION }}
+          FABRIC_LOADER_VERSION: ${{ steps.resolve.outputs.FABRIC_LOADER_VERSION }}
+          FABRIC_INSTALLER_VERSION: ${{ steps.resolve.outputs.FABRIC_INSTALLER_VERSION }}
+          FORGE_VERSION: ${{ steps.resolve.outputs.FORGE_VERSION }}
         run: |
-          flavor="${{ steps.resolve.outputs.FLAVOR }}"
-          case "${flavor}" in
+          case "${FLAVOR}" in
             fabric)
               {
-                echo "FABRIC_MINECRAFT_VERSION=${{ steps.resolve.outputs.MINECRAFT_VERSION }}"
-                echo "FABRIC_LOADER_VERSION=${{ steps.resolve.outputs.FABRIC_LOADER_VERSION }}"
-                echo "FABRIC_INSTALLER_VERSION=${{ steps.resolve.outputs.FABRIC_INSTALLER_VERSION }}"
+                echo "FABRIC_MINECRAFT_VERSION=${MINECRAFT_VERSION}"
+                echo "FABRIC_LOADER_VERSION=${FABRIC_LOADER_VERSION}"
+                echo "FABRIC_INSTALLER_VERSION=${FABRIC_INSTALLER_VERSION}"
               } > /tmp/mc-game.args
               echo "DOCKERFILE=minecraft/fabric/Dockerfile" >> "${GITHUB_ENV}"
               ;;
             vanilla)
               {
-                echo "VANILLA_VERSION=${{ steps.resolve.outputs.MINECRAFT_VERSION }}"
+                echo "VANILLA_VERSION=${MINECRAFT_VERSION}"
               } > /tmp/mc-game.args
               echo "DOCKERFILE=minecraft/vanilla/Dockerfile" >> "${GITHUB_ENV}"
               ;;
             forge)
               {
-                echo "FORGE_MINECRAFT_VERSION=${{ steps.resolve.outputs.MINECRAFT_VERSION }}"
-                echo "FORGE_VERSION=${{ steps.resolve.outputs.FORGE_VERSION }}"
+                echo "FORGE_MINECRAFT_VERSION=${MINECRAFT_VERSION}"
+                echo "FORGE_VERSION=${FORGE_VERSION}"
               } > /tmp/mc-game.args
               echo "DOCKERFILE=minecraft/forge/Dockerfile" >> "${GITHUB_ENV}"
               ;;
             *)
-              echo "unknown flavor: ${flavor}" >&2
+              echo "unknown flavor: ${FLAVOR}" >&2
               exit 1
               ;;
           esac
@@ -160,21 +180,27 @@ jobs:
           TAG: ${{ steps.resolve.outputs.IMAGE_TAG }}
           BUILD_ARGS_FILE: /tmp/mc-game.args
           EXTRA_TAGS: ${{ inputs.also_tag_latest && 'latest' || '' }}
+          BASE_TAG: ${{ steps.resolve.outputs.BASE_TAG }}
+          IMAGE_NAME: ${{ steps.resolve.outputs.IMAGE_NAME }}
         run: |
           eval "$(./ci/repo-meta.sh)"
           export IMAGE_OWNER
-          base_image="${REGISTRY}/${IMAGE_OWNER}/minecraft-base:${{ steps.resolve.outputs.BASE_TAG }}"
+          base_image="${REGISTRY}/${IMAGE_OWNER}/minecraft-base:${BASE_TAG}"
           ./ci/build-image.sh \
-            "${{ steps.resolve.outputs.IMAGE_NAME }}" \
+            "${IMAGE_NAME}" \
             minecraft \
             "${DOCKERFILE}" \
             "${base_image}"
 
       - name: Scan images
         if: env.PUSH == 'true'
+        env:
+          BASE_TAG: ${{ steps.resolve.outputs.BASE_TAG }}
+          IMAGE_TAG: ${{ steps.resolve.outputs.IMAGE_TAG }}
+          IMAGE_NAME: ${{ steps.resolve.outputs.IMAGE_NAME }}
         run: |
           eval "$(./ci/repo-meta.sh)"
           ./ci/trivy-image.sh \
-            "${REGISTRY}/${IMAGE_OWNER}/minecraft-base:${{ steps.resolve.outputs.BASE_TAG }}"
+            "${REGISTRY}/${IMAGE_OWNER}/minecraft-base:${BASE_TAG}"
           ./ci/trivy-image.sh \
-            "${REGISTRY}/${IMAGE_OWNER}/${{ steps.resolve.outputs.IMAGE_NAME }}:${{ steps.resolve.outputs.IMAGE_TAG }}"
+            "${REGISTRY}/${IMAGE_OWNER}/${IMAGE_NAME}:${IMAGE_TAG}"

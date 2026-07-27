@@ -1,0 +1,2 @@
+# Workflow changes need an explicit review (see GitHub Actions secure use).
+.github/workflows/ @Sudo-Ivan

@@ -42,4 +42,17 @@ __IMAGE_PREFIX__/minecraft-fabric:26.2
 
 Trivy is installed from a pinned GitHub release tarball with SHA-256 verification (ci/install-trivy.sh). This repo does not use aquasecurity/trivy-action after the March 2026 supply-chain compromise. Shared scan settings live in trivy.yaml.
 
+## Workflow security
+
+Workflows follow [GitHub Actions secure use](https://docs.github.com/en/actions/reference/security/secure-use) practices:
+
+- Default `permissions: contents: read`. Jobs that push to GHCR add `packages: write` only on those jobs.
+- Third-party actions are pinned to full commit SHAs (with version comments).
+- `actions/checkout` uses `persist-credentials: false` so the job token is not left in `.git/config`.
+- Pull requests use the default `pull_request` trigger (not `pull_request_target`). Verify jobs use read-scoped `GITHUB_TOKEN`.
+- `workflow_dispatch` inputs are passed into shell steps via `env`, not `${{ }}` interpolation in `run` scripts.
+- `.github/CODEOWNERS` requires review for workflow changes.
+
+In GitHub repository settings, prefer default workflow token read-only, restrict allowed actions, and avoid enabling "Allow GitHub Actions to create and approve pull requests" unless required.
+
 Base images are always pushed so matrix jobs can reuse them. Manual builds can set the push input for game images.

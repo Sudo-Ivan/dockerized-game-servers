@@ -20,7 +20,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   build:
@@ -29,6 +28,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Docker Buildx
         if: inputs.push
@@ -46,15 +47,17 @@ jobs:
         env:
           PUSH: ${{ inputs.push && 'true' || 'false' }}
           TAG: ${{ inputs.tag }}
+          IMAGE_NAME: ${{ inputs.name }}
         run: |
           chmod +x ci/*.sh
-          ./ci/build-one-image.sh "${{ inputs.name }}"
+          ./ci/build-one-image.sh "${IMAGE_NAME}"
 
       - name: Scan image with pinned Trivy CLI
         if: inputs.scan && inputs.push
         env:
           TAG: ${{ inputs.tag }}
+          IMAGE_NAME: ${{ inputs.name }}
         run: |
           eval "$(./ci/repo-meta.sh)"
           ./ci/trivy-image.sh \
-            "ghcr.io/${IMAGE_OWNER}/${{ inputs.name }}:${TAG}"
+            "ghcr.io/${IMAGE_OWNER}/${IMAGE_NAME}:${TAG}"
