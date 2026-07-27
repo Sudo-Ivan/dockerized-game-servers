@@ -6,8 +6,10 @@
 set -eu
 
 IMAGE_REF="${1:?image ref required}"
+# OCI/GHCR image references must be lowercase.
+IMAGE_REF="$(printf '%s' "${IMAGE_REF}" | tr '[:upper:]' '[:lower:]')"
 
-ROOT="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
 cd "${ROOT}"
 
 chmod +x "${ROOT}/ci/install-trivy.sh"

@@ -59,6 +59,7 @@ else
 fi
 
 if [ -n "${BASE_IMAGE}" ]; then
+  BASE_IMAGE="$(printf '%s' "${BASE_IMAGE}" | tr '[:upper:]' '[:lower:]')"
   set -- "$@" --build-arg "BASE_IMAGE=${BASE_IMAGE}"
   echo "  base=${BASE_IMAGE}"
 fi

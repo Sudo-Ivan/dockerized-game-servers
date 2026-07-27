@@ -161,6 +161,8 @@ jobs:
           BUILD_ARGS_FILE: /tmp/mc-game.args
           EXTRA_TAGS: ${{ inputs.also_tag_latest && 'latest' || '' }}
         run: |
+          eval "$(./ci/repo-meta.sh)"
+          export IMAGE_OWNER
           base_image="${REGISTRY}/${IMAGE_OWNER}/minecraft-base:${{ steps.resolve.outputs.BASE_TAG }}"
           ./ci/build-image.sh \
             "${{ steps.resolve.outputs.IMAGE_NAME }}" \
@@ -171,6 +173,7 @@ jobs:
       - name: Scan images
         if: env.PUSH == 'true'
         run: |
+          eval "$(./ci/repo-meta.sh)"
           ./ci/trivy-image.sh \
             "${REGISTRY}/${IMAGE_OWNER}/minecraft-base:${{ steps.resolve.outputs.BASE_TAG }}"
           ./ci/trivy-image.sh \
