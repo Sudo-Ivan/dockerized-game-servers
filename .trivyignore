@@ -1,4 +1,4 @@
-# steam-base stays root so child images can install packages.
+# steam-base and runtime-base stay root so child images can install packages.
 # Game images default to non-root USER. Entrypoints still accept --user root for volume chown.
 DS-0002
 

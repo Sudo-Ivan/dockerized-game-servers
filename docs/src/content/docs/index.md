@@ -30,6 +30,7 @@ This site is static HTML. Reading and navigation work without JavaScript. Fuzzy 
 
 - minecraft-base: Temurin JRE on Alpine
 - steam-base: SteamCMD on Arch Linux
+- runtime-base: Debian slim for non-Steam non-Java servers
 
 ## Next steps
 

@@ -29,6 +29,7 @@ Shared bases:
 
 - `minecraft-base` Temurin JRE on Alpine
 - `steam-base` SteamCMD on Arch Linux with the [XLibre](https://github.com/x11libre/xserver) Arch package repo ([xlibre-arch](https://github.com/xlibre-arch/xlibre-arch)) for X11/Xvfb needs
+- `runtime-base` Debian slim glibc runtime for non-Steam non-Java servers (Factorio, OpenMoHAA)
 
 ## Quick start
 
@@ -253,6 +254,7 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 | --- | --- |
 | `minecraft-base` | Shared Minecraft runtime |
 | `steam-base` | Shared SteamCMD runtime (Arch + XLibre repo) |
+| `runtime-base` | Shared Debian slim runtime (non-Steam, non-Java) |
 | `minecraft-fabric` | Fabric |
 | `minecraft-vanilla` | Vanilla |
 | `minecraft-forge` | Forge |

@@ -1,15 +1,11 @@
-ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
+ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/runtime-base:latest
 FROM ${BASE_IMAGE}
 
 LABEL org.opencontainers.image.title="factorio" \
       org.opencontainers.image.description="Factorio dedicated server" \
       org.opencontainers.image.licenses="ISC"
 
-RUN pacman -Sy --noconfirm --needed \
-    xz \
-  && pacman -Scc --noconfirm \
-  && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/* \
-  && useradd -m -u 1000 factorio \
+RUN useradd -m -u 1000 factorio \
   && mkdir -p /opt/factorio \
   && chown -R factorio:factorio /opt/factorio /home/factorio
 

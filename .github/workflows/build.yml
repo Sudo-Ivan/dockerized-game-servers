@@ -56,6 +56,9 @@ jobs:
           - name: steam-base
             context: bases/steam
             dockerfile: bases/steam/Dockerfile
+          - name: runtime-base
+            context: bases/runtime
+            dockerfile: bases/runtime/Dockerfile
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -127,7 +130,7 @@ jobs:
           - name: factorio
             context: factorio
             dockerfile: factorio/Dockerfile
-            base: steam-base
+            base: runtime-base
           - name: 7-days-to-die
             context: 7-days-to-die
             dockerfile: 7-days-to-die/Dockerfile
@@ -143,7 +146,7 @@ jobs:
           - name: openmohaa
             context: openmohaa
             dockerfile: openmohaa/Dockerfile
-            base: steam-base
+            base: runtime-base
           - name: arma-3
             context: arma/arma-3
             dockerfile: arma/arma-3/Dockerfile

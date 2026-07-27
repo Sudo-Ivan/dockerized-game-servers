@@ -9,6 +9,7 @@ Prefix: {{IMAGE_PREFIX}}
 | --- | --- |
 | minecraft-base | Shared Minecraft runtime |
 | steam-base | Shared SteamCMD runtime (Arch) |
+| runtime-base | Shared Debian slim runtime (non-Steam, non-Java) |
 | minecraft-fabric | Fabric |
 | minecraft-vanilla | Vanilla |
 | minecraft-forge | Forge |

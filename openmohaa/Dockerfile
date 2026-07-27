@@ -1,13 +1,9 @@
-ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
+ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/runtime-base:latest
 FROM ${BASE_IMAGE} AS fetch
 
 ARG OPENMOHAA_VERSION=v0.82.1
 
-RUN pacman -Sy --noconfirm --needed \
-    curl \
-    unzip \
-    ca-certificates \
-  && mkdir -p /opt/openmohaa/lib/openmohaa \
+RUN mkdir -p /opt/openmohaa/lib/openmohaa \
   && curl -fsSL --retry 3 --retry-delay 2 \
     -o /tmp/openmohaa.zip \
     "https://github.com/openmoh/openmohaa/releases/download/${OPENMOHAA_VERSION}/openmohaa-${OPENMOHAA_VERSION}-linux-amd64.zip" \
@@ -15,10 +11,9 @@ RUN pacman -Sy --noconfirm --needed \
   && chmod +x /opt/openmohaa/lib/openmohaa/omohaaded \
   && printf '%s\n' "${OPENMOHAA_VERSION}" > /opt/openmohaa/.installed-version \
   && rm -f /tmp/openmohaa.zip \
-  && pacman -Scc --noconfirm \
-  && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/*
+  && rm -rf /tmp/* /var/tmp/*
 
-ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
+ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/runtime-base:latest
 FROM ${BASE_IMAGE}
 
 ARG OPENMOHAA_VERSION=v0.82.1
@@ -27,13 +22,11 @@ LABEL org.opencontainers.image.title="openmohaa" \
       org.opencontainers.image.description="OpenMoHAA dedicated server" \
       org.opencontainers.image.licenses="ISC"
 
-# curl/unzip kept for OPENMOHAA_FORCE_UPDATE reinstalls at runtime.
-RUN pacman -Sy --noconfirm --needed \
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
     socat \
-    curl \
-    unzip \
-  && pacman -Scc --noconfirm \
-  && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/* \
+    libstdc++6 \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
   && useradd -m -u 1000 openmohaa \
   && mkdir -p /opt/openmohaa /usr/local/share/mohaa \
   && chown -R openmohaa:openmohaa /opt/openmohaa /usr/local/share/mohaa /home/openmohaa
