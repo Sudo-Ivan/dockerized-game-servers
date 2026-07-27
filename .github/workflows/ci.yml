@@ -2,13 +2,31 @@ name: ci
 
 on:
   push:
-    paths-ignore:
-      - "docs/**"
-      - "**/*.md"
+    paths:
+      - ".github/workflows/ci.yml"
+      - ".github/workflows/docker-image.yml"
+      - "ci/**"
+      - "tools/**"
+      - "bases/**"
+      - "**/Dockerfile"
+      - "**/docker-compose.yml"
+      - "**/compose.yml"
+      - "trivy.yaml"
+      - ".trivyignore"
+      - "**/*.sh"
   pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "**/*.md"
+    paths:
+      - ".github/workflows/ci.yml"
+      - ".github/workflows/docker-image.yml"
+      - "ci/**"
+      - "tools/**"
+      - "bases/**"
+      - "**/Dockerfile"
+      - "**/docker-compose.yml"
+      - "**/compose.yml"
+      - "trivy.yaml"
+      - ".trivyignore"
+      - "**/*.sh"
   workflow_dispatch:
 
 concurrency:
@@ -19,9 +37,37 @@ permissions:
   contents: read
 
 jobs:
+  changes:
+    name: detect changes
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      docker: ${{ steps.filter.outputs.docker }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Detect docker verify paths
+        id: filter
+        run: |
+          chmod +x ci/changed-paths.sh
+          if ./ci/changed-paths.sh docker-verify \
+            "${{ github.event.pull_request.base.sha }}" \
+            "${{ github.event.pull_request.head.sha }}"; then
+            echo "docker=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "docker=false" >> "${GITHUB_OUTPUT}"
+          fi
+
   matrix:
     name: prepare matrix
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && needs.changes.outputs.docker == 'true'
+    needs: changes
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -80,8 +126,10 @@ jobs:
 
   verify-bases:
     name: verify / ${{ matrix.name }}
-    if: github.event_name == 'pull_request'
-    needs: matrix
+    if: github.event_name == 'pull_request' && needs.changes.outputs.docker == 'true'
+    needs:
+      - changes
+      - matrix
     permissions:
       contents: read
     strategy:

@@ -112,6 +112,10 @@ if ! python3 -m py_compile ci/github-matrix.py; then
   echo "python syntax error: ci/github-matrix.py" >&2
   fail=1
 fi
+if ! sh -n ci/changed-paths.sh; then
+  echo "shell syntax error: ci/changed-paths.sh" >&2
+  fail=1
+fi
 
 echo "==> GitHub Actions image matrix"
 if ! python3 ci/github-matrix.py bases | python3 -c "import json,sys; json.load(sys.stdin)"; then

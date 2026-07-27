@@ -16,6 +16,7 @@ on:
       - ".trivyignore"
       - ".github/workflows/build.yml"
       - ".github/workflows/docker-image.yml"
+      - ".github/workflows/ci.yml"
   workflow_dispatch:
     inputs:
       push:
