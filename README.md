@@ -432,11 +432,11 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 
 ### Arma Reforger
 
-Steam App 1874900. Native Linux `ArmaReforgerServer` via SteamCMD. Compose uses `STEAMCMD_WINDOWS_WORKAROUND=full` for anonymous installs. UDP 2001 and 17777. Server JSON under `arma/reforger/data/Configs/`.
+Steam App 1874900. Native Linux `ArmaReforgerServer` via SteamCMD. Compose uses `STEAMCMD_WINDOWS_WORKAROUND=full` for anonymous installs. UDP 2001 and 17777. Server JSON under `arma/reforger/data/Configs/`. Mods use the [Reforger Workshop](https://reforger.armaplatform.com/workshop) (16-char `modId` in `ServerConfig.json`, not Steam Workshop). See the [Arma Reforger](https://sudo-ivan.github.io/dockerized-game-servers/servers/arma-reforger/) docs page.
 
 ### DayZ
 
-Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account that owns DayZ (no anonymous depot). UDP 2302-2306. Config `dayz/data/serverDZ.cfg`, profiles under `dayz/data/profiles/`.
+Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account that owns DayZ (no anonymous depot). UDP 2302-2306. Config `dayz/data/serverDZ.cfg`, profiles under `dayz/data/profiles/`. Mods: Steam Workshop via App 221100, `.bikey` files in `keys/`, `-mod=` via `DAYZ_EXTRA_ARGS`. See the [DayZ](https://sudo-ivan.github.io/dockerized-game-servers/servers/dayz/) docs page.
 
 ## Images
 
