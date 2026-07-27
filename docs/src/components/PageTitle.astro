@@ -18,8 +18,8 @@ const iconSrc = iconFile ? `${base}game-icons/${iconFile}` : undefined
 				class="game-title-icon"
 				src={iconSrc}
 				alt=""
-				width="48"
-				height="48"
+				width="64"
+				height="64"
 				decoding="async"
 			/>
 		)
@@ -31,14 +31,14 @@ const iconSrc = iconFile ? `${base}game-icons/${iconFile}` : undefined
 	.page-title {
 		display: flex;
 		align-items: center;
-		gap: 0.85rem;
+		gap: 1rem;
 		margin-top: 1rem;
 	}
 
 	.game-title-icon {
-		width: 2.75rem;
-		height: 2.75rem;
-		border-radius: 0.7rem;
+		width: 3.5rem;
+		height: 3.5rem;
+		border-radius: 0.85rem;
 		object-fit: cover;
 		flex-shrink: 0;
 		background: #141414;
@@ -56,9 +56,9 @@ const iconSrc = iconFile ? `${base}game-icons/${iconFile}` : undefined
 
 	@media (min-width: 50rem) {
 		.game-title-icon {
-			width: 3.25rem;
-			height: 3.25rem;
-			border-radius: 0.8rem;
+			width: 4rem;
+			height: 4rem;
+			border-radius: 0.95rem;
 		}
 	}
 </style>
