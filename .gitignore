@@ -14,6 +14,7 @@ arma/arma-3/cache/*
 .env
 *.env
 !.env.example
+!minecraft/defaults.env
 *.log
 .DS_Store
 
