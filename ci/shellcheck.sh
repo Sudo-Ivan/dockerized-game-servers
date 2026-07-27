@@ -27,6 +27,8 @@ fi
 rm -f "${roots_tmp}"
 
 sort -u "${tmp}" -o "${tmp}"
+printf '%s\n' bases/steam/steamcmd-app-update.sh >>"${tmp}"
+sort -u "${tmp}" -o "${tmp}"
 fail=0
 while IFS= read -r script; do
   [ -f "${script}" ] || continue
@@ -37,7 +39,12 @@ while IFS= read -r script; do
       ;;
   esac
   # SC1007: intentional CDPATH='' / CDPATH= clear idiom used repo-wide
-  if ! shellcheck -x -e SC1007 "${script}"; then
+  # SC1091: entrypoints source /opt/steamcmd/steamcmd-app-update.sh (exists in steam-base image only)
+  sc_exclude="SC1007"
+  if grep -q '/opt/steamcmd/steamcmd-app-update.sh' "${script}" 2>/dev/null; then
+    sc_exclude="${sc_exclude},SC1091"
+  fi
+  if ! shellcheck -x -e "${sc_exclude}" "${script}"; then
     echo "shellcheck failed: ${script}" >&2
     fail=1
   fi
