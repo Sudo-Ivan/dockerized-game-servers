@@ -1,0 +1,29 @@
+services:
+  bfv:
+    image: ghcr.io/${IMAGE_OWNER}/bfv:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/runtime-base:latest
+    container_name: bfv
+    restart: unless-stopped
+    init: true
+    ports:
+      - "4755:4755/udp"
+      - "27900:27900/udp"
+    volumes:
+      - ./data:/opt/bfv
+    environment:
+      BFV_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 180s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 1024M

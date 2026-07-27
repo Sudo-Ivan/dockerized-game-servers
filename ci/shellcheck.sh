@@ -27,7 +27,7 @@ fi
 rm -f "${roots_tmp}"
 
 sort -u "${tmp}" -o "${tmp}"
-printf '%s\n' bases/steam/steamcmd-app-update.sh >>"${tmp}"
+printf '%s\n' bases/steam/steamcmd-app-update.sh bases/runtime/linuxgsm-tar-install.sh bases/runtime/install-legacy32-libs.sh >>"${tmp}"
 sort -u "${tmp}" -o "${tmp}"
 fail=0
 while IFS= read -r script; do

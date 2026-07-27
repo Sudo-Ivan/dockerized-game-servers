@@ -77,7 +77,7 @@ wait_success() {
         fi
         ;;
       process|gameid)
-        if docker logs "${container}" 2>&1 | grep -Eqi 'server is up and ready for players|server ready|Status: server ready|Hosting world|Game Server version|Dedicated server running|Hosting at|Factorio.*Server|Listening on|SteamGameServer_Init|World generation finished|omohaaded|Anonymous Steam login cannot download|SERVER STARTED|7 Days to Die|Terraria Server|StartGame done|Gameserver Steam|VAC secure mode|Palworld|Starbound|Space Engineers|Insurgency|Sandstorm|Counter-Strike|Killing Floor|Icarus'; then
+        if docker logs "${container}" 2>&1 | grep -Eqi 'server is up and ready for players|server ready|Status: server ready|Hosting world|Game Server version|Dedicated server running|Hosting at|Factorio.*Server|Listening on|SteamGameServer_Init|World generation finished|omohaaded|Anonymous Steam login cannot download|SERVER STARTED|7 Days to Die|Terraria Server|StartGame done|Gameserver Steam|VAC secure mode|Palworld|Starbound|Space Engineers|Insurgency|Sandstorm|Counter-Strike|Killing Floor|Icarus|Hitch warning|cod_lnxded|cod2_lnxded|codwaw_lnxded|cod4x|q3ded|bf1942|bfvietnam|Eco Server'; then
           # Arma missing owned server is a clear expected failure path.
           if docker logs "${container}" 2>&1 | grep -q 'Anonymous Steam login cannot download'; then
             echo "arma-needs-steam-login" >&2
@@ -120,6 +120,11 @@ while IFS= read -r line || [ -n "${line}" ]; do
   [ -n "${id}" ] || continue
   [ "${first_party}" = "1" ] || continue
   in_smoke_only "${id}" || continue
+
+  if [ "${id}" = "eco" ] && [ -z "${ECO_USER_TOKEN:-}" ]; then
+    echo "SKIP ${id}: ECO_USER_TOKEN not set" | tee -a "${REPORT}"
+    continue
+  fi
 
   printf '\n======== %s ========\n' "${id}"
   cleanup_one "${compose}" "${container}"

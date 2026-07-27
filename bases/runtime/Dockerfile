@@ -4,9 +4,15 @@ LABEL org.opencontainers.image.title="runtime-base" \
       org.opencontainers.image.description="Shared Debian runtime for non-Steam non-Java game servers" \
       org.opencontainers.image.licenses="ISC"
 
-# glibc runtime for download-and-run servers (Factorio, OpenMoHAA, etc.).
+COPY install-legacy32-libs.sh /tmp/install-legacy32-libs.sh
+COPY linuxgsm-tar-install.sh /usr/local/bin/linuxgsm-tar-install.sh
+
+# glibc runtime for download-and-run servers (Factorio, OpenMoHAA, LinuxGSM archives, etc.).
 # Alpine/musl cannot run typical upstream Linux game binaries.
-RUN apt-get update \
+RUN chmod 755 /tmp/install-legacy32-libs.sh /usr/local/bin/linuxgsm-tar-install.sh \
+  && apt-get update \
+  && dpkg --add-architecture i386 \
+  && apt-get update \
   && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
@@ -16,6 +22,10 @@ RUN apt-get update \
     unzip \
     util-linux \
     procps \
+    libc6-i386 \
+    lib32gcc-s1 \
+  && bash /tmp/install-legacy32-libs.sh \
+  && rm -f /tmp/install-legacy32-libs.sh \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 STOPSIGNAL SIGTERM

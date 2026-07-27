@@ -1,0 +1,32 @@
+services:
+  cod4:
+    image: ghcr.io/${IMAGE_OWNER}/cod4:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/runtime-base:latest
+    pull_policy: missing
+    container_name: cod4
+    restart: unless-stopped
+    init: true
+    ports:
+      - "28960:28960/udp"
+    volumes:
+      - ./data:/opt/cod4
+    environment:
+      COD4_PORT: "28960"
+      COD4_MAXPLAYERS: "32"
+      COD4_STARTMAP: "mp_crossfire"
+      COD4_HOSTNAME: "Call of Duty 4 Server"
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 2048M

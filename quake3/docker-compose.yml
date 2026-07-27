@@ -1,0 +1,30 @@
+services:
+  quake3:
+    image: ghcr.io/${IMAGE_OWNER}/quake3:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/runtime-base:latest
+    container_name: quake3
+    restart: unless-stopped
+    init: true
+    ports:
+      - "27960:27960/udp"
+    volumes:
+      - ./data:/opt/quake3
+    environment:
+      Q3_PORT: "27960"
+      Q3_STARTMAP: "q3dm17"
+      Q3_HOSTNAME: "Quake 3 Arena Server"
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 512M

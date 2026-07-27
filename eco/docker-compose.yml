@@ -1,0 +1,36 @@
+services:
+  eco:
+    image: ghcr.io/${IMAGE_OWNER}/eco:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: eco
+    restart: unless-stopped
+    stop_grace_period: 120s
+    init: true
+    ports:
+      - "3000:3000/udp"
+      - "3001:3001/udp"
+    volumes:
+      - ./data:/opt/eco
+    environment:
+      STEAM_USERNAME: "anonymous"
+      STEAM_PASSWORD: ""
+      ECO_APP_ID: "739590"
+      ECO_FORCE_UPDATE: "${ECO_FORCE_UPDATE:-false}"
+      ECO_USER_TOKEN: "${ECO_USER_TOKEN:-}"
+      ECO_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 900s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 4096M
