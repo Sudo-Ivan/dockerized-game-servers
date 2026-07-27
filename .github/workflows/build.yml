@@ -84,9 +84,9 @@ jobs:
     uses: ./.github/workflows/docker-image.yml
     with:
       name: ${{ matrix.name }}
-      push: ${{ env.PUSH == 'true' }}
-      tag: ${{ env.TAG }}
-      scan: ${{ env.PUSH == 'true' }}
+      push: ${{ github.event_name != 'workflow_dispatch' || inputs.push }}
+      tag: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || 'latest' }}
+      scan: ${{ github.event_name != 'workflow_dispatch' || inputs.push }}
 
   images:
     name: image / ${{ matrix.name }}
@@ -102,6 +102,6 @@ jobs:
     uses: ./.github/workflows/docker-image.yml
     with:
       name: ${{ matrix.name }}
-      push: ${{ env.PUSH == 'true' }}
-      tag: ${{ env.TAG }}
-      scan: ${{ env.PUSH == 'true' }}
+      push: ${{ github.event_name != 'workflow_dispatch' || inputs.push }}
+      tag: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || 'latest' }}
+      scan: ${{ github.event_name != 'workflow_dispatch' || inputs.push }}
