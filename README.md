@@ -41,6 +41,8 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Starbound | `starbound` | `starbound` |
 | OpenMoHAA | `openmohaa` | `openmohaa` |
 | Arma 3 | `arma/arma-3` | `arma-3` |
+| Arma Reforger | `arma/reforger` | `arma-reforger` |
+| DayZ | `dayz` | `dayz` |
 | Hytale | `hytale` | external (`deinfreu/hytale-server`) |
 | Stardew Valley | `stardew-valley` | external ([JunimoServer](https://github.com/stardew-valley-dedicated-server/server) `sdvd/server`) |
 
@@ -428,6 +430,14 @@ Uses [JunimoServer](https://github.com/stardew-valley-dedicated-server/server) (
 
 Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You must copy licensed Allied Assault game data** (`main`, and optionally `mainta` / `maintt` PK3s) into `openmohaa/data/` before the server can run. Defaults: UDP `12203` (game) and UDP `12300` (GameSpy). Server config: `openmohaa/data/home/main/settings/server.cfg` (a default is created on first start). See [OpenMoHAA docs](https://docs.openmohaa.org/).
 
+### Arma Reforger
+
+Steam App 1874900. Native Linux `ArmaReforgerServer` via SteamCMD. Compose uses `STEAMCMD_WINDOWS_WORKAROUND=full` for anonymous installs. UDP 2001 and 17777. Server JSON under `arma/reforger/data/Configs/`.
+
+### DayZ
+
+Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account that owns DayZ (no anonymous depot). UDP 2302-2306. Config `dayz/data/serverDZ.cfg`, profiles under `dayz/data/profiles/`.
+
 ## Images
 
 | Name | Notes |
@@ -466,6 +476,8 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 | `starbound` | Starbound dedicated |
 | `openmohaa` | OpenMoHAA (BYO MOHAA assets) |
 | `arma-3` | Arma 3 dedicated |
+| `arma-reforger` | Arma Reforger dedicated |
+| `dayz` | DayZ dedicated |
 
 ```bash
 docker pull ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
@@ -538,6 +550,8 @@ palworld/         Palworld
 starbound/        Starbound
 openmohaa/       OpenMoHAA
 arma/arma-3/     Arma 3
+arma/reforger/   Arma Reforger
+dayz/            DayZ
 hytale/          external image compose
 stardew-valley/  JunimoServer (external images)
 ```

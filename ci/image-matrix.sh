@@ -38,6 +38,8 @@ emit "icarus" "icarus" "icarus/Dockerfile" "steam-base"
 emit "palworld" "palworld" "palworld/Dockerfile" "steam-base"
 emit "starbound" "starbound" "starbound/Dockerfile" "steam-base"
 emit "arma-3" "arma/arma-3" "arma/arma-3/Dockerfile" "steam-base"
+emit "arma-reforger" "arma/reforger" "arma/reforger/Dockerfile" "steam-base"
+emit "dayz" "dayz" "dayz/Dockerfile" "steam-base"
 
 emit "factorio" "factorio" "factorio/Dockerfile" "runtime-base"
 emit "openmohaa" "openmohaa" "openmohaa/Dockerfile" "runtime-base"

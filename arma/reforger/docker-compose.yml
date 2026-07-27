@@ -1,0 +1,43 @@
+services:
+  arma-reforger:
+    image: ghcr.io/${IMAGE_OWNER}/arma-reforger:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: arma-reforger
+    restart: unless-stopped
+    stop_grace_period: 120s
+    init: true
+    ports:
+      - "2001:2001/udp"
+      - "17777:17777/udp"
+    volumes:
+      - ./data:/opt/arma-reforger
+    environment:
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+      ARMAR_APP_ID: "1874900"
+      ARMAR_FORCE_UPDATE: "${ARMAR_FORCE_UPDATE:-false}"
+      STEAMCMD_WINDOWS_WORKAROUND: "full"
+      ARMAR_BIND_PORT: "2001"
+      ARMAR_A2S_PORT: "17777"
+      ARMAR_MAX_FPS: "60"
+      ARMAR_MAX_PLAYERS: "16"
+      ARMAR_SERVER_NAME: "Arma Reforger Server"
+      ARMAR_SCENARIO_ID: "{59AD59368755F41A}Missions/23_Campaign.conf"
+      ARMAR_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 1200s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 6144M

@@ -52,5 +52,7 @@ emit "palworld" "palworld/docker-compose.yml" "palworld" "data" "PALWORLD_FORCE_
 emit "starbound" "starbound/docker-compose.yml" "starbound" "data" "STARBOUND_FORCE_UPDATE" "process" "1"
 emit "openmohaa" "openmohaa/docker-compose.yml" "openmohaa" "data" "OPENMOHAA_FORCE_UPDATE" "process" "1"
 emit "arma-3" "arma/arma-3/docker-compose.yml" "arma3" "server,configs,profiles" "-" "process" "1"
+emit "arma-reforger" "arma/reforger/docker-compose.yml" "arma-reforger" "data" "ARMAR_FORCE_UPDATE" "process" "1"
+emit "dayz" "dayz/docker-compose.yml" "dayz" "data" "DAYZ_FORCE_UPDATE" "process" "1"
 emit "hytale" "hytale/docker-compose.yml" "hytale-server" "data" "-" "none" "0"
 emit "stardew-valley" "stardew-valley/docker-compose.yml" "stardew-valley-server" "data" "-" "none" "0"

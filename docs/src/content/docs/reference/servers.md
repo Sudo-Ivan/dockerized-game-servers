@@ -38,6 +38,8 @@ Runnable servers are defined in `ci/server-catalog.sh`. First-party images publi
 | Starbound | starbound | starbound | [Guide](../servers/starbound/) |
 | OpenMoHAA | openmohaa | openmohaa | [Guide](../servers/openmohaa/) |
 | Arma 3 | arma/arma-3 | arma-3 | [Guide](../servers/arma-3/) |
+| Arma Reforger | arma/reforger | arma-reforger | [Guide](../servers/arma-reforger/) |
+| DayZ | dayz | dayz | [Guide](../servers/dayz/) |
 | Hytale | hytale | external (deinfreu/hytale-server) | [Guide](../servers/hytale/) |
 | Stardew Valley | stardew-valley | external (JunimoServer sdvd/server) | [Guide](../servers/stardew-valley/) |
 
