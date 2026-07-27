@@ -17,8 +17,9 @@ services:
     volumes:
       - ./data:/opt/zomboid
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       PZ_APP_ID: "380870"
       PZ_FORCE_UPDATE: "${PZ_FORCE_UPDATE:-false}"
       PZ_SERVER_NAME: "servertest"

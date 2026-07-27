@@ -1,8 +1,12 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
+. /opt/steamcmd/steamcmd-app-update.sh
+
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
+STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
 SEVENDTD_APP_ID="${SEVENDTD_APP_ID:-294420}"
 SEVENDTD_FORCE_UPDATE="${SEVENDTD_FORCE_UPDATE:-false}"
 
@@ -17,20 +21,11 @@ server_binary_present() {
 }
 
 prepare_steam_install_dir() {
-    mkdir -p "${SEVENDTD_DIR}/steamapps"
-    cat > "${SEVENDTD_DIR}/steamapps/libraryfolders.vdf" <<EOF
-"LibraryFolders"
-{
-    "0" "${SEVENDTD_DIR}"
-}
-EOF
+    steam_prepare_install_dir "${SEVENDTD_DIR}"
 }
 
 cleanup_incomplete_install() {
-    if [ -d "${SEVENDTD_DIR}/steamapps" ] && ! server_binary_present; then
-        echo "--- Removing incomplete Steam install state from ${SEVENDTD_DIR} ---"
-        rm -rf "${SEVENDTD_DIR}/steamapps" "${SEVENDTD_DIR}/package"
-    fi
+    steam_cleanup_incomplete_install "${SEVENDTD_DIR}" "${SEVENDTD_APP_ID}" "${SERVER_BINARY}"
 }
 
 relocate_install_if_needed() {
@@ -62,27 +57,12 @@ install_server() {
     cleanup_incomplete_install
     prepare_steam_install_dir
 
-    local steam_login="${STEAM_USERNAME}"
-    if [ -n "${STEAM_PASSWORD}" ]; then
-        steam_login="${steam_login} ${STEAM_PASSWORD}"
-    fi
-    export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
-    while true; do
-        # shellcheck disable=SC2086
-        "${STEAM_DIR}/linux32/steamcmd" \
-            +@sSteamCmdForcePlatformType linux \
-            +force_install_dir "${SEVENDTD_DIR}" \
-            +login ${steam_login} \
-            +app_update "${SEVENDTD_APP_ID}" validate \
-            +quit
-        status=$?
-        if [ "${status}" -ne 42 ]; then
-            break
-        fi
-    done
+    steamcmd_install_linux_app "${SEVENDTD_DIR}" "${SEVENDTD_APP_ID}" \
+        +app_update "${SEVENDTD_APP_ID}" validate || status=$?
     if [ "${status}" -ne 0 ]; then
         echo "7 Days to Die server install failed with exit code ${status}" >&2
+        steam_install_anonymous_hint "${SEVENDTD_APP_ID}" "7 Days to Die"
         exit 1
     fi
 

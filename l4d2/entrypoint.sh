@@ -1,10 +1,15 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
+. /opt/steamcmd/steamcmd-app-update.sh
+
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
+STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
 L4D2_APP_ID="${L4D2_APP_ID:-222860}"
 L4D2_FORCE_UPDATE="${L4D2_FORCE_UPDATE:-false}"
+STEAMCMD_WINDOWS_WORKAROUND="${STEAMCMD_WINDOWS_WORKAROUND:-full}"
 
 L4D2_PORT="${L4D2_PORT:-27015}"
 L4D2_MAXPLAYERS="${L4D2_MAXPLAYERS:-8}"
@@ -18,21 +23,8 @@ server_present() {
     [ -f "${SRCDS_RUN}" ]
 }
 
-prepare_steam_install_dir() {
-    mkdir -p "${L4D2_DIR}/steamapps"
-    cat > "${L4D2_DIR}/steamapps/libraryfolders.vdf" <<EOF
-"LibraryFolders"
-{
-    "0" "${L4D2_DIR}"
-}
-EOF
-}
-
 cleanup_incomplete_install() {
-    if [ -d "${L4D2_DIR}/steamapps" ] && ! server_present; then
-        echo "--- Removing incomplete Steam install state from ${L4D2_DIR} ---"
-        rm -rf "${L4D2_DIR}/steamapps" "${L4D2_DIR}/package"
-    fi
+    steam_cleanup_incomplete_install "${L4D2_DIR}" "${L4D2_APP_ID}" "${SRCDS_RUN}"
 }
 
 relocate_install_if_needed() {
@@ -62,29 +54,14 @@ install_server() {
     echo "--- Installing Left 4 Dead 2 dedicated server (App ${L4D2_APP_ID}) ---"
     mkdir -p "${L4D2_DIR}"
     cleanup_incomplete_install
-    prepare_steam_install_dir
+    steam_prepare_install_dir "${L4D2_DIR}"
 
-    local steam_login="${STEAM_USERNAME}"
-    if [ -n "${STEAM_PASSWORD}" ]; then
-        steam_login="${steam_login} ${STEAM_PASSWORD}"
-    fi
-    export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
-    while true; do
-        # shellcheck disable=SC2086
-        "${STEAM_DIR}/linux32/steamcmd" \
-            +@sSteamCmdForcePlatformType linux \
-            +force_install_dir "${L4D2_DIR}" \
-            +login ${steam_login} \
-            +app_update "${L4D2_APP_ID}" validate \
-            +quit
-        status=$?
-        if [ "${status}" -ne 42 ]; then
-            break
-        fi
-    done
+    steamcmd_install_linux_app "${L4D2_DIR}" "${L4D2_APP_ID}" \
+        +app_update "${L4D2_APP_ID}" validate || status=$?
     if [ "${status}" -ne 0 ]; then
         echo "L4D2 server install failed with exit code ${status}" >&2
+        steam_install_anonymous_hint "${L4D2_APP_ID}" "Left 4 Dead 2"
         exit 1
     fi
 

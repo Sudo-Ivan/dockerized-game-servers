@@ -1,8 +1,12 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
+. /opt/steamcmd/steamcmd-app-update.sh
+
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
+STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
 GB_APP_ID="${GB_APP_ID:-476400}"
 GB_STEAM_APP_ID="${GB_STEAM_APP_ID:-16900}"
 GB_FORCE_UPDATE="${GB_FORCE_UPDATE:-false}"
@@ -21,28 +25,13 @@ SERVER_CONFIG_DIR="${GB_INSTALL_DIR}/GroundBranch/ServerConfig"
 
 install_server() {
     echo "--- Installing Ground Branch dedicated server (App ${GB_APP_ID}) ---"
-    local steam_login="${STEAM_USERNAME}"
-    if [ -n "${STEAM_PASSWORD}" ]; then
-        steam_login="${steam_login} ${STEAM_PASSWORD}"
-    fi
-    export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
-    while true; do
-        # shellcheck disable=SC2086
-        "${STEAM_DIR}/steamcmd.sh" \
-            +@sSteamCmdForcePlatformType windows \
-            +@sSteamCmdForcePlatformBitness 64 \
-            +force_install_dir "${GB_INSTALL_DIR}" \
-            +login ${steam_login} \
-            +app_update "${GB_APP_ID}" validate \
-            +quit
-        status=$?
-        if [ "${status}" -ne 42 ]; then
-            break
-        fi
-    done
+    steamcmd_invoke windows "${GB_INSTALL_DIR}" \
+        +@sSteamCmdForcePlatformBitness 64 \
+        +app_update "${GB_APP_ID}" validate || status=$?
     if [ "${status}" -ne 0 ]; then
         echo "Ground Branch server install failed with exit code ${status}" >&2
+        steam_install_anonymous_hint "${GB_APP_ID}" "Ground Branch"
         exit 1
     fi
     if [ ! -f "${SERVER_BIN}" ]; then

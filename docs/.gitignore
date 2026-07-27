@@ -10,6 +10,7 @@ public/docs.md.zip
 public/sw.js
 public/manifest.webmanifest
 public/robots.txt
+public/game-icons/
 src/generated/
 
 # dependencies

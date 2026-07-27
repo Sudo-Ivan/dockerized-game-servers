@@ -17,8 +17,9 @@ services:
     volumes:
       - ./data:/opt/corekeeper
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       CK_APP_ID: "1963720"
       CK_STEAMWORKS_APP_ID: "1007"
       CK_FORCE_UPDATE: "${CK_FORCE_UPDATE:-false}"

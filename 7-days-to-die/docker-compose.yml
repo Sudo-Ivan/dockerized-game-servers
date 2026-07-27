@@ -20,8 +20,9 @@ services:
     volumes:
       - ./data:/opt/7dtd
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       SEVENDTD_APP_ID: "294420"
       SEVENDTD_FORCE_UPDATE: "${SEVENDTD_FORCE_UPDATE:-false}"
       CONFIG_FILE: "serverconfig.xml"

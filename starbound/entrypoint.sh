@@ -1,8 +1,12 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
+. /opt/steamcmd/steamcmd-app-update.sh
+
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
+STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
 STARBOUND_APP_ID="${STARBOUND_APP_ID:-211820}"
 STARBOUND_FORCE_UPDATE="${STARBOUND_FORCE_UPDATE:-false}"
 
@@ -18,20 +22,11 @@ server_binary_present() {
 }
 
 prepare_steam_install_dir() {
-    mkdir -p "${STARBOUND_DIR}/steamapps"
-    cat > "${STARBOUND_DIR}/steamapps/libraryfolders.vdf" <<EOF
-"LibraryFolders"
-{
-    "0" "${STARBOUND_DIR}"
-}
-EOF
+    steam_prepare_install_dir "${STARBOUND_DIR}"
 }
 
 cleanup_incomplete_install() {
-    if [ -d "${STARBOUND_DIR}/steamapps" ] && ! server_binary_present; then
-        echo "--- Removing incomplete Steam install state from ${STARBOUND_DIR} ---"
-        rm -rf "${STARBOUND_DIR}/steamapps" "${STARBOUND_DIR}/package"
-    fi
+    steam_cleanup_incomplete_install "${STARBOUND_DIR}" "${STARBOUND_APP_ID}" "${SERVER_BINARY}"
 }
 
 relocate_install_if_needed() {
@@ -63,27 +58,12 @@ install_server() {
     cleanup_incomplete_install
     prepare_steam_install_dir
 
-    local steam_login="${STEAM_USERNAME}"
-    if [ -n "${STEAM_PASSWORD}" ]; then
-        steam_login="${steam_login} ${STEAM_PASSWORD}"
-    fi
-    export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
-    while true; do
-        # shellcheck disable=SC2086
-        "${STEAM_DIR}/linux32/steamcmd" \
-            +@sSteamCmdForcePlatformType linux \
-            +force_install_dir "${STARBOUND_DIR}" \
-            +login ${steam_login} \
-            +app_update "${STARBOUND_APP_ID}" validate \
-            +quit
-        status=$?
-        if [ "${status}" -ne 42 ]; then
-            break
-        fi
-    done
+    steamcmd_install_linux_app "${STARBOUND_DIR}" "${STARBOUND_APP_ID}" \
+        +app_update "${STARBOUND_APP_ID}" validate || status=$?
     if [ "${status}" -ne 0 ]; then
         echo "Starbound server install failed with exit code ${status}" >&2
+        steam_install_anonymous_hint "${STARBOUND_APP_ID}" "Starbound"
         exit 1
     fi
 

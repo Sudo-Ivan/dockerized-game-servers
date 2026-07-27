@@ -1,8 +1,12 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
+. /opt/steamcmd/steamcmd-app-update.sh
+
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
+STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
 INS_SANDSTORM_APP_ID="${INS_SANDSTORM_APP_ID:-581330}"
 INS_SANDSTORM_FORCE_UPDATE="${INS_SANDSTORM_FORCE_UPDATE:-false}"
 
@@ -23,20 +27,11 @@ server_present() {
 }
 
 prepare_steam_install_dir() {
-    mkdir -p "${INS_SANDSTORM_DIR}/steamapps"
-    cat > "${INS_SANDSTORM_DIR}/steamapps/libraryfolders.vdf" <<EOF
-"LibraryFolders"
-{
-    "0" "${INS_SANDSTORM_DIR}"
-}
-EOF
+    steam_prepare_install_dir "${INS_SANDSTORM_DIR}"
 }
 
 cleanup_incomplete_install() {
-    if [ -d "${INS_SANDSTORM_DIR}/steamapps" ] && ! server_present; then
-        echo "--- Removing incomplete Steam install state from ${INS_SANDSTORM_DIR} ---"
-        rm -rf "${INS_SANDSTORM_DIR}/steamapps" "${INS_SANDSTORM_DIR}/package"
-    fi
+    steam_cleanup_incomplete_install "${INS_SANDSTORM_DIR}" "${INS_SANDSTORM_APP_ID}" "${SERVER_BIN}"
 }
 
 relocate_install_if_needed() {
@@ -78,27 +73,12 @@ install_server() {
     cleanup_incomplete_install
     prepare_steam_install_dir
 
-    local steam_login="${STEAM_USERNAME}"
-    if [ -n "${STEAM_PASSWORD}" ]; then
-        steam_login="${steam_login} ${STEAM_PASSWORD}"
-    fi
-    export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
-    while true; do
-        # shellcheck disable=SC2086
-        "${STEAM_DIR}/linux32/steamcmd" \
-            +@sSteamCmdForcePlatformType linux \
-            +force_install_dir "${INS_SANDSTORM_DIR}" \
-            +login ${steam_login} \
-            +app_update "${INS_SANDSTORM_APP_ID}" validate \
-            +quit
-        status=$?
-        if [ "${status}" -ne 42 ]; then
-            break
-        fi
-    done
+    steamcmd_install_linux_app "${INS_SANDSTORM_DIR}" "${INS_SANDSTORM_APP_ID}" \
+        +app_update "${INS_SANDSTORM_APP_ID}" validate || status=$?
     if [ "${status}" -ne 0 ]; then
         echo "Insurgency: Sandstorm server install failed with exit code ${status}" >&2
+        steam_install_anonymous_hint "${INS_SANDSTORM_APP_ID}" "Insurgency: Sandstorm"
         exit 1
     fi
 

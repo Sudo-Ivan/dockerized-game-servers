@@ -16,8 +16,9 @@ services:
     volumes:
       - ./data:/opt/terraria
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       TERRARIA_APP_ID: "105600"
       TERRARIA_FORCE_UPDATE: "${TERRARIA_FORCE_UPDATE:-false}"
       WORLD_NAME: "world"

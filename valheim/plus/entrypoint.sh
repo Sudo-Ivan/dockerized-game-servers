@@ -1,8 +1,12 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
+. /opt/steamcmd/steamcmd-app-update.sh
+
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
+STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
 VALHEIM_APP_ID="${VALHEIM_APP_ID:-896660}"
 VALHEIM_FORCE_UPDATE="${VALHEIM_FORCE_UPDATE:-false}"
 VALHEIM_PLUS_VERSION="${VALHEIM_PLUS_VERSION:-0.9.17.1}"
@@ -25,20 +29,11 @@ server_binary_present() {
 }
 
 prepare_steam_install_dir() {
-    mkdir -p "${VALHEIM_DIR}/steamapps"
-    cat > "${VALHEIM_DIR}/steamapps/libraryfolders.vdf" <<EOF
-"LibraryFolders"
-{
-    "0" "${VALHEIM_DIR}"
-}
-EOF
+    steam_prepare_install_dir "${VALHEIM_DIR}"
 }
 
 cleanup_incomplete_install() {
-    if [ -d "${VALHEIM_DIR}/steamapps" ] && ! server_binary_present; then
-        echo "--- Removing incomplete Steam install state from ${VALHEIM_DIR} ---"
-        rm -rf "${VALHEIM_DIR}/steamapps" "${VALHEIM_DIR}/package"
-    fi
+    steam_cleanup_incomplete_install "${VALHEIM_DIR}" "${VALHEIM_APP_ID}" "${SERVER_BINARY}"
 }
 
 relocate_install_if_needed() {
@@ -70,28 +65,12 @@ install_server() {
     cleanup_incomplete_install
     prepare_steam_install_dir
 
-    local steam_login="${STEAM_USERNAME}"
-    if [ -n "${STEAM_PASSWORD}" ]; then
-        steam_login="${steam_login} ${STEAM_PASSWORD}"
-    fi
-    export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
-    while true; do
-        # steam_login may contain "user pass" as two argv words for steamcmd
-        # shellcheck disable=SC2086
-        "${STEAM_DIR}/linux32/steamcmd" \
-            +@sSteamCmdForcePlatformType linux \
-            +force_install_dir "${VALHEIM_DIR}" \
-            +login ${steam_login} \
-            +app_update "${VALHEIM_APP_ID}" validate \
-            +quit
-        status=$?
-        if [ "${status}" -ne 42 ]; then
-            break
-        fi
-    done
+    steamcmd_install_linux_app "${VALHEIM_DIR}" "${VALHEIM_APP_ID}" \
+        +app_update "${VALHEIM_APP_ID}" validate || status=$?
     if [ "${status}" -ne 0 ]; then
         echo "Valheim server install failed with exit code ${status}" >&2
+        steam_install_anonymous_hint "${VALHEIM_APP_ID}" "Valheim"
         exit 1
     fi
 

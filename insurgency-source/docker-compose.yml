@@ -18,8 +18,9 @@ services:
     volumes:
       - ./data:/opt/insurgency-source
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       INS_SOURCE_APP_ID: "237410"
       INS_SOURCE_FORCE_UPDATE: "${INS_SOURCE_FORCE_UPDATE:-false}"
       INS_SOURCE_PORT: "27015"

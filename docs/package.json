@@ -20,9 +20,10 @@
     }
   },
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
+    "dev": "node scripts/build-assets.mjs && astro dev",
+    "start": "node scripts/build-assets.mjs && astro dev",
     "build": "node scripts/build-assets.mjs && astro build && node scripts/check-tokens.mjs",
+    "icons": "node scripts/fetch-game-icons.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "audit": "pnpm audit --prod"

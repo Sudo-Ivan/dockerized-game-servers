@@ -18,8 +18,9 @@ services:
       - ./data/instances:/opt/spaceengineers/instances
       - ./data/plugins:/opt/spaceengineers/plugins
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       SE_APP_ID: "298740"
       SE_GAME_APP_ID: "244850"
       SE_FORCE_UPDATE: "${SE_FORCE_UPDATE:-false}"

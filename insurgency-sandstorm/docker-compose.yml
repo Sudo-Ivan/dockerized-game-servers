@@ -17,8 +17,9 @@ services:
     volumes:
       - ./data:/opt/insurgency-sandstorm
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       INS_SANDSTORM_APP_ID: "581330"
       INS_SANDSTORM_FORCE_UPDATE: "${INS_SANDSTORM_FORCE_UPDATE:-false}"
       INS_SANDSTORM_PORT: "27102"

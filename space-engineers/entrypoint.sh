@@ -1,8 +1,12 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
+. /opt/steamcmd/steamcmd-app-update.sh
+
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
+STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
 SE_APP_ID="${SE_APP_ID:-298740}"
 SE_GAME_APP_ID="${SE_GAME_APP_ID:-244850}"
 SE_FORCE_UPDATE="${SE_FORCE_UPDATE:-false}"
@@ -35,28 +39,13 @@ sed_replace_xml() {
 
 install_server() {
     echo "--- Installing Space Engineers dedicated server (App ${SE_APP_ID}) ---"
-    local steam_login="${STEAM_USERNAME}"
-    if [ -n "${STEAM_PASSWORD}" ]; then
-        steam_login="${steam_login} ${STEAM_PASSWORD}"
-    fi
-    export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
-    while true; do
-        # shellcheck disable=SC2086
-        "${STEAM_DIR}/steamcmd.sh" \
-            +@sSteamCmdForcePlatformType windows \
-            +@sSteamCmdForcePlatformBitness 64 \
-            +force_install_dir "${SE_DEDICATED_DIR}" \
-            +login ${steam_login} \
-            +app_update "${SE_APP_ID}" validate \
-            +quit
-        status=$?
-        if [ "${status}" -ne 42 ]; then
-            break
-        fi
-    done
+    steamcmd_invoke windows "${SE_DEDICATED_DIR}" \
+        +@sSteamCmdForcePlatformBitness 64 \
+        +app_update "${SE_APP_ID}" validate || status=$?
     if [ "${status}" -ne 0 ]; then
         echo "Space Engineers server install failed with exit code ${status}" >&2
+        steam_install_anonymous_hint "${SE_APP_ID}" "Space Engineers"
         exit 1
     fi
     if [ ! -f "${SERVER_EXE}" ]; then

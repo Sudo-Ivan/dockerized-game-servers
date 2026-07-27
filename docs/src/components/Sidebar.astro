@@ -2,6 +2,7 @@
 import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter'
 import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro'
 import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro'
+import { gameIcons } from '../generated/game-icons.mjs'
 
 const { sidebar } = Astro.locals.starlightRoute
 const base = import.meta.env.BASE_URL.endsWith('/')
@@ -9,6 +10,15 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 	: `${import.meta.env.BASE_URL}/`
 const downloadHref = `${base}dgs-docs.zip`
 const licenseHref = `${base}reference/license/`
+
+const iconCss = Object.entries(gameIcons)
+	.map(([slug, file]) => {
+		const href = `${base}servers/${slug}/`
+		const hrefNoSlash = href.slice(0, -1)
+		const src = `${base}game-icons/${file}`
+		return `.sidebar-stack a[href="${href}"],.sidebar-stack a[href="${hrefNoSlash}"]{display:flex;align-items:center;gap:.45rem}.sidebar-stack a[href="${href}"]::before,.sidebar-stack a[href="${hrefNoSlash}"]::before{content:"";width:1.125rem;height:1.125rem;border-radius:.2rem;flex-shrink:0;background:#1a1a1a url("${src}") center/cover no-repeat}`
+	})
+	.join('')
 ---
 
 <div class="sidebar-stack">
@@ -27,6 +37,8 @@ const licenseHref = `${base}reference/license/`
 <div class="md:sl-hidden">
 	<MobileMenuFooter />
 </div>
+
+{iconCss && <style is:global set:html={iconCss} />}
 
 <style>
 	.sidebar-stack {

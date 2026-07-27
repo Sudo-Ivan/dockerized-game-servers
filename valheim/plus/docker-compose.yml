@@ -18,8 +18,9 @@ services:
     volumes:
       - ./data:/opt/valheim
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       VALHEIM_APP_ID: "896660"
       VALHEIM_FORCE_UPDATE: "${VALHEIM_FORCE_UPDATE:-false}"
       VALHEIM_PLUS_VERSION: "0.9.17.1"

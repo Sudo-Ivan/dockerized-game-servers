@@ -1,0 +1,41 @@
+services:
+  kf2:
+    image: ghcr.io/${IMAGE_OWNER}/kf2:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: kf2
+    restart: unless-stopped
+    stop_grace_period: 90s
+    init: true
+    ports:
+      - "7777:7777/udp"
+      - "27015:27015/udp"
+      - "8080:8080/tcp"
+      - "20560:20560/udp"
+    volumes:
+      - ./data:/opt/kf2
+    environment:
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+      KF2_APP_ID: "232130"
+      KF2_FORCE_UPDATE: "${KF2_FORCE_UPDATE:-false}"
+      KF2_PORT: "7777"
+      KF2_QUERY_PORT: "27015"
+      KF2_STARTMAP: "kf-bioticslab"
+      KF2_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 900s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 4096M

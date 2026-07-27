@@ -1,0 +1,43 @@
+services:
+  cs-source:
+    image: ghcr.io/${IMAGE_OWNER}/cs-source:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: cs-source
+    restart: unless-stopped
+    stop_grace_period: 90s
+    init: true
+    ports:
+      - "27015:27015/tcp"
+      - "27015:27015/udp"
+      - "27005:27005/udp"
+    volumes:
+      - ./data:/opt/cs-source
+    environment:
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+      CSS_APP_ID: "232330"
+      CSS_FORCE_UPDATE: "${CSS_FORCE_UPDATE:-false}"
+      CSS_PORT: "27015"
+      CSS_CLIENT_PORT: "27005"
+      CSS_MAXPLAYERS: "16"
+      CSS_STARTMAP: "de_dust2"
+      CSS_TICKRATE: "66"
+      CSS_GSLT: "${CSS_GSLT:-}"
+      CSS_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 600s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 2048M

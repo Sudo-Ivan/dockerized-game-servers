@@ -1,8 +1,12 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
+. /opt/steamcmd/steamcmd-app-update.sh
+
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
+STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
 TERRARIA_APP_ID="${TERRARIA_APP_ID:-105600}"
 TERRARIA_FORCE_UPDATE="${TERRARIA_FORCE_UPDATE:-false}"
 
@@ -23,20 +27,11 @@ server_binary_present() {
 }
 
 prepare_steam_install_dir() {
-    mkdir -p "${TERRARIA_DIR}/steamapps"
-    cat > "${TERRARIA_DIR}/steamapps/libraryfolders.vdf" <<EOF
-"LibraryFolders"
-{
-    "0" "${TERRARIA_DIR}"
-}
-EOF
+    steam_prepare_install_dir "${TERRARIA_DIR}"
 }
 
 cleanup_incomplete_install() {
-    if [ -d "${TERRARIA_DIR}/steamapps" ] && ! server_binary_present; then
-        echo "--- Removing incomplete Steam install state from ${TERRARIA_DIR} ---"
-        rm -rf "${TERRARIA_DIR}/steamapps" "${TERRARIA_DIR}/package"
-    fi
+    steam_cleanup_incomplete_install "${TERRARIA_DIR}" "${TERRARIA_APP_ID}" "${SERVER_BINARY}"
 }
 
 relocate_install_if_needed() {
@@ -68,27 +63,12 @@ install_server() {
     cleanup_incomplete_install
     prepare_steam_install_dir
 
-    local steam_login="${STEAM_USERNAME}"
-    if [ -n "${STEAM_PASSWORD}" ]; then
-        steam_login="${steam_login} ${STEAM_PASSWORD}"
-    fi
-    export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
-    while true; do
-        # shellcheck disable=SC2086
-        "${STEAM_DIR}/linux32/steamcmd" \
-            +@sSteamCmdForcePlatformType linux \
-            +force_install_dir "${TERRARIA_DIR}" \
-            +login ${steam_login} \
-            +app_update "${TERRARIA_APP_ID}" validate \
-            +quit
-        status=$?
-        if [ "${status}" -ne 42 ]; then
-            break
-        fi
-    done
+    steamcmd_install_linux_app "${TERRARIA_DIR}" "${TERRARIA_APP_ID}" \
+        +app_update "${TERRARIA_APP_ID}" validate || status=$?
     if [ "${status}" -ne 0 ]; then
         echo "Terraria server install failed with exit code ${status}" >&2
+        steam_install_anonymous_hint "${TERRARIA_APP_ID}" "Terraria"
         exit 1
     fi
 

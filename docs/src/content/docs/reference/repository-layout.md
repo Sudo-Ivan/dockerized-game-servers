@@ -19,6 +19,9 @@ terraria/         Terraria
 l4d2/             Left 4 Dead 2
 insurgency-source/   Insurgency (Source)
 insurgency-sandstorm/ Insurgency: Sandstorm
+cs-source/        Counter-Strike: Source
+kf2/              Killing Floor 2
+icarus/           Icarus (Wine)
 palworld/         Palworld
 starbound/        Starbound
 openmohaa/       OpenMoHAA (BYO game assets)

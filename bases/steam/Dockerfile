@@ -46,5 +46,6 @@ RUN sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf \
   && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/*
 
 COPY --from=steamcmd /opt/steamcmd /opt/steamcmd
+COPY steamcmd-app-update.sh /opt/steamcmd/steamcmd-app-update.sh
 
 ENV STEAMCMD_DIR="/opt/steamcmd"

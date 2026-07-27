@@ -18,8 +18,9 @@ services:
     volumes:
       - ./data:/opt/l4d2
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       L4D2_APP_ID: "222860"
       L4D2_FORCE_UPDATE: "${L4D2_FORCE_UPDATE:-false}"
       L4D2_PORT: "27015"

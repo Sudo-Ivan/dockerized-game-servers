@@ -17,8 +17,9 @@ services:
     volumes:
       - ./data:/opt/groundbranch
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       GB_APP_ID: "476400"
       GB_STEAM_APP_ID: "16900"
       GB_FORCE_UPDATE: "${GB_FORCE_UPDATE:-false}"

@@ -16,8 +16,9 @@ services:
     volumes:
       - ./data:/opt/starbound
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       STARBOUND_APP_ID: "211820"
       STARBOUND_FORCE_UPDATE: "${STARBOUND_FORCE_UPDATE:-false}"
       STARBOUND_PORT: "21025"

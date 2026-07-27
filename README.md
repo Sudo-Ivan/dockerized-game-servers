@@ -25,6 +25,9 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Left 4 Dead 2 | `l4d2` | `l4d2` |
 | Insurgency (Source) | `insurgency-source` | `insurgency-source` |
 | Insurgency: Sandstorm | `insurgency-sandstorm` | `insurgency-sandstorm` |
+| Counter-Strike: Source | `cs-source` | `cs-source` |
+| Killing Floor 2 | `kf2` | `kf2` |
+| Icarus | `icarus` | `icarus` |
 | Palworld | `palworld` | `palworld` |
 | Starbound | `starbound` | `starbound` |
 | OpenMoHAA | `openmohaa` | `openmohaa` |
@@ -212,6 +215,34 @@ docker run -d --name insurgency-sandstorm --restart unless-stopped --init \
   ghcr.io/sudo-ivan/dockerized-game-servers/insurgency-sandstorm:latest
 ```
 
+Counter-Strike: Source:
+
+```bash
+docker run -d --name cs-source --restart unless-stopped --init \
+  -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
+  -v "$PWD/cs-source/data:/opt/cs-source" \
+  -e CSS_GSLT="${CSS_GSLT:-}" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/cs-source:latest
+```
+
+Killing Floor 2:
+
+```bash
+docker run -d --name kf2 --restart unless-stopped --init \
+  -p 7777:7777/udp -p 27015:27015/udp -p 8080:8080/tcp -p 20560:20560/udp \
+  -v "$PWD/kf2/data:/opt/kf2" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/kf2:latest
+```
+
+Icarus:
+
+```bash
+docker run -d --name icarus --restart unless-stopped --init \
+  -p 17777:17777/udp -p 27015:27015/udp \
+  -v "$PWD/icarus/data:/opt/icarus" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/icarus:latest
+```
+
 Palworld:
 
 ```bash
@@ -282,7 +313,7 @@ Accept the EULA with `EULA=true`. World and config live in each server's `./data
 
 ### Steam games
 
-Many titles allow anonymous SteamCMD. Arma 3 usually needs a Steam account that owns the server files. Set Valheim `SERVER_PASS` via `-e` or a `.env` file next to compose.
+Many titles still allow anonymous SteamCMD. Valve has removed anonymous access for some dedicated servers (for example Left 4 Dead 2 and Counter-Strike: Source). Those need `STEAM_USERNAME` and `STEAM_PASSWORD` for an account that owns the game, plus optional `STEAM_GUARD_CODE`. Linux installs use a shared SteamCMD workaround in `steam-base` (rebuild `steam-base` before game images when updating install logic). Arma 3 usually needs a Steam account that owns the server files. Set Valheim `SERVER_PASS` via `-e` or a `.env` file next to compose.
 
 ### Ground Branch
 
@@ -332,7 +363,7 @@ Steam App 105600. Official dedicated server binary and `serverconfig.txt` under 
 
 ### Left 4 Dead 2
 
-Steam App 222860. Source dedicated server via `srcds_run`. Default map `c1m1_hotel`, port 27015 TCP/UDP. Set `L4D2_STARTMAP`, `L4D2_MAXPLAYERS`, and `L4D2_EXTRA_ARGS` as needed.
+Steam App 222860. Source dedicated server via `srcds_run`. Default map `c1m1_hotel`, port 27015 TCP/UDP. Set `L4D2_STARTMAP`, `L4D2_MAXPLAYERS`, and `L4D2_EXTRA_ARGS` as needed. SteamCMD needs an account that owns Left 4 Dead 2 (`STEAM_USERNAME`, `STEAM_PASSWORD`, optional `STEAM_GUARD_CODE`).
 
 ### Insurgency (Source)
 
@@ -341,6 +372,18 @@ Steam App 237410. Source dedicated server via `srcds_run` (`-game insurgency`). 
 ### Insurgency: Sandstorm
 
 Steam App 581330. Linux dedicated binary under `insurgency-sandstorm/data`. Default UDP 27102 (game) and 27131 (query). Set `INS_SANDSTORM_MAP`, `INS_SANDSTORM_SCENARIO`, `INS_SANDSTORM_GSLT`, and `INS_SANDSTORM_GAMESTATS_TOKEN` for listing and GameStats. Use `INS_SANDSTORM_EXTRA_ARGS` for mutators, `-mods`, and `ModDownloadTravelTo`. Mod config files live under `insurgency-sandstorm/data/Insurgency/Config/Server/`. See the [Insurgency Sandstorm](https://sudo-ivan.github.io/dockerized-game-servers/servers/insurgency-sandstorm/) docs page for a full modding guide. Allocate at least 8 GB RAM.
+
+### Counter-Strike: Source
+
+Steam App 232330. Source `srcds` with `-game cstrike`. Default map `de_dust2`. Set `CSS_GSLT` for public listing. Config under `cs-source/data/cstrike/cfg/`.
+
+### Killing Floor 2
+
+Steam App 232130. Linux binary `KFGameSteamServer.bin.x86_64`. UDP 7777 game, 27015 query, TCP 8080 web admin. Default map `kf-bioticslab`. Config in `kf2/data/KFGame/Config/`.
+
+### Icarus
+
+Steam App 2089300 (Windows server via Wine). UDP 17777 and 27015 query. Set `ICARUS_GAME_MODE`, `ICARUS_SESSION_NAME`, and related env vars. Persist `icarus/data` including `.wine`. Allocate at least 8 GB RAM.
 
 ### Palworld
 
@@ -380,6 +423,9 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 | `l4d2` | Left 4 Dead 2 dedicated |
 | `insurgency-source` | Insurgency (Source) dedicated |
 | `insurgency-sandstorm` | Insurgency: Sandstorm dedicated |
+| `cs-source` | Counter-Strike: Source dedicated |
+| `kf2` | Killing Floor 2 dedicated |
+| `icarus` | Icarus dedicated (Wine) |
 | `palworld` | Palworld dedicated |
 | `starbound` | Starbound dedicated |
 | `openmohaa` | OpenMoHAA (BYO MOHAA assets) |
@@ -449,6 +495,9 @@ terraria/         Terraria
 l4d2/             Left 4 Dead 2
 insurgency-source/   Insurgency (Source)
 insurgency-sandstorm/ Insurgency: Sandstorm
+cs-source/        Counter-Strike: Source
+kf2/              Killing Floor 2
+icarus/           Icarus
 palworld/         Palworld
 starbound/        Starbound
 openmohaa/       OpenMoHAA

@@ -25,6 +25,9 @@ This site is static HTML. Reading and navigation work without JavaScript. Fuzzy 
 | Left 4 Dead 2 | l4d2 | l4d2 |
 | Insurgency (Source) | insurgency-source | insurgency-source |
 | Insurgency: Sandstorm | insurgency-sandstorm | insurgency-sandstorm |
+| Counter-Strike: Source | cs-source | cs-source |
+| Killing Floor 2 | kf2 | kf2 |
+| Icarus | icarus | icarus |
 | Palworld | palworld | palworld |
 | Starbound | starbound | starbound |
 | OpenMoHAA | openmohaa | openmohaa |

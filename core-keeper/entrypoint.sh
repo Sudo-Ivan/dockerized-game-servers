@@ -1,8 +1,12 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
+. /opt/steamcmd/steamcmd-app-update.sh
+
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
+STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
 CK_APP_ID="${CK_APP_ID:-1963720}"
 CK_STEAMWORKS_APP_ID="${CK_STEAMWORKS_APP_ID:-1007}"
 CK_FORCE_UPDATE="${CK_FORCE_UPDATE:-false}"
@@ -59,31 +63,16 @@ trap cleanup EXIT INT TERM
 
 install_server() {
     echo "--- Installing Core Keeper dedicated server (App ${CK_APP_ID}) ---"
-    local steam_login="${STEAM_USERNAME}"
-    if [ -n "${STEAM_PASSWORD}" ]; then
-        steam_login="${steam_login} ${STEAM_PASSWORD}"
-    fi
     mkdir -p "${CK_INSTALL_DIR}"
-    export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
+    steam_prepare_install_dir "${CK_INSTALL_DIR}"
     local status=0
-    while true; do
-        # steam_login may contain "user pass" as two argv words for steamcmd
-        # shellcheck disable=SC2086
-        "${STEAM_DIR}/linux32/steamcmd" \
-            +@sSteamCmdForcePlatformType linux \
-            +@sSteamCmdForcePlatformBitness 64 \
-            +force_install_dir "${CK_INSTALL_DIR}" \
-            +login ${steam_login} \
-            +app_update "${CK_STEAMWORKS_APP_ID}" validate \
-            +app_update "${CK_APP_ID}" validate \
-            +quit
-        status=$?
-        if [ "${status}" -ne 42 ]; then
-            break
-        fi
-    done
+    steamcmd_install_linux_app "${CK_INSTALL_DIR}" "${CK_APP_ID}" \
+        +@sSteamCmdForcePlatformBitness 64 \
+        +app_update "${CK_STEAMWORKS_APP_ID}" validate \
+        +app_update "${CK_APP_ID}" validate || status=$?
     if [ "${status}" -ne 0 ]; then
         echo "Core Keeper server install failed with exit code ${status}" >&2
+        steam_install_anonymous_hint "${CK_APP_ID}" "Core Keeper"
         exit 1
     fi
     if [ ! -x "${SERVER_BIN}" ] && [ -f "${SERVER_BIN}" ]; then

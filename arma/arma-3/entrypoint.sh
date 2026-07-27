@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
+. /opt/steamcmd/steamcmd-app-update.sh
+
 mkdir -p "${ARMA_DIR}/keys"
 
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
@@ -10,20 +13,14 @@ ARMA_APP_ID="${ARMA_APP_ID:-233780}"
 
 if [ ! -f "${ARMA_DIR}/arma3server_x64" ]; then
     echo "--- Installing Arma 3 server (App ${ARMA_APP_ID}) ---"
-    STEAM_LOGIN="${STEAM_USERNAME}"
-    if [ -n "${STEAM_PASSWORD}" ]; then
-        STEAM_LOGIN="${STEAM_LOGIN} ${STEAM_PASSWORD}"
-    fi
-    if [ -n "${STEAM_GUARD_CODE}" ]; then
-        STEAM_LOGIN="${STEAM_LOGIN} ${STEAM_GUARD_CODE}"
-    fi
+    STEAM_LOGIN="$(steam_login_args)"
     # shellcheck disable=SC2086
     ${STEAM_DIR}/steamcmd.sh +force_install_dir ${ARMA_DIR} +login ${STEAM_LOGIN} +app_update ${ARMA_APP_ID} validate +quit
 fi
 
 if [ ! -f "${ARMA_DIR}/arma3server_x64" ]; then
     echo "Arma 3 server binary not found at ${ARMA_DIR}/arma3server_x64" >&2
-    echo "Anonymous Steam login cannot download Arma 3. Set STEAM_USERNAME and STEAM_PASSWORD for an account that owns the server." >&2
+    steam_install_anonymous_hint "${ARMA_APP_ID}" "Arma 3 Server" >&2
     exit 1
 fi
 

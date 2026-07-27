@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { zipSync, strToU8 } from 'fflate'
 import { resolveRepo } from '../src/lib/repo.mjs'
 import { buildSearchIndex } from '../src/lib/search-index.mjs'
+import { fetchGameIcons } from './fetch-game-icons.mjs'
 
 const docsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const contentRoot = path.join(docsDir, 'src/content/docs')
@@ -258,7 +259,8 @@ buildRobotsTxt()
 const docsCount = buildDocsZip()
 const searchCount = buildSearch()
 buildManifestAndSw(buildId)
+const { icons: gameIcons, report: iconReport } = await fetchGameIcons()
 
 console.log(
-	`docs assets: zip=${docsCount} files, search=${searchCount} docs, buildId=${buildId}, base=${repo.siteBase}`,
+	`docs assets: zip=${docsCount} files, search=${searchCount} docs, icons=${Object.keys(gameIcons).length}/${iconReport.length}, buildId=${buildId}, base=${repo.siteBase}`,
 )

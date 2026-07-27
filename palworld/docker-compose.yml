@@ -16,8 +16,9 @@ services:
     volumes:
       - ./data:/opt/palworld
     environment:
-      STEAM_USERNAME: "anonymous"
-      STEAM_PASSWORD: ""
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       PALWORLD_APP_ID: "2394010"
       PALWORLD_FORCE_UPDATE: "${PALWORLD_FORCE_UPDATE:-false}"
       PALWORLD_PORT: "8211"
