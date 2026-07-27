@@ -6,7 +6,7 @@ Owner, repo, GHCR prefix, and Pages URLs resolve from git remote or GITHUB_REPOS
 
 ## Requirements
 
-- Node.js 22.12+
+- Node.js 22.13+
 - pnpm 11.17.0+ (pinned in package.json)
 
 ## Local preview
