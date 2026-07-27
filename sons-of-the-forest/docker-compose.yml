@@ -1,0 +1,54 @@
+services:
+  sons-of-the-forest:
+    image: ghcr.io/${IMAGE_OWNER}/sons-of-the-forest:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: sons-of-the-forest
+    restart: unless-stopped
+    stop_grace_period: 60s
+    init: true
+    ports:
+      - "8766:8766/udp"
+      - "27016:27016/udp"
+      - "9700:9700/udp"
+    volumes:
+      - ./data:/opt/sotf
+    environment:
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+      SOTF_APP_ID: "2465200"
+      SOTF_STEAM_APP_ID: "1326470"
+      SOTF_FORCE_UPDATE: "${SOTF_FORCE_UPDATE:-false}"
+      SOTF_IP: "0.0.0.0"
+      SOTF_GAME_PORT: "8766"
+      SOTF_QUERY_PORT: "27016"
+      SOTF_BLOB_SYNC_PORT: "9700"
+      SOTF_SERVER_NAME: "Sons Of The Forest Server (dedicated)"
+      SOTF_MAX_PLAYERS: "8"
+      SOTF_PASSWORD: ""
+      SOTF_LAN_ONLY: "false"
+      SOTF_SAVE_SLOT: "1"
+      SOTF_SAVE_MODE: "Continue"
+      SOTF_GAME_MODE: "Normal"
+      SOTF_SAVE_INTERVAL: "600"
+      SOTF_EXTRA_ARGS: ""
+      WINEPREFIX: "/opt/sotf/.wine"
+      WINEARCH: "win64"
+      WINEDEBUG: "-all"
+      SteamAppId: "1326470"
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 900s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 6144M

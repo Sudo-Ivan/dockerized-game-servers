@@ -1,0 +1,54 @@
+services:
+  the-forest:
+    image: ghcr.io/${IMAGE_OWNER}/the-forest:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: the-forest
+    restart: unless-stopped
+    stop_grace_period: 60s
+    init: true
+    ports:
+      - "8766:8766/tcp"
+      - "8766:8766/udp"
+      - "27015:27015/tcp"
+      - "27015:27015/udp"
+      - "27016:27016/tcp"
+      - "27016:27016/udp"
+    volumes:
+      - ./data:/opt/theforest
+    environment:
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+      FOREST_APP_ID: "556450"
+      FOREST_FORCE_UPDATE: "${FOREST_FORCE_UPDATE:-false}"
+      FOREST_IP: "0.0.0.0"
+      FOREST_STEAM_PORT: "8766"
+      FOREST_GAME_PORT: "27015"
+      FOREST_QUERY_PORT: "27016"
+      FOREST_SERVER_NAME: "The Forest Dedicated Server"
+      FOREST_MAX_PLAYERS: "8"
+      FOREST_PASSWORD: ""
+      FOREST_ADMIN_PASSWORD: ""
+      FOREST_STEAM_ACCOUNT: ""
+      FOREST_DIFFICULTY: "Normal"
+      FOREST_INIT_TYPE: "Continue"
+      FOREST_SLOT: "1"
+      FOREST_AUTOSAVE_INTERVAL: "15"
+      FOREST_ENABLE_VAC: "true"
+      FOREST_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 300s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 3072M

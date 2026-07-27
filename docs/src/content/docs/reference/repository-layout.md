@@ -22,6 +22,9 @@ insurgency-sandstorm/ Insurgency: Sandstorm
 cs-source/        Counter-Strike: Source
 kf2/              Killing Floor 2
 icarus/           Icarus (Wine)
+the-forest/       The Forest (native Linux)
+sons-of-the-forest/ Sons Of The Forest (Wine)
+sniper-elite-4/   Sniper Elite 4 (Wine)
 bf1942/           Battlefield 1942 (LinuxGSM)
 bfv/              Battlefield Vietnam (LinuxGSM)
 cod/              Call of Duty (LinuxGSM)

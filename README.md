@@ -29,6 +29,9 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Counter-Strike: Source | `cs-source` | `cs-source` |
 | Killing Floor 2 | `kf2` | `kf2` |
 | Icarus | `icarus` | `icarus` |
+| The Forest | `the-forest` | `the-forest` |
+| Sons Of The Forest | `sons-of-the-forest` | `sons-of-the-forest` |
+| Sniper Elite 4 | `sniper-elite-4` | `sniper-elite-4` |
 | Battlefield 1942 | `bf1942` | `bf1942` |
 | Battlefield Vietnam | `bfv` | `bfv` |
 | Call of Duty | `cod` | `cod` |
@@ -256,6 +259,35 @@ docker run -d --name icarus --restart unless-stopped --init \
   ghcr.io/sudo-ivan/dockerized-game-servers/icarus:latest
 ```
 
+The Forest:
+
+```bash
+docker run -d --name the-forest --restart unless-stopped --init \
+  -p 8766:8766/tcp -p 8766:8766/udp \
+  -p 27015:27015/tcp -p 27015:27015/udp \
+  -p 27016:27016/tcp -p 27016:27016/udp \
+  -v "$PWD/the-forest/data:/opt/theforest" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/the-forest:latest
+```
+
+Sons Of The Forest:
+
+```bash
+docker run -d --name sons-of-the-forest --restart unless-stopped --init \
+  -p 8766:8766/udp -p 27016:27016/udp -p 9700:9700/udp \
+  -v "$PWD/sons-of-the-forest/data:/opt/sotf" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/sons-of-the-forest:latest
+```
+
+Sniper Elite 4:
+
+```bash
+docker run -d --name sniper-elite-4 --restart unless-stopped --init \
+  -p 27000:27000/udp -p 27005:27005/udp -p 27010:27010/tcp -p 27015:27015/udp \
+  -v "$PWD/sniper-elite-4/data:/opt/se4" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/sniper-elite-4:latest
+```
+
 Palworld:
 
 ```bash
@@ -400,6 +432,18 @@ Steam App 232130. Linux binary `KFGameSteamServer.bin.x86_64`. UDP 7777 game, 27
 
 Steam App 2089300 (Windows server via Wine). UDP 17777 and 27015 query. Set `ICARUS_GAME_MODE`, `ICARUS_SESSION_NAME`, and related env vars. Persist `icarus/data` including `.wine`. Allocate at least 8 GB RAM.
 
+### The Forest
+
+Steam App 556450. Native Linux dedicated binary (no Wine). UDP/TCP 8766 (Steam), 27015 (game), 27016 (query). Set `FOREST_SERVER_NAME`, `FOREST_DIFFICULTY`, `FOREST_MAX_PLAYERS`. Defaults to `FOREST_INIT_TYPE=Continue` so container restarts load the existing save instead of overwriting it. Persist `the-forest/data`.
+
+### Sons Of The Forest
+
+Steam App 2465200 (dedicated server tool, Windows via Wine). UDP 8766 (game), 27016 (query), 9700 (BlobSync). `dedicatedserver.cfg` and `ownerswhitelist.txt` are generated under `sons-of-the-forest/data/userdata/` on first start. Allocate at least 6 GB RAM.
+
+### Sniper Elite 4
+
+Steam App 568880 (dedicated server tool, Windows via Wine). UDP 27000 (auth), UDP 27005 (game), TCP 27010 (lobby), UDP 27015 (update). `server.cfg` is generated in `sniper-elite-4/data/` with map rotation from `SE4_MAP_ROTATION`. Some accounts may need `STEAM_USERNAME` / `STEAM_PASSWORD` instead of anonymous login.
+
 ### Battlefield 1942 / Vietnam
 
 Linux dedicated files from [LinuxGSM](http://linuxgsm.download/) (same archives as LinuxGSM `install_server_files.sh`). You must own the game. Images bake the server payload; first start copies into `bf1942/data` or `bfv/data`. BF1942: UDP 14567 and TCP 23000. BFV: see `bfv/docker-compose.yml` for ports.
@@ -474,6 +518,9 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `cs-source` | Counter-Strike: Source dedicated |
 | `kf2` | Killing Floor 2 dedicated |
 | `icarus` | Icarus dedicated (Wine) |
+| `the-forest` | The Forest dedicated (native Linux) |
+| `sons-of-the-forest` | Sons Of The Forest dedicated (Wine) |
+| `sniper-elite-4` | Sniper Elite 4 dedicated (Wine) |
 | `bf1942` | Battlefield 1942 dedicated (LinuxGSM files) |
 | `bfv` | Battlefield Vietnam dedicated (LinuxGSM files) |
 | `cod` | Call of Duty dedicated (LinuxGSM files) |
@@ -558,6 +605,9 @@ insurgency-sandstorm/ Insurgency: Sandstorm
 cs-source/        Counter-Strike: Source
 kf2/              Killing Floor 2
 icarus/           Icarus
+the-forest/      The Forest
+sons-of-the-forest/ Sons Of The Forest
+sniper-elite-4/  Sniper Elite 4
 palworld/         Palworld
 starbound/        Starbound
 openmohaa/       OpenMoHAA

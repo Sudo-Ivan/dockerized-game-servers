@@ -26,6 +26,9 @@ Runnable servers are defined in `ci/server-catalog.sh`. First-party images publi
 | Counter-Strike: Source | cs-source | cs-source | [Guide](../servers/cs-source/) |
 | Killing Floor 2 | kf2 | kf2 | [Guide](../servers/kf2/) |
 | Icarus | icarus | icarus | [Guide](../servers/icarus/) |
+| The Forest | the-forest | the-forest | [Guide](../servers/the-forest/) |
+| Sons Of The Forest | sons-of-the-forest | sons-of-the-forest | [Guide](../servers/sons-of-the-forest/) |
+| Sniper Elite 4 | sniper-elite-4 | sniper-elite-4 | [Guide](../servers/sniper-elite-4/) |
 | Battlefield 1942 | bf1942 | bf1942 | [Guide](../servers/bf1942/) |
 | Battlefield Vietnam | bfv | bfv | [Guide](../servers/bfv/) |
 | Call of Duty | cod | cod | [Guide](../servers/cod/) |
