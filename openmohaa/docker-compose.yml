@@ -1,0 +1,37 @@
+services:
+  openmohaa:
+    image: ghcr.io/${IMAGE_OWNER}/openmohaa:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: openmohaa
+    restart: unless-stopped
+    stop_grace_period: 30s
+    init: true
+    ports:
+      - "12203:12203/udp"
+      - "12300:12300/udp"
+    volumes:
+      - ./data:/usr/local/share/mohaa
+    environment:
+      OPENMOHAA_VERSION: "v0.82.1"
+      OPENMOHAA_FORCE_UPDATE: "${OPENMOHAA_FORCE_UPDATE:-false}"
+      MOH_GAME_PORT: "12203"
+      MOH_GAMESPY_PORT: "12300"
+      MOH_TARGET_GAME: "0"
+      MOH_SERVER_CFG: "server.cfg"
+      MOH_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 60s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 2048M

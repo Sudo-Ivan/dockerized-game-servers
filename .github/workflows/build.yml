@@ -128,6 +128,10 @@ jobs:
             context: factorio
             dockerfile: factorio/Dockerfile
             base: steam-base
+          - name: openmohaa
+            context: openmohaa
+            dockerfile: openmohaa/Dockerfile
+            base: steam-base
           - name: arma-3
             context: arma/arma-3
             dockerfile: arma/arma-3/Dockerfile

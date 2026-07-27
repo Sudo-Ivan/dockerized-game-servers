@@ -13,6 +13,7 @@ valheim/         Vanilla and Plus
 ground-branch/   Ground Branch
 core-keeper/     Core Keeper
 factorio/         Factorio
+openmohaa/       OpenMoHAA (BYO game assets)
 arma/arma-3/     Arma 3
 hytale/          external image compose
 backups/         local gs backup archives (gitignored)

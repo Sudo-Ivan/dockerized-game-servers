@@ -19,6 +19,7 @@ This site is static HTML. Reading and navigation work without JavaScript. Fuzzy 
 | Ground Branch | ground-branch | ground-branch |
 | Core Keeper | core-keeper | core-keeper |
 | Factorio | factorio | factorio |
+| OpenMoHAA | openmohaa | openmohaa |
 | Arma 3 | arma/arma-3 | arma-3 |
 | Hytale | hytale | external (deinfreu/hytale-server) |
 

@@ -17,6 +17,7 @@ Prefix: {{IMAGE_PREFIX}}
 | ground-branch | Ground Branch (Wine) |
 | core-keeper | Core Keeper dedicated |
 | factorio | Factorio dedicated |
+| openmohaa | OpenMoHAA (bring your own MOHAA assets) |
 | arma-3 | Arma 3 dedicated |
 
 ```bash

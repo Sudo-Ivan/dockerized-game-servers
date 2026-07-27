@@ -18,6 +18,7 @@ Images publish to GHCR under `ghcr.io/$IMAGE_OWNER/` where IMAGE_OWNER is `owner
 | Ground Branch | `ground-branch` | `ground-branch` |
 | Core Keeper | `core-keeper` | `core-keeper` |
 | Factorio | `factorio` | `factorio` |
+| OpenMoHAA | `openmohaa` | `openmohaa` |
 | Arma 3 | `arma/arma-3` | `arma-3` |
 | Hytale | `hytale` | external (`deinfreu/hytale-server`) |
 
@@ -126,6 +127,15 @@ docker run -d --name factorio --restart unless-stopped --init \
   ghcr.io/$IMAGE_OWNER/factorio:latest
 ```
 
+OpenMoHAA (copy your owned MOHAA `main` / `mainta` / `maintt` PK3s into `openmohaa/data` first):
+
+```bash
+docker run -d --name openmohaa --restart unless-stopped --init \
+  -p 12203:12203/udp -p 12300:12300/udp \
+  -v "$PWD/openmohaa/data:/usr/local/share/mohaa" \
+  ghcr.io/$IMAGE_OWNER/openmohaa:latest
+```
+
 Arma 3:
 
 ```bash
@@ -189,6 +199,10 @@ export IMAGE_OWNER="$(./ci/repo-meta.sh | sed -n 's/^IMAGE_OWNER=//p')"
 
 Downloads the official headless package from factorio.com (`FACTORIO_VERSION`, default `stable`). Creates `saves/<SAVE_NAME>.zip` on first start and writes `config/server-settings.json` if missing. Game traffic is UDP `34197`. Set `RCON_PASSWORD` to enable RCON on TCP `27015`. Edit settings under `factorio/data/config/` after the first run.
 
+### OpenMoHAA
+
+Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You must copy licensed Allied Assault game data** (`main`, and optionally `mainta` / `maintt` PK3s) into `openmohaa/data/` before the server can run. Defaults: UDP `12203` (game) and UDP `12300` (GameSpy). Server config: `openmohaa/data/home/main/settings/server.cfg` (a default is created on first start). See [OpenMoHAA docs](https://docs.openmohaa.org/).
+
 ## Images
 
 | Name | Notes |
@@ -203,6 +217,7 @@ Downloads the official headless package from factorio.com (`FACTORIO_VERSION`, d
 | `ground-branch` | Ground Branch (Wine) |
 | `core-keeper` | Core Keeper dedicated |
 | `factorio` | Factorio dedicated |
+| `openmohaa` | OpenMoHAA (BYO MOHAA assets) |
 | `arma-3` | Arma 3 dedicated |
 
 ```bash
@@ -248,6 +263,7 @@ valheim/         Vanilla and Plus
 ground-branch/   Ground Branch
 core-keeper/     Core Keeper
 factorio/         Factorio
+openmohaa/       OpenMoHAA
 arma/arma-3/     Arma 3
 hytale/          external image compose
 ```

@@ -29,5 +29,6 @@ emit "valheim-plus" "valheim/plus/docker-compose.yml" "valheim-plus" "data" "VAL
 emit "ground-branch" "ground-branch/docker-compose.yml" "ground-branch" "data" "GB_FORCE_UPDATE" "process" "1"
 emit "core-keeper" "core-keeper/docker-compose.yml" "core-keeper" "data" "CK_FORCE_UPDATE" "gameid" "1"
 emit "factorio" "factorio/docker-compose.yml" "factorio" "data" "FACTORIO_FORCE_UPDATE" "process" "1"
+emit "openmohaa" "openmohaa/docker-compose.yml" "openmohaa" "data" "OPENMOHAA_FORCE_UPDATE" "process" "1"
 emit "arma-3" "arma/arma-3/docker-compose.yml" "arma3" "server,configs,profiles" "" "process" "1"
 emit "hytale" "hytale/docker-compose.yml" "hytale-server" "data" "" "none" "0"
