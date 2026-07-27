@@ -4,7 +4,7 @@ Dockerized dedicated game servers with small images and compose files.
 
 Docs publish to GitHub Pages for this repository (see Actions / Pages).
 
-Images publish to GHCR under `ghcr.io/$IMAGE_OWNER/` where IMAGE_OWNER is `owner/repo` (from git remote or GITHUB_REPOSITORY). Compose reads IMAGE_OWNER from the environment or a local `.env` file.
+Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<tag>`. Compose files use the `IMAGE_OWNER` variable (set it in `.env` or the environment). Forks that publish their own images can set `IMAGE_OWNER` to their `owner/repo` (lowercase).
 
 ## Servers
 
@@ -39,10 +39,16 @@ Shared bases:
 
 ### Compose
 
-Set IMAGE_OWNER to your GitHub owner/repo (lowercase), then start:
+Published images use `IMAGE_OWNER=sudo-ivan/dockerized-game-servers`. For a fork with its own GHCR packages, set `IMAGE_OWNER` in `.env` (see `.env.example`).
 
 ```bash
-export IMAGE_OWNER="$(./ci/repo-meta.sh | sed -n 's/^IMAGE_OWNER=//p')"
+docker compose -f minecraft/fabric/docker-compose.yml up
+```
+
+To pin the upstream registry explicitly:
+
+```bash
+export IMAGE_OWNER=sudo-ivan/dockerized-game-servers
 docker compose -f minecraft/fabric/docker-compose.yml up
 ```
 
@@ -52,11 +58,11 @@ Build locally:
 docker compose -f minecraft/fabric/docker-compose.yml up --build
 ```
 
-Compose files set image to GHCR via IMAGE_OWNER and keep build for local rebuilds. pull_policy missing uses a local image when present, otherwise pulls.
+Compose files reference `ghcr.io/${IMAGE_OWNER}/...` and keep build contexts for local rebuilds. `pull_policy: missing` uses a local image when present, otherwise pulls.
 
 ### Docker run
 
-Image prefix: ghcr.io/$IMAGE_OWNER
+Image prefix: `ghcr.io/sudo-ivan/dockerized-game-servers` (replace `sudo-ivan/dockerized-game-servers` in the examples if you use another registry namespace).
 
 Minecraft Fabric:
 
@@ -65,7 +71,7 @@ docker run -d --name fabric --restart unless-stopped --init \
   -p 25565:25565/tcp -p 25565:25565/udp \
   -v "$PWD/minecraft/fabric/data:/data" \
   -e EULA=true \
-  ghcr.io/$IMAGE_OWNER/minecraft-fabric:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
 ```
 
 Minecraft Vanilla:
@@ -75,7 +81,7 @@ docker run -d --name vanilla --restart unless-stopped --init \
   -p 25565:25565/tcp -p 25565:25565/udp \
   -v "$PWD/minecraft/vanilla/data:/data" \
   -e EULA=true \
-  ghcr.io/$IMAGE_OWNER/minecraft-vanilla:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-vanilla:latest
 ```
 
 Minecraft Forge:
@@ -85,7 +91,7 @@ docker run -d --name forge --restart unless-stopped --init \
   -p 25565:25565/tcp -p 25565:25565/udp \
   -v "$PWD/minecraft/forge/data:/data" \
   -e EULA=true \
-  ghcr.io/$IMAGE_OWNER/minecraft-forge:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-forge:latest
 ```
 
 Valheim:
@@ -95,7 +101,7 @@ docker run -d --name valheim --restart unless-stopped --init \
   -p 2456-2458:2456-2458/udp \
   -v "$PWD/valheim/vanilla/data:/opt/valheim" \
   -e SERVER_PASS=changeme \
-  ghcr.io/$IMAGE_OWNER/valheim:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/valheim:latest
 ```
 
 Valheim Plus:
@@ -105,7 +111,7 @@ docker run -d --name valheim-plus --restart unless-stopped --init \
   -p 2456-2458:2456-2458/udp \
   -v "$PWD/valheim/plus/data:/opt/valheim" \
   -e SERVER_PASS=changeme \
-  ghcr.io/$IMAGE_OWNER/valheim-plus:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/valheim-plus:latest
 ```
 
 Ground Branch:
@@ -114,7 +120,7 @@ Ground Branch:
 docker run -d --name ground-branch --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp \
   -v "$PWD/ground-branch/data:/opt/groundbranch" \
-  ghcr.io/$IMAGE_OWNER/ground-branch:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/ground-branch:latest
 ```
 
 Space Engineers:
@@ -126,7 +132,7 @@ docker run -d --name space-engineers --restart unless-stopped --init \
   -v "$PWD/space-engineers/data/instances:/opt/spaceengineers/instances" \
   -v "$PWD/space-engineers/data/plugins:/opt/spaceengineers/plugins" \
   -e SE_INSTANCE_NAME=Default \
-  ghcr.io/$IMAGE_OWNER/space-engineers:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/space-engineers:latest
 ```
 
 Core Keeper (SDR, no ports):
@@ -134,7 +140,7 @@ Core Keeper (SDR, no ports):
 ```bash
 docker run -d --name core-keeper --restart unless-stopped --init \
   -v "$PWD/core-keeper/data:/opt/corekeeper" \
-  ghcr.io/$IMAGE_OWNER/core-keeper:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/core-keeper:latest
 ```
 
 Factorio:
@@ -144,7 +150,7 @@ docker run -d --name factorio --restart unless-stopped --init \
   -p 34197:34197/udp -p 27015:27015/tcp \
   -v "$PWD/factorio/data:/opt/factorio" \
   -e RCON_PASSWORD=changeme \
-  ghcr.io/$IMAGE_OWNER/factorio:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/factorio:latest
 ```
 
 7 Days to Die:
@@ -154,7 +160,7 @@ docker run -d --name 7-days-to-die --restart unless-stopped --init \
   -p 26900:26900/tcp -p 26900:26900/udp \
   -p 26901-26903:26901-26903/udp \
   -v "$PWD/7-days-to-die/data:/opt/7dtd" \
-  ghcr.io/$IMAGE_OWNER/7-days-to-die:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/7-days-to-die:latest
 ```
 
 Project Zomboid:
@@ -164,7 +170,7 @@ docker run -d --name project-zomboid --restart unless-stopped --init \
   -p 16261:16261/udp -p 16262:16262/udp \
   -v "$PWD/project-zomboid/data:/opt/zomboid" \
   -e PZ_ADMIN_PASSWORD=changeme \
-  ghcr.io/$IMAGE_OWNER/project-zomboid:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/project-zomboid:latest
 ```
 
 Terraria:
@@ -173,7 +179,7 @@ Terraria:
 docker run -d --name terraria --restart unless-stopped --init \
   -p 7777:7777/tcp \
   -v "$PWD/terraria/data:/opt/terraria" \
-  ghcr.io/$IMAGE_OWNER/terraria:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/terraria:latest
 ```
 
 Left 4 Dead 2:
@@ -182,7 +188,7 @@ Left 4 Dead 2:
 docker run -d --name l4d2 --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
   -v "$PWD/l4d2/data:/opt/l4d2" \
-  ghcr.io/$IMAGE_OWNER/l4d2:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/l4d2:latest
 ```
 
 Palworld:
@@ -191,7 +197,7 @@ Palworld:
 docker run -d --name palworld --restart unless-stopped --init \
   -p 8211:8211/udp \
   -v "$PWD/palworld/data:/opt/palworld" \
-  ghcr.io/$IMAGE_OWNER/palworld:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/palworld:latest
 ```
 
 Starbound:
@@ -200,7 +206,7 @@ Starbound:
 docker run -d --name starbound --restart unless-stopped --init \
   -p 21025:21025/tcp \
   -v "$PWD/starbound/data:/opt/starbound" \
-  ghcr.io/$IMAGE_OWNER/starbound:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/starbound:latest
 ```
 
 OpenMoHAA (copy your owned MOHAA `main` / `mainta` / `maintt` PK3s into `openmohaa/data` first):
@@ -209,7 +215,7 @@ OpenMoHAA (copy your owned MOHAA `main` / `mainta` / `maintt` PK3s into `openmoh
 docker run -d --name openmohaa --restart unless-stopped --init \
   -p 12203:12203/udp -p 12300:12300/udp \
   -v "$PWD/openmohaa/data:/usr/local/share/mohaa" \
-  ghcr.io/$IMAGE_OWNER/openmohaa:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/openmohaa:latest
 ```
 
 Arma 3:
@@ -223,7 +229,7 @@ docker run -d --name arma3 --restart unless-stopped \
   -v "$PWD/arma/arma-3/cache:/home/arma3/cache" \
   -e STEAM_USERNAME=youruser \
   -e STEAM_PASSWORD=yourpass \
-  ghcr.io/$IMAGE_OWNER/arma-3:latest
+  ghcr.io/sudo-ivan/dockerized-game-servers/arma-3:latest
 ```
 
 Hytale (external image):
@@ -269,11 +275,12 @@ For direct connect, set `SERVER_PORT` and publish that UDP port. World data live
 Backup, restore, update, and healthchecks: `./tools/gs` (see docs guides/ops). Examples:
 
 ```bash
-export IMAGE_OWNER="$(./ci/repo-meta.sh | sed -n 's/^IMAGE_OWNER=//p')"
 ./tools/gs list
 ./tools/gs backup core-keeper
 ./tools/gs update factorio --backup
 ```
+
+`./tools/gs` resolves `IMAGE_OWNER` from your git remote via `ci/repo-meta.sh`. Forks can `export IMAGE_OWNER=your-user/your-fork` when using custom images.
 
 ### Factorio
 
@@ -333,7 +340,7 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 | `arma-3` | Arma 3 dedicated |
 
 ```bash
-docker pull ghcr.io/$IMAGE_OWNER/minecraft-fabric:latest
+docker pull ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
 ```
 
 ## CI
@@ -348,8 +355,8 @@ docker pull ghcr.io/$IMAGE_OWNER/minecraft-fabric:latest
 Example tags after a versioned Fabric build for `26.2`:
 
 ```text
-ghcr.io/$IMAGE_OWNER/minecraft-base:java25
-ghcr.io/$IMAGE_OWNER/minecraft-fabric:26.2
+ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-base:java25
+ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:26.2
 ```
 
 Local resolve preview:
