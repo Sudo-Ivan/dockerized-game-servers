@@ -80,8 +80,6 @@ jobs:
       push: ${{ env.PUSH == 'true' }}
       tag: ${{ env.TAG }}
       scan: ${{ env.PUSH == 'true' }}
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   images:
     name: image / ${{ matrix.name }}
@@ -97,5 +95,3 @@ jobs:
       push: ${{ env.PUSH == 'true' }}
       tag: ${{ env.TAG }}
       scan: ${{ env.PUSH == 'true' }}
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

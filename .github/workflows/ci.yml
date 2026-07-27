@@ -79,5 +79,3 @@ jobs:
       push: false
       tag: ci
       scan: false
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
