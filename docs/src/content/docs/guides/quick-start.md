@@ -85,6 +85,22 @@ These patterns show up across many servers, but not all, always check the server
 Anonymous SteamCMD downloads most dedicated server tools without a Steam account. A few games (Arma 3 is the common case) need an account that owns the server files. Set `STEAM_USERNAME` and `STEAM_PASSWORD`, and `STEAM_GUARD_CODE` if Steam Guard prompts for a code. Anonymous logins can also fail to list a server publicly for some titles, in which case set real credentials.
 :::
 
+## Networking: getting friends onto your server
+
+Docker only publishes ports on the machine it runs on, your router still has to let the traffic in from the internet. Two ways to do that:
+
+- **Port forwarding** (recommended for a server you keep around): a rule on your router that always sends traffic on a given port to your server's local IP. Reliable, and it is what most guides assume.
+- **UPnP**: your router opens the port automatically when asked. Convenient, but not every router supports it well, and it is a weaker security boundary since any device on your network could ask for a port to be opened.
+
+Whichever you use, give the machine running the containers a fixed local IP (a static IP or a DHCP reservation in your router). Otherwise the forwarding rule can silently point at the wrong device after a reboot.
+
+:::note[If it "isn't working"]
+- **Same-network testing can lie to you.** Many home routers do not support NAT loopback (hairpin NAT), so visiting your own public IP from inside your own network can fail even though it works fine for a friend elsewhere. Test from outside your network, mobile data works well, before assuming the setup is broken.
+- **CGNAT blocks port forwarding entirely.** If your ISP puts you behind Carrier-Grade NAT, forwarded ports never reach your router no matter how you configure it. Compare the WAN IP shown in your router's admin page to your public IP from a site like whatismyip.com, if they differ, you are likely behind CGNAT and need a different approach (a VPS, a tunnel, or asking your ISP for a public IP).
+- **Check both TCP and UDP.** Most game servers need both, and forwarding one but not the other is a common miss, check the port table on the server's guide.
+- **A host firewall can still block a correctly forwarded port.** `ufw`/`firewalld`/cloud provider security groups sit between the internet and the container even after the router is configured correctly.
+:::
+
 ## Ops: backup, restore, update, healthchecks
 
 Covered on the [Ops](./ops/) page: `./tools/gs backup`, `./tools/gs restore`, `./tools/gs update`, and how healthchecks map to `docker inspect`.

@@ -18,6 +18,8 @@ Arma 3 dedicated server files (Steam App **233780**) usually require a Steam acc
 
 The entrypoint runs `arma3server_x64` with `-config=/home/arma3/configs/server.cfg`, UDP port **2302**, and `-profiles=/home/arma3/profiles`.
 
+`ci/server-catalog.sh` lists `server`, `configs`, and `profiles` as the backup volumes for `./tools/gs backup arma-3`, `cache` is left out since it only holds the SteamCMD/workshop download cache and regenerates on the next sync. Arma 3 has no `update_envs` entry, so `./tools/gs update arma-3` is not available, see [Ops](/guides/ops/) for what does work.
+
 ## Ports
 
 Publish UDP **2302-2306** (game and Steam query).
@@ -69,7 +71,7 @@ docker compose -f arma/arma-3/docker-compose.yml up -d
 ## Docker run
 
 ```bash
-docker run -d --name arma3 --restart unless-stopped \
+docker run -d --name arma3 --restart unless-stopped --init \
   -p 2302-2306:2302-2306/udp \
   -v "$PWD/arma/arma-3/server:/home/arma3/server" \
   -v "$PWD/arma/arma-3/configs:/home/arma3/configs" \
@@ -81,4 +83,23 @@ docker run -d --name arma3 --restart unless-stopped \
   {{IMAGE_PREFIX}}/arma-3:latest
 ```
 
-Tuning for large mod lists: `ARMA_DOWNLOAD_MAX_WORKERS`, `ARMA_DOWNLOAD_CHUNK_SIZE`, and CDN retry env vars in compose adjust Steam CDN download behavior.
+## Workshop CDN tuning
+
+The Steam CDN client (`arma/arma-3/api/`) reads these for large mod lists, all set in `docker-compose.yml`:
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `ARMA_DOWNLOAD_MAX_WORKERS` | `4` | Parallel CDN download workers |
+| `ARMA_DOWNLOAD_CHUNK_SIZE` | `4194304` | Bytes per download chunk (4 MiB) |
+| `ARMA_DOWNLOAD_PROGRESS_INTERVAL` | `60` | Seconds between download progress log lines |
+| `ARMA_CDN_CLIENT_RETRIES` | `3` | Retries for a failed CDN client connection |
+| `ARMA_CDN_CLIENT_BASE_DELAY` | `1.5` | Base backoff seconds between CDN client retries |
+| `ARMA_CDN_OP_RETRIES` | `3` | Retries for a failed CDN manifest or file operation |
+| `ARMA_CDN_OP_BASE_DELAY` | `1.5` | Base backoff seconds between CDN operation retries |
+
+`ARMA_APP_ID` (default `233780`) overrides the Steam App ID used for both the server install and the workshop sync, only useful for testing against a different depot.
+
+## See also
+
+- [All servers](/reference/servers/) for the compose path and image name
+- [Ops](/guides/ops/) for `./tools/gs backup` and `restore`

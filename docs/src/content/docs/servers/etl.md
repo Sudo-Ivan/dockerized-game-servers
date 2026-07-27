@@ -5,7 +5,7 @@ description: ET Legacy dedicated server built from the GameServerManagers etlser
 
 Compose path: etl. Image: etl.
 
-Built on the shared [runtime-base](/reference/images/) image. The Dockerfile bakes a bundle from [GameServerManagers etlserver-build](https://github.com/GameServerManagers/etlserver-build) (`etlegacy-latest-i386-et-260b`) into the image as a seed, then copies that seed into the data volume the first time the container runs. You must own Wolfenstein: Enemy Territory (ET: Legacy is a free, open-source engine rebuild but still expects the original game's assets in some setups, check the etlserver-build release notes for your target version).
+Built on the shared [runtime-base](/reference/images/) image. The Dockerfile bakes a bundle from [GameServerManagers etlserver-build](https://github.com/GameServerManagers/etlserver-build) (`etlegacy-latest-i386-et-260b`) into the image as a seed, then copies that seed into the data volume the first time the container runs. Wolfenstein: Enemy Territory was released as a free standalone multiplayer game, so unlike the rest of this game family there is no ownership requirement, the bundle already includes the pak files ET: Legacy needs.
 
 :::note[Requirements]
 - Persist `./data` for the server install and `etmain/server.cfg`

@@ -10,164 +10,164 @@ Nothing here is uploaded. The config is generated with JavaScript in your browse
 :::
 
 <div id="a3cfg-tool" class="a3cfg-tool" data-tool>
-  <form id="a3cfg-form" class="a3cfg-form">
-    <fieldset class="a3cfg-fieldset">
-      <legend>Global settings</legend>
+<form id="a3cfg-form" class="a3cfg-form">
+<fieldset class="a3cfg-fieldset">
+<legend>Global settings</legend>
 
-      <label class="a3cfg-field">
-        <span>Hostname</span>
-        <input type="text" id="a3cfg-hostname" value="My Arma 3 Server" maxlength="200" />
-      </label>
+<label class="a3cfg-field">
+<span>Hostname</span>
+<input type="text" id="a3cfg-hostname" value="My Arma 3 Server" maxlength="200" />
+</label>
 
-      <label class="a3cfg-field">
-        <span>Server password <small>(blank = none)</small></span>
-        <input type="text" id="a3cfg-password" value="" />
-      </label>
+<label class="a3cfg-field">
+<span>Server password <small>(blank = none)</small></span>
+<input type="text" id="a3cfg-password" value="" />
+</label>
 
-      <label class="a3cfg-field">
-        <span>Admin password</span>
-        <input type="text" id="a3cfg-passwordAdmin" value="changeme" />
-      </label>
+<label class="a3cfg-field">
+<span>Admin password</span>
+<input type="text" id="a3cfg-passwordAdmin" value="changeme" />
+</label>
 
-      <label class="a3cfg-field">
-        <span>Server commands password <small>(blank = same as admin)</small></span>
-        <input type="text" id="a3cfg-serverCommandPassword" value="" />
-      </label>
+<label class="a3cfg-field">
+<span>Server commands password <small>(blank = same as admin)</small></span>
+<input type="text" id="a3cfg-serverCommandPassword" value="" />
+</label>
 
-      <label class="a3cfg-field a3cfg-field-wide">
-        <span>Message of the day <small>(one line per message)</small></span>
-        <textarea id="a3cfg-motd" rows="3">Welcome to the server.
+<label class="a3cfg-field a3cfg-field-wide">
+<span>Message of the day <small>(one line per message)</small></span>
+<textarea id="a3cfg-motd" rows="3">Welcome to the server.
 Have fun and follow the rules.</textarea>
-      </label>
+</label>
 
-      <label class="a3cfg-field">
-        <span>MOTD interval (seconds)</span>
-        <input type="number" id="a3cfg-motdInterval" value="30" min="0" />
-      </label>
-    </fieldset>
+<label class="a3cfg-field">
+<span>MOTD interval (seconds)</span>
+<input type="number" id="a3cfg-motdInterval" value="30" min="0" />
+</label>
+</fieldset>
 
-    <fieldset class="a3cfg-fieldset">
-      <legend>Connection settings</legend>
+<fieldset class="a3cfg-fieldset">
+<legend>Connection settings</legend>
 
-      <label class="a3cfg-field">
-        <span>Max players</span>
-        <input type="number" id="a3cfg-maxPlayers" value="32" min="1" max="300" />
-      </label>
+<label class="a3cfg-field">
+<span>Max players</span>
+<input type="number" id="a3cfg-maxPlayers" value="32" min="1" max="300" />
+</label>
 
-      <label class="a3cfg-field a3cfg-checkbox">
-        <input type="checkbox" id="a3cfg-kickDuplicate" checked />
-        <span>Kick duplicate player IDs</span>
-      </label>
+<label class="a3cfg-field a3cfg-checkbox">
+<input type="checkbox" id="a3cfg-kickDuplicate" checked />
+<span>Kick duplicate player IDs</span>
+</label>
 
-      <label class="a3cfg-field">
-        <span>Verify signatures</span>
-        <select id="a3cfg-verifySignatures">
-          <option value="0">Disabled</option>
-          <option value="2" selected>Full protection</option>
-        </select>
-      </label>
+<label class="a3cfg-field">
+<span>Verify signatures</span>
+<select id="a3cfg-verifySignatures">
+<option value="0">Disabled</option>
+<option value="2" selected>Full protection</option>
+</select>
+</label>
 
-      <label class="a3cfg-field">
-        <span>Allow file patching</span>
-        <select id="a3cfg-allowedFilePatching">
-          <option value="0" selected>No clients</option>
-          <option value="1">Headless clients only</option>
-          <option value="2">All clients</option>
-        </select>
-      </label>
+<label class="a3cfg-field">
+<span>Allow file patching</span>
+<select id="a3cfg-allowedFilePatching">
+<option value="0" selected>No clients</option>
+<option value="1">Headless clients only</option>
+<option value="2">All clients</option>
+</select>
+</label>
 
-      <label class="a3cfg-field">
-        <span>Disconnect timeout (seconds)</span>
-        <input type="number" id="a3cfg-disconnectTimeout" value="90" min="5" max="90" />
-      </label>
+<label class="a3cfg-field">
+<span>Disconnect timeout (seconds)</span>
+<input type="number" id="a3cfg-disconnectTimeout" value="90" min="5" max="90" />
+</label>
 
-      <label class="a3cfg-field">
-        <span>Max desync (ms) <small>(blank = engine default)</small></span>
-        <input type="number" id="a3cfg-maxDesync" value="" min="0" />
-      </label>
+<label class="a3cfg-field">
+<span>Max desync (ms) <small>(blank = engine default)</small></span>
+<input type="number" id="a3cfg-maxDesync" value="" min="0" />
+</label>
 
-      <label class="a3cfg-field">
-        <span>Max ping (ms) <small>(blank = engine default)</small></span>
-        <input type="number" id="a3cfg-maxPing" value="" min="0" />
-      </label>
+<label class="a3cfg-field">
+<span>Max ping (ms) <small>(blank = engine default)</small></span>
+<input type="number" id="a3cfg-maxPing" value="" min="0" />
+</label>
 
-      <label class="a3cfg-field">
-        <span>Max packet loss <small>(blank = engine default)</small></span>
-        <input type="number" id="a3cfg-maxPacketLoss" value="" min="0" />
-      </label>
-    </fieldset>
+<label class="a3cfg-field">
+<span>Max packet loss <small>(blank = engine default)</small></span>
+<input type="number" id="a3cfg-maxPacketLoss" value="" min="0" />
+</label>
+</fieldset>
 
-    <fieldset class="a3cfg-fieldset">
-      <legend>In-game settings</legend>
+<fieldset class="a3cfg-fieldset">
+<legend>In-game settings</legend>
 
-      <label class="a3cfg-field a3cfg-checkbox">
-        <input type="checkbox" id="a3cfg-battlEye" checked />
-        <span>Enable BattlEye</span>
-      </label>
+<label class="a3cfg-field a3cfg-checkbox">
+<input type="checkbox" id="a3cfg-battlEye" checked />
+<span>Enable BattlEye</span>
+</label>
 
-      <label class="a3cfg-field a3cfg-checkbox">
-        <input type="checkbox" id="a3cfg-persistent" checked />
-        <span>Persistent mission (keep running with no players)</span>
-      </label>
+<label class="a3cfg-field a3cfg-checkbox">
+<input type="checkbox" id="a3cfg-persistent" checked />
+<span>Persistent mission (keep running with no players)</span>
+</label>
 
-      <label class="a3cfg-field a3cfg-checkbox">
-        <input type="checkbox" id="a3cfg-disableVoN" />
-        <span>Disable voice over net</span>
-      </label>
+<label class="a3cfg-field a3cfg-checkbox">
+<input type="checkbox" id="a3cfg-disableVoN" />
+<span>Disable voice over net</span>
+</label>
 
-      <label class="a3cfg-field">
-        <span>VoN codec</span>
-        <select id="a3cfg-vonCodec">
-          <option value="0">SPEEX</option>
-          <option value="1" selected>OPUS</option>
-        </select>
-      </label>
+<label class="a3cfg-field">
+<span>VoN codec</span>
+<select id="a3cfg-vonCodec">
+<option value="0">SPEEX</option>
+<option value="1" selected>OPUS</option>
+</select>
+</label>
 
-      <label class="a3cfg-field">
-        <span>VoN codec quality <small>(1-20 OPUS, 1-10 SPEEX)</small></span>
-        <input type="number" id="a3cfg-vonCodecQuality" value="15" min="1" max="20" />
-      </label>
+<label class="a3cfg-field">
+<span>VoN codec quality <small>(1-20 OPUS, 1-10 SPEEX)</small></span>
+<input type="number" id="a3cfg-vonCodecQuality" value="15" min="1" max="20" />
+</label>
 
-      <label class="a3cfg-field">
-        <span>Vote threshold <small>(0-1)</small></span>
-        <input type="number" id="a3cfg-voteThreshold" value="0.33" min="0" max="1" step="0.01" />
-      </label>
+<label class="a3cfg-field">
+<span>Vote threshold <small>(0-1)</small></span>
+<input type="number" id="a3cfg-voteThreshold" value="0.33" min="0" max="1" step="0.01" />
+</label>
 
-      <label class="a3cfg-field">
-        <span>Vote mission players</span>
-        <input type="number" id="a3cfg-voteMissionPlayers" value="1" min="0" />
-      </label>
-    </fieldset>
+<label class="a3cfg-field">
+<span>Vote mission players</span>
+<input type="number" id="a3cfg-voteMissionPlayers" value="1" min="0" />
+</label>
+</fieldset>
 
-    <fieldset class="a3cfg-fieldset">
-      <legend>Log settings</legend>
+<fieldset class="a3cfg-fieldset">
+<legend>Log settings</legend>
 
-      <label class="a3cfg-field">
-        <span>Log file</span>
-        <input type="text" id="a3cfg-logFile" value="server_console.log" />
-      </label>
+<label class="a3cfg-field">
+<span>Log file</span>
+<input type="text" id="a3cfg-logFile" value="server_console.log" />
+</label>
 
-      <label class="a3cfg-field">
-        <span>Timestamp format</span>
-        <select id="a3cfg-timeStampFormat">
-          <option value="none">None</option>
-          <option value="short" selected>Short</option>
-          <option value="full">Full</option>
-        </select>
-      </label>
-    </fieldset>
-  </form>
+<label class="a3cfg-field">
+<span>Timestamp format</span>
+<select id="a3cfg-timeStampFormat">
+<option value="none">None</option>
+<option value="short" selected>Short</option>
+<option value="full">Full</option>
+</select>
+</label>
+</fieldset>
+</form>
 
-  <div class="a3cfg-output">
-    <div class="a3cfg-output-head">
-      <span>server.cfg</span>
-      <div class="a3cfg-actions">
-        <button type="button" id="a3cfg-copy">Copy</button>
-        <button type="button" id="a3cfg-download">Download</button>
-      </div>
-    </div>
-    <pre id="a3cfg-preview" class="a3cfg-pre"></pre>
-  </div>
+<div class="a3cfg-output">
+<div class="a3cfg-output-head">
+<span>server.cfg</span>
+<div class="a3cfg-actions">
+<button type="button" id="a3cfg-copy">Copy</button>
+<button type="button" id="a3cfg-download">Download</button>
+</div>
+</div>
+<pre id="a3cfg-preview" class="a3cfg-pre"></pre>
+</div>
 </div>
 
 <style>

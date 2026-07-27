@@ -10,101 +10,101 @@ Nothing here is uploaded. The output is generated with JavaScript in your browse
 :::
 
 <div id="drun-tool" class="drun-tool" data-tool>
-  <form id="drun-form" class="drun-form">
-    <fieldset class="drun-fieldset">
-      <legend>Container</legend>
+<form id="drun-form" class="drun-form">
+<fieldset class="drun-fieldset">
+<legend>Container</legend>
 
-      <label class="drun-field">
-        <span>Image</span>
-        <input type="text" id="drun-image" value="ghcr.io/example/minecraft-vanilla:latest" />
-      </label>
+<label class="drun-field">
+<span>Image</span>
+<input type="text" id="drun-image" value="ghcr.io/example/minecraft-vanilla:latest" />
+</label>
 
-      <label class="drun-field">
-        <span>Container name</span>
-        <input type="text" id="drun-name" value="my-server" />
-      </label>
+<label class="drun-field">
+<span>Container name</span>
+<input type="text" id="drun-name" value="my-server" />
+</label>
 
-      <label class="drun-field">
-        <span>Restart policy</span>
-        <select id="drun-restart">
-          <option value="">None</option>
-          <option value="unless-stopped" selected>Unless stopped</option>
-          <option value="always">Always</option>
-          <option value="on-failure">On failure</option>
-        </select>
-      </label>
+<label class="drun-field">
+<span>Restart policy</span>
+<select id="drun-restart">
+<option value="">None</option>
+<option value="unless-stopped" selected>Unless stopped</option>
+<option value="always">Always</option>
+<option value="on-failure">On failure</option>
+</select>
+</label>
 
-      <label class="drun-field drun-checkbox">
-        <input type="checkbox" id="drun-init" checked />
-        <span>Run with an init process (<code>--init</code>)</span>
-      </label>
-    </fieldset>
+<label class="drun-field drun-checkbox">
+<input type="checkbox" id="drun-init" checked />
+<span>Run with an init process (<code>--init</code>)</span>
+</label>
+</fieldset>
 
-    <fieldset class="drun-fieldset">
-      <legend>Ports</legend>
-      <div id="drun-ports" class="drun-rows"></div>
-      <button type="button" id="drun-add-port" class="drun-add">Add port</button>
-    </fieldset>
+<fieldset class="drun-fieldset">
+<legend>Ports</legend>
+<div id="drun-ports" class="drun-rows"></div>
+<button type="button" id="drun-add-port" class="drun-add">Add port</button>
+</fieldset>
 
-    <fieldset class="drun-fieldset">
-      <legend>Volumes</legend>
-      <div id="drun-volumes" class="drun-rows"></div>
-      <button type="button" id="drun-add-volume" class="drun-add">Add volume</button>
-    </fieldset>
+<fieldset class="drun-fieldset">
+<legend>Volumes</legend>
+<div id="drun-volumes" class="drun-rows"></div>
+<button type="button" id="drun-add-volume" class="drun-add">Add volume</button>
+</fieldset>
 
-    <fieldset class="drun-fieldset">
-      <legend>Environment variables</legend>
-      <div id="drun-envs" class="drun-rows"></div>
-      <button type="button" id="drun-add-env" class="drun-add">Add variable</button>
-    </fieldset>
-  </form>
+<fieldset class="drun-fieldset">
+<legend>Environment variables</legend>
+<div id="drun-envs" class="drun-rows"></div>
+<button type="button" id="drun-add-env" class="drun-add">Add variable</button>
+</fieldset>
+</form>
 
-  <div class="drun-output">
-    <div class="drun-output-head">
-      <span id="drun-output-label">docker run</span>
-      <div class="drun-tabs">
-        <button type="button" id="drun-tab-run" class="drun-tab is-active" data-tab="run">docker run</button>
-        <button type="button" id="drun-tab-compose" class="drun-tab" data-tab="compose">compose</button>
-      </div>
-      <div class="drun-actions">
-        <button type="button" id="drun-copy">Copy</button>
-        <button type="button" id="drun-download">Download</button>
-      </div>
-    </div>
-    <pre id="drun-preview" class="drun-pre"></pre>
-  </div>
+<div class="drun-output">
+<div class="drun-output-head">
+<span id="drun-output-label">docker run</span>
+<div class="drun-tabs">
+<button type="button" id="drun-tab-run" class="drun-tab is-active" data-tab="run">docker run</button>
+<button type="button" id="drun-tab-compose" class="drun-tab" data-tab="compose">compose</button>
+</div>
+<div class="drun-actions">
+<button type="button" id="drun-copy">Copy</button>
+<button type="button" id="drun-download">Download</button>
+</div>
+</div>
+<pre id="drun-preview" class="drun-pre"></pre>
+</div>
 </div>
 
 <template id="drun-port-row-template">
-  <div class="drun-row" data-row>
-    <input type="text" class="drun-host-port" placeholder="Host port" value="" />
-    <span class="drun-sep">:</span>
-    <input type="text" class="drun-container-port" placeholder="Container port" value="" />
-    <select class="drun-proto">
-      <option value="tcp">tcp</option>
-      <option value="udp">udp</option>
-      <option value="both">tcp+udp</option>
-    </select>
-    <button type="button" class="drun-remove" data-remove aria-label="Remove port">Remove</button>
-  </div>
+<div class="drun-row" data-row>
+<input type="text" class="drun-host-port" placeholder="Host port" value="" />
+<span class="drun-sep">:</span>
+<input type="text" class="drun-container-port" placeholder="Container port" value="" />
+<select class="drun-proto">
+<option value="tcp">tcp</option>
+<option value="udp">udp</option>
+<option value="both">tcp+udp</option>
+</select>
+<button type="button" class="drun-remove" data-remove aria-label="Remove port">Remove</button>
+</div>
 </template>
 
 <template id="drun-volume-row-template">
-  <div class="drun-row" data-row>
-    <input type="text" class="drun-host-path" placeholder="Host path" value="" />
-    <span class="drun-sep">:</span>
-    <input type="text" class="drun-container-path" placeholder="Container path" value="" />
-    <button type="button" class="drun-remove" data-remove aria-label="Remove volume">Remove</button>
-  </div>
+<div class="drun-row" data-row>
+<input type="text" class="drun-host-path" placeholder="Host path" value="" />
+<span class="drun-sep">:</span>
+<input type="text" class="drun-container-path" placeholder="Container path" value="" />
+<button type="button" class="drun-remove" data-remove aria-label="Remove volume">Remove</button>
+</div>
 </template>
 
 <template id="drun-env-row-template">
-  <div class="drun-row" data-row>
-    <input type="text" class="drun-env-key" placeholder="KEY" value="" />
-    <span class="drun-sep">=</span>
-    <input type="text" class="drun-env-value" placeholder="value" value="" />
-    <button type="button" class="drun-remove" data-remove aria-label="Remove variable">Remove</button>
-  </div>
+<div class="drun-row" data-row>
+<input type="text" class="drun-env-key" placeholder="KEY" value="" />
+<span class="drun-sep">=</span>
+<input type="text" class="drun-env-value" placeholder="value" value="" />
+<button type="button" class="drun-remove" data-remove aria-label="Remove variable">Remove</button>
+</div>
 </template>
 
 <style>

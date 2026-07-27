@@ -23,17 +23,25 @@ Experimental server branch: set `ARMAR_APP_ID=1890870`.
 
 ## Environment
 
-| Variable | Purpose |
-| --- | --- |
-| `ARMAR_BIND_PORT` / `ARMAR_A2S_PORT` | Game and A2S ports (must match compose port mappings) |
-| `ARMAR_SERVER_NAME` | Browser name (seed config only, edit JSON later for live changes) |
-| `ARMAR_MAX_PLAYERS` | Player cap in generated config |
-| `ARMAR_SCENARIO_ID` | Scenario GUID path, for example `{59AD59368755F41A}Missions/23_Campaign.conf` |
-| `ARMAR_MAX_FPS` | Server FPS cap (default `60`) |
-| `ARMAR_FORCE_UPDATE` | Re-run SteamCMD install |
-| `STEAMCMD_WINDOWS_WORKAROUND` | Keep `full` for reliable anonymous installs |
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `STEAM_USERNAME` | `anonymous` | Steam login for the install step |
+| `STEAM_PASSWORD` | (empty) | Steam password, only needed if anonymous install fails |
+| `STEAM_GUARD_CODE` | (empty) | Steam Guard code for the login step |
+| `STEAMCMD_WINDOWS_WORKAROUND` | `full` | SteamCMD depot fetch mode (`full`, `prime`, or `off`), `full` pulls a Windows depot pass before the Linux depot |
+| `ARMAR_APP_ID` | `1874900` | SteamCMD app id, set `1890870` for the experimental branch |
+| `ARMAR_FORCE_UPDATE` | `false` | Re-run SteamCMD install, same var `./tools/gs update arma-reforger` sets |
+| `ARMAR_BIND_PORT` | `2001` | Game UDP port, must match the compose port mapping |
+| `ARMAR_A2S_PORT` | `17777` | A2S query UDP port, must match the compose port mapping |
+| `ARMAR_SERVER_NAME` | `Arma Reforger Server` | Browser name, seed config only, edit JSON later for live changes |
+| `ARMAR_MAX_PLAYERS` | `16` | Player cap in generated config |
+| `ARMAR_SCENARIO_ID` | `{59AD59368755F41A}Missions/23_Campaign.conf` | Scenario GUID path, this default is Conflict on Everon |
+| `ARMAR_MAX_FPS` | `60` | Server FPS cap |
+| `ARMAR_EXTRA_ARGS` | (empty) | Extra CLI args appended to the launch command, for example `-listScenarios` |
 
 After the first start, edit `arma/reforger/data/Configs/ServerConfig.json` directly for hostname, password, RCON, mods, and scenario. Restart the container to apply changes.
+
+The healthcheck is a process probe (`pgrep -f ArmaReforgerServer`) with a 1200s start period since first install and validation can take a while. See [Ops](/guides/ops/) for `./tools/gs backup`, `restore`, and `update`.
 
 ## Modding
 
@@ -98,3 +106,8 @@ docker run -d --name arma-reforger --restart unless-stopped --init \
 ```
 
 Allocate at least 6 GB RAM for the container. Mod-heavy servers need more CPU, RAM, and disk under `profile/`.
+
+## See also
+
+- [All servers](/reference/servers/) for the compose path and image name
+- [Ops](/guides/ops/) for `./tools/gs backup`, `restore`, and `update`

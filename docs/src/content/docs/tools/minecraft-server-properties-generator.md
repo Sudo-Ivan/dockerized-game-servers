@@ -10,149 +10,149 @@ Nothing here is uploaded. The file is generated with JavaScript in your browser.
 :::
 
 <div id="mcprops-tool" class="mcprops-tool" data-tool>
-  <form id="mcprops-form" class="mcprops-form">
-    <fieldset class="mcprops-fieldset">
-      <legend>World</legend>
+<form id="mcprops-form" class="mcprops-form">
+<fieldset class="mcprops-fieldset">
+<legend>World</legend>
 
-      <label class="mcprops-field">
-        <span>Level name</span>
-        <input type="text" id="mcprops-level-name" value="world" />
-      </label>
+<label class="mcprops-field">
+<span>Level name</span>
+<input type="text" id="mcprops-level-name" value="world" />
+</label>
 
-      <label class="mcprops-field">
-        <span>Level seed <small>(blank = random)</small></span>
-        <input type="text" id="mcprops-level-seed" value="" />
-      </label>
+<label class="mcprops-field">
+<span>Level seed <small>(blank = random)</small></span>
+<input type="text" id="mcprops-level-seed" value="" />
+</label>
 
-      <label class="mcprops-field">
-        <span>Level type</span>
-        <select id="mcprops-level-type">
-          <option value="minecraft:normal" selected>Normal</option>
-          <option value="minecraft:flat">Flat</option>
-          <option value="minecraft:large_biomes">Large biomes</option>
-          <option value="minecraft:amplified">Amplified</option>
-        </select>
-      </label>
+<label class="mcprops-field">
+<span>Level type</span>
+<select id="mcprops-level-type">
+<option value="minecraft:normal" selected>Normal</option>
+<option value="minecraft:flat">Flat</option>
+<option value="minecraft:large_biomes">Large biomes</option>
+<option value="minecraft:amplified">Amplified</option>
+</select>
+</label>
 
-      <label class="mcprops-field">
-        <span>Gamemode</span>
-        <select id="mcprops-gamemode">
-          <option value="survival" selected>Survival</option>
-          <option value="creative">Creative</option>
-          <option value="adventure">Adventure</option>
-          <option value="spectator">Spectator</option>
-        </select>
-      </label>
+<label class="mcprops-field">
+<span>Gamemode</span>
+<select id="mcprops-gamemode">
+<option value="survival" selected>Survival</option>
+<option value="creative">Creative</option>
+<option value="adventure">Adventure</option>
+<option value="spectator">Spectator</option>
+</select>
+</label>
 
-      <label class="mcprops-field">
-        <span>Difficulty</span>
-        <select id="mcprops-difficulty">
-          <option value="peaceful">Peaceful</option>
-          <option value="easy">Easy</option>
-          <option value="normal" selected>Normal</option>
-          <option value="hard">Hard</option>
-        </select>
-      </label>
+<label class="mcprops-field">
+<span>Difficulty</span>
+<select id="mcprops-difficulty">
+<option value="peaceful">Peaceful</option>
+<option value="easy">Easy</option>
+<option value="normal" selected>Normal</option>
+<option value="hard">Hard</option>
+</select>
+</label>
 
-      <label class="mcprops-field a3cfg-checkbox mcprops-checkbox">
-        <input type="checkbox" id="mcprops-hardcore" />
-        <span>Hardcore</span>
-      </label>
-    </fieldset>
+<label class="mcprops-field a3cfg-checkbox mcprops-checkbox">
+<input type="checkbox" id="mcprops-hardcore" />
+<span>Hardcore</span>
+</label>
+</fieldset>
 
-    <fieldset class="mcprops-fieldset">
-      <legend>Players and access</legend>
+<fieldset class="mcprops-fieldset">
+<legend>Players and access</legend>
 
-      <label class="mcprops-field">
-        <span>Server port</span>
-        <input type="number" id="mcprops-server-port" value="25565" min="1" max="65535" />
-      </label>
+<label class="mcprops-field">
+<span>Server port</span>
+<input type="number" id="mcprops-server-port" value="25565" min="1" max="65535" />
+</label>
 
-      <label class="mcprops-field">
-        <span>Max players</span>
-        <input type="number" id="mcprops-max-players" value="20" min="1" max="2000" />
-      </label>
+<label class="mcprops-field">
+<span>Max players</span>
+<input type="number" id="mcprops-max-players" value="20" min="1" max="2000" />
+</label>
 
-      <label class="mcprops-field mcprops-checkbox">
-        <input type="checkbox" id="mcprops-online-mode" checked />
-        <span>Online mode (Mojang authentication)</span>
-      </label>
+<label class="mcprops-field mcprops-checkbox">
+<input type="checkbox" id="mcprops-online-mode" checked />
+<span>Online mode (Mojang authentication)</span>
+</label>
 
-      <label class="mcprops-field mcprops-checkbox">
-        <input type="checkbox" id="mcprops-white-list" />
-        <span>Enable whitelist</span>
-      </label>
+<label class="mcprops-field mcprops-checkbox">
+<input type="checkbox" id="mcprops-white-list" />
+<span>Enable whitelist</span>
+</label>
 
-      <label class="mcprops-field mcprops-checkbox">
-        <input type="checkbox" id="mcprops-pvp" checked />
-        <span>PvP</span>
-      </label>
+<label class="mcprops-field mcprops-checkbox">
+<input type="checkbox" id="mcprops-pvp" checked />
+<span>PvP</span>
+</label>
 
-      <label class="mcprops-field mcprops-checkbox">
-        <input type="checkbox" id="mcprops-allow-flight" />
-        <span>Allow flight</span>
-      </label>
+<label class="mcprops-field mcprops-checkbox">
+<input type="checkbox" id="mcprops-allow-flight" />
+<span>Allow flight</span>
+</label>
 
-      <label class="mcprops-field mcprops-checkbox">
-        <input type="checkbox" id="mcprops-enable-command-block" />
-        <span>Enable command blocks</span>
-      </label>
-    </fieldset>
+<label class="mcprops-field mcprops-checkbox">
+<input type="checkbox" id="mcprops-enable-command-block" />
+<span>Enable command blocks</span>
+</label>
+</fieldset>
 
-    <fieldset class="mcprops-fieldset">
-      <legend>Performance and view</legend>
+<fieldset class="mcprops-fieldset">
+<legend>Performance and view</legend>
 
-      <label class="mcprops-field">
-        <span>View distance <small>(chunks)</small></span>
-        <input type="number" id="mcprops-view-distance" value="10" min="3" max="32" />
-      </label>
+<label class="mcprops-field">
+<span>View distance <small>(chunks)</small></span>
+<input type="number" id="mcprops-view-distance" value="10" min="3" max="32" />
+</label>
 
-      <label class="mcprops-field">
-        <span>Simulation distance <small>(chunks)</small></span>
-        <input type="number" id="mcprops-simulation-distance" value="10" min="3" max="32" />
-      </label>
+<label class="mcprops-field">
+<span>Simulation distance <small>(chunks)</small></span>
+<input type="number" id="mcprops-simulation-distance" value="10" min="3" max="32" />
+</label>
 
-      <label class="mcprops-field">
-        <span>Spawn protection radius</span>
-        <input type="number" id="mcprops-spawn-protection" value="16" min="0" />
-      </label>
-    </fieldset>
+<label class="mcprops-field">
+<span>Spawn protection radius</span>
+<input type="number" id="mcprops-spawn-protection" value="16" min="0" />
+</label>
+</fieldset>
 
-    <fieldset class="mcprops-fieldset">
-      <legend>Motd and RCON</legend>
+<fieldset class="mcprops-fieldset">
+<legend>Motd and RCON</legend>
 
-      <label class="mcprops-field a3cfg-field-wide">
-        <span>MOTD</span>
-        <input type="text" id="mcprops-motd" value="A Minecraft Server" maxlength="59" />
-      </label>
+<label class="mcprops-field a3cfg-field-wide">
+<span>MOTD</span>
+<input type="text" id="mcprops-motd" value="A Minecraft Server" maxlength="59" />
+</label>
 
-      <label class="mcprops-field mcprops-checkbox">
-        <input type="checkbox" id="mcprops-enable-rcon" />
-        <span>Enable RCON</span>
-      </label>
+<label class="mcprops-field mcprops-checkbox">
+<input type="checkbox" id="mcprops-enable-rcon" />
+<span>Enable RCON</span>
+</label>
 
-      <label class="mcprops-field">
-        <span>RCON port</span>
-        <input type="number" id="mcprops-rcon-port" value="25575" min="1" max="65535" />
-      </label>
+<label class="mcprops-field">
+<span>RCON port</span>
+<input type="number" id="mcprops-rcon-port" value="25575" min="1" max="65535" />
+</label>
 
-      <label class="mcprops-field">
-        <span>RCON password <small>(required if RCON enabled)</small></span>
-        <input type="text" id="mcprops-rcon-password" value="" />
-      </label>
-    </fieldset>
-  </form>
+<label class="mcprops-field">
+<span>RCON password <small>(required if RCON enabled)</small></span>
+<input type="text" id="mcprops-rcon-password" value="" />
+</label>
+</fieldset>
+</form>
 
-  <div class="mcprops-output">
-    <div class="mcprops-output-head">
-      <span>server.properties</span>
-      <div class="mcprops-actions">
-        <button type="button" id="mcprops-copy">Copy</button>
-        <button type="button" id="mcprops-download">Download</button>
-      </div>
-    </div>
-    <pre id="mcprops-preview" class="mcprops-pre"></pre>
-  </div>
+<div class="mcprops-output">
+<div class="mcprops-output-head">
+<span>server.properties</span>
+<div class="mcprops-actions">
+<button type="button" id="mcprops-copy">Copy</button>
+<button type="button" id="mcprops-download">Download</button>
+</div>
+</div>
+<pre id="mcprops-preview" class="mcprops-pre"></pre>
+</div>
 </div>
 
 <style>
