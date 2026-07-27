@@ -16,6 +16,7 @@ Images publish to GHCR under `ghcr.io/$IMAGE_OWNER/` where IMAGE_OWNER is `owner
 | Valheim | `valheim/vanilla` | `valheim` |
 | Valheim Plus | `valheim/plus` | `valheim-plus` |
 | Ground Branch | `ground-branch` | `ground-branch` |
+| Space Engineers | `space-engineers` | `space-engineers` |
 | Core Keeper | `core-keeper` | `core-keeper` |
 | Factorio | `factorio` | `factorio` |
 | 7 Days to Die | `7-days-to-die` | `7-days-to-die` |
@@ -114,6 +115,16 @@ docker run -d --name ground-branch --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp \
   -v "$PWD/ground-branch/data:/opt/groundbranch" \
   ghcr.io/$IMAGE_OWNER/ground-branch:latest
+```
+
+Space Engineers:
+
+```bash
+docker run -d --name space-engineers --restart unless-stopped --init \
+  -p 27016:27016/udp \
+  -v "$PWD/space-engineers/data:/opt/spaceengineers" \
+  -e SE_INSTANCE_NAME=Default \
+  ghcr.io/$IMAGE_OWNER/space-engineers:latest
 ```
 
 Core Keeper (SDR, no ports):
@@ -237,6 +248,10 @@ Many titles allow anonymous SteamCMD. Arma 3 usually needs a Steam account that 
 
 Server config appears under `ground-branch/data/GroundBranch/ServerConfig/` after first start. Optional map/mission via `GB_MAP` and `GB_MISSION`.
 
+### Space Engineers
+
+Steam App 298740 (Windows dedicated server via Wine). Persist `space-engineers/data` at `/opt/spaceengineers` (dedicated binaries, instances, plugins, Wine prefix). Default instance `Default`, config `space-engineers/data/instances/Default/SpaceEngineers-Dedicated.cfg`. First start installs dotnet48 into the Wine prefix and downloads server files (allow several minutes). UDP game port 27016. Set `SE_PUBLIC_IP` when the container cannot infer a reachable address for the dedicated config.
+
 ### Core Keeper
 
 Defaults to Steam Datagram Relay (SDR). No published ports are required. When ready, `docker logs` prints the Game ID and `Status: server ready and ready for players!`. Fallback:
@@ -303,6 +318,7 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 | `valheim` | Valheim dedicated |
 | `valheim-plus` | Valheim Plus |
 | `ground-branch` | Ground Branch (Wine) |
+| `space-engineers` | Space Engineers (Wine) |
 | `core-keeper` | Core Keeper dedicated |
 | `factorio` | Factorio dedicated |
 | `7-days-to-die` | 7 Days to Die dedicated |
@@ -369,6 +385,7 @@ docs/            Starlight site (GitHub Pages)
 minecraft/       Fabric, Vanilla, Forge
 valheim/         Vanilla and Plus
 ground-branch/   Ground Branch
+space-engineers/ Space Engineers
 core-keeper/     Core Keeper
 factorio/         Factorio
 7-days-to-die/    7 Days to Die

@@ -1,0 +1,44 @@
+services:
+  space-engineers:
+    image: ghcr.io/${IMAGE_OWNER}/space-engineers:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: space-engineers
+    restart: unless-stopped
+    stop_grace_period: 120s
+    init: true
+    ports:
+      - "27016:27016/udp"
+    volumes:
+      - ./data:/opt/spaceengineers
+    environment:
+      STEAM_USERNAME: "anonymous"
+      STEAM_PASSWORD: ""
+      SE_APP_ID: "298740"
+      SE_GAME_APP_ID: "244850"
+      SE_FORCE_UPDATE: "${SE_FORCE_UPDATE:-false}"
+      SE_INSTANCE_NAME: "Default"
+      SE_SERVER_NAME: "Space Engineers"
+      SE_WORLD_NAME: "DedicatedWorld"
+      SE_PUBLIC_IP: ""
+      SE_PORT: "27016"
+      SE_EXTRA_ARGS: ""
+      WINEPREFIX: "/opt/spaceengineers/.wine"
+      WINEARCH: "win64"
+      WINEDEBUG: "-all"
+      SteamAppId: "244850"
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 900s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 8192M

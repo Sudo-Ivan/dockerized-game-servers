@@ -27,6 +27,7 @@ emit "forge" "minecraft/forge/docker-compose.yml" "forge" "data" "FORGE_FORCE_IN
 emit "valheim" "valheim/vanilla/docker-compose.yml" "valheim" "data" "VALHEIM_FORCE_UPDATE" "process" "1"
 emit "valheim-plus" "valheim/plus/docker-compose.yml" "valheim-plus" "data" "VALHEIM_FORCE_UPDATE,VALHEIM_PLUS_FORCE_INSTALL" "process" "1"
 emit "ground-branch" "ground-branch/docker-compose.yml" "ground-branch" "data" "GB_FORCE_UPDATE" "process" "1"
+emit "space-engineers" "space-engineers/docker-compose.yml" "space-engineers" "data" "SE_FORCE_UPDATE" "process" "1"
 emit "core-keeper" "core-keeper/docker-compose.yml" "core-keeper" "data" "CK_FORCE_UPDATE" "gameid" "1"
 emit "factorio" "factorio/docker-compose.yml" "factorio" "data" "FACTORIO_FORCE_UPDATE" "process" "1"
 emit "7-days-to-die" "7-days-to-die/docker-compose.yml" "7-days-to-die" "data" "SEVENDTD_FORCE_UPDATE" "process" "1"

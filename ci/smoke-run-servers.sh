@@ -77,7 +77,7 @@ wait_success() {
         fi
         ;;
       process|gameid)
-        if docker logs "${container}" 2>&1 | grep -Eqi 'server ready|Status: server ready|Hosting world|Game Server version|Dedicated server running|Hosting at|Factorio.*Server|Listening on|SteamGameServer_Init|World generation finished|omohaaded|Anonymous Steam login cannot download|SERVER STARTED|7 Days to Die|Terraria Server|StartGame done|Gameserver Steam|VAC secure mode|Palworld|Starbound'; then
+        if docker logs "${container}" 2>&1 | grep -Eqi 'server ready|Status: server ready|Hosting world|Game Server version|Dedicated server running|Hosting at|Factorio.*Server|Listening on|SteamGameServer_Init|World generation finished|omohaaded|Anonymous Steam login cannot download|SERVER STARTED|7 Days to Die|Terraria Server|StartGame done|Gameserver Steam|VAC secure mode|Palworld|Starbound|Space Engineers'; then
           # Arma missing owned server is a clear expected failure path.
           if docker logs "${container}" 2>&1 | grep -q 'Anonymous Steam login cannot download'; then
             echo "arma-needs-steam-login" >&2
