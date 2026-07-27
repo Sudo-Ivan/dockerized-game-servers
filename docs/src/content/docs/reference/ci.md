@@ -55,4 +55,8 @@ Workflows follow [GitHub Actions secure use](https://docs.github.com/en/actions/
 
 In GitHub repository settings, prefer default workflow token read-only, restrict allowed actions, and avoid enabling "Allow GitHub Actions to create and approve pull requests" unless required.
 
+## GHCR publish failures
+
+Build logs that end with `denied: installation not allowed to Write organization package` mean the image compiled locally but `GITHUB_TOKEN` could not push to GHCR. Fix repository (and organization, if applicable) workflow **Read and write** permissions and grant this repository **Write** on the GHCR package via package **Manage Actions access**. PR verify jobs do not push (`push: false`).
+
 Base images are always pushed so matrix jobs can reuse them. Manual builds can set the push input for game images.

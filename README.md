@@ -348,6 +348,17 @@ Base images are always pushed so matrix jobs can reuse them. Manual builds can s
 
 After the first publish, set GHCR package visibility to public if the repo is public.
 
+### GHCR push denied from Actions
+
+If `build` or `build-minecraft` logs show the image built then fails with `denied: installation not allowed to Write organization package` (or similar), the Docker build succeeded and GitHub blocked the registry push.
+
+1. Repository **Settings → Actions → General → Workflow permissions**: choose **Read and write permissions** (not read-only). Workflows also declare `packages: write` on publish jobs, but the repo default must allow it.
+2. Open the package on GitHub (**Packages**, or the failed image under `ghcr.io/...`). **Package settings → Manage Actions access** (or link the package to this repository) and grant this repo **Write** access.
+3. If the repo lives under an **organization**, check org **Settings → Actions → General** for the same workflow permission default, and org **Packages** policies that restrict Actions from publishing.
+4. PR **verify-bases** jobs use `push: false` and should not contact GHCR. Logs that show `pushing layers` to `ghcr.io` are from the **`build`** workflow (merge to `main` / schedule / manual publish), not from verify.
+
+See [Publishing packages with GitHub Actions](https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows-and-grants/publishing-and-installing-a-package-with-github-actions).
+
 ## Layout
 
 ```text
