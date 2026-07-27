@@ -21,15 +21,21 @@ services:
       STEAM_USERNAME: "anonymous"
       STEAM_PASSWORD: ""
       VALHEIM_APP_ID: "896660"
-      VALHEIM_FORCE_UPDATE: "false"
+      VALHEIM_FORCE_UPDATE: "${VALHEIM_FORCE_UPDATE:-false}"
       VALHEIM_PLUS_VERSION: "0.9.17.1"
-      VALHEIM_PLUS_FORCE_INSTALL: "false"
+      VALHEIM_PLUS_FORCE_INSTALL: "${VALHEIM_PLUS_FORCE_INSTALL:-false}"
       SERVER_NAME: "Valheim Plus Server"
       SERVER_PORT: "2456"
       WORLD_NAME: "Dedicated"
       SERVER_PASS: "${SERVER_PASS:-changeme}"
       SERVER_PUBLIC: "1"
       SERVER_LOGINTOKEN: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 300s
     security_opt:
       - no-new-privileges:true
     cap_drop:

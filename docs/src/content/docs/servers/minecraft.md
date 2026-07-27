@@ -11,11 +11,11 @@ Three flavors share minecraft-base (Temurin JRE on Alpine).
 | Vanilla | minecraft/vanilla | minecraft-vanilla |
 | Forge | minecraft/forge | minecraft-forge |
 
-## Requirements
-
-- Set EULA=true
-- Persist ./data for world and config
-- Publish TCP and UDP 25565 by default
+:::note[Requirements]
+- Set `EULA=true`
+- Persist `./data` for world and config
+- Publish TCP and UDP **25565** by default
+:::
 
 ## Compose
 

@@ -21,7 +21,7 @@ services:
       STEAM_PASSWORD: ""
       CK_APP_ID: "1963720"
       CK_STEAMWORKS_APP_ID: "1007"
-      CK_FORCE_UPDATE: "false"
+      CK_FORCE_UPDATE: "${CK_FORCE_UPDATE:-false}"
       WORLD_INDEX: "0"
       WORLD_NAME: "Core Keeper Server"
       WORLD_SEED: ""
@@ -37,6 +37,12 @@ services:
       ACTIVATE_ALL_CONTENT: "false"
       ALLOW_ONLY_PLATFORM: ""
       CK_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 300s
     security_opt:
       - no-new-privileges:true
     cap_drop:

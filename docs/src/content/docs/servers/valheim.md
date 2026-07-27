@@ -8,11 +8,11 @@ description: Valheim and Valheim Plus dedicated servers.
 | Vanilla | valheim/vanilla | valheim |
 | Plus | valheim/plus | valheim-plus |
 
-## Requirements
-
-- Set SERVER_PASS (via -e or a .env next to compose)
-- Persist data under /opt/valheim in the container
-- Publish UDP 2456-2458
+:::note[Requirements]
+- Set `SERVER_PASS` (via `-e` or a `.env` next to compose)
+- Persist data under `/opt/valheim` in the container
+- Publish UDP **2456–2458**
+:::
 
 ## Docker run
 

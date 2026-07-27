@@ -24,6 +24,18 @@
 	--sl-color-text-accent: #f5f5f5;
 	--sl-color-text-invert: #0a0a0a;
 	--sl-color-backdrop-overlay: rgb(0 0 0 / 0.65);
+	--sl-color-blue-low: #141414;
+	--sl-color-blue: #525252;
+	--sl-color-blue-high: #e5e5e5;
+	--sl-color-purple-low: #141414;
+	--sl-color-purple: #525252;
+	--sl-color-purple-high: #e5e5e5;
+	--sl-color-orange-low: #1a1612;
+	--sl-color-orange: #6b5a45;
+	--sl-color-orange-high: #e8dcc8;
+	--sl-color-red-low: #1a1212;
+	--sl-color-red: #6b4545;
+	--sl-color-red-high: #e8c8c8;
 	color-scheme: dark;
 }
 
@@ -49,4 +61,77 @@ a.sl-link-button.primary:hover {
 
 a.sl-link-button.minimal {
 	color: #c4c4c4;
+}
+
+.sl-markdown-content table:not(:where(.not-content *)) {
+	display: table;
+	width: 100%;
+	border: 1px solid var(--sl-color-hairline);
+	border-radius: 0.625rem;
+	overflow: hidden;
+	background: #0f0f0f;
+}
+
+.sl-markdown-content thead:not(:where(.not-content *)) {
+	background: #141414;
+}
+
+.sl-markdown-content th:not(:where(.not-content *)) {
+	font-size: 0.8125rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	color: var(--sl-color-gray-2);
+	border-bottom: 1px solid var(--sl-color-hairline);
+}
+
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+	padding: 0.65rem 1rem;
+}
+
+.sl-markdown-content tbody tr:not(:where(.not-content *)):hover {
+	background: rgb(255 255 255 / 0.02);
+}
+
+.sl-markdown-content tbody tr:last-child td:not(:where(.not-content *)) {
+	border-bottom: 0;
+}
+
+.sl-markdown-content .starlight-aside:not(:where(.not-content *)) {
+	border-radius: 0.625rem;
+	border: 1px solid var(--sl-color-hairline);
+	border-inline-start-width: 0.25rem;
+}
+
+.sl-markdown-content .starlight-aside--note:not(:where(.not-content *)) {
+	background: linear-gradient(135deg, #121212 0%, #0f0f0f 100%);
+}
+
+.sl-markdown-content .starlight-aside__content:not(:where(.not-content *)) ul {
+	margin: 0;
+	padding-inline-start: 1.15rem;
+}
+
+.sl-markdown-content .starlight-aside__content:not(:where(.not-content *)) li + li {
+	margin-top: 0.35rem;
+}
+
+.sl-markdown-content pre:not(:where(.not-content *)) {
+	border-radius: 0.625rem;
+	background: #0c0c0c;
+}
+
+.sl-markdown-content a:not(:where(.not-content *)) {
+	text-decoration: underline;
+	text-decoration-color: rgb(255 255 255 / 0.2);
+	text-underline-offset: 0.15em;
+}
+
+.sl-markdown-content a:hover:not(:where(.not-content *)) {
+	text-decoration-color: rgb(255 255 255 / 0.45);
+}
+
+.sl-markdown-content ol:not(:where(.not-content *)) > li::marker {
+	color: var(--sl-color-gray-3);
+	font-weight: 600;
 }

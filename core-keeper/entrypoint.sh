@@ -27,6 +27,15 @@ SERVER_BIN="${CK_INSTALL_DIR}/CoreKeeperServer"
 xvfbpid=""
 ckpid=""
 
+# shellcheck source=ready.sh
+if [ -f /home/corekeeper/ready.sh ]; then
+    # shellcheck disable=SC1091
+    . /home/corekeeper/ready.sh
+elif [ -f "$(dirname "$0")/ready.sh" ]; then
+    # shellcheck disable=SC1091
+    . "$(dirname "$0")/ready.sh"
+fi
+
 add_param() {
     local name="$1"
     local value="$2"
@@ -58,6 +67,8 @@ install_server() {
     export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
     while true; do
+        # steam_login may contain "user pass" as two argv words for steamcmd
+        # shellcheck disable=SC2086
         "${STEAM_DIR}/linux32/steamcmd" \
             +@sSteamCmdForcePlatformType linux \
             +@sSteamCmdForcePlatformBitness 64 \
@@ -142,5 +153,14 @@ DISPLAY=:99 \
 LD_LIBRARY_PATH="${STEAM_DIR}/linux64:${LD_LIBRARY_PATH:-}" \
     ./CoreKeeperServer "${params[@]}" &
 ckpid=$!
+
+if command -v ck_wait_for_game_id >/dev/null 2>&1; then
+    if game_id="$(ck_wait_for_game_id "${CK_INSTALL_DIR}/GameID.txt" 120 "${ckpid}")"; then
+        ck_print_game_id "${game_id}"
+        ck_print_ready_status
+    else
+        echo "Continuing without Game ID on stdout" >&2
+    fi
+fi
 
 wait "${ckpid}"

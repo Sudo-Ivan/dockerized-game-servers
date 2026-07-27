@@ -77,7 +77,7 @@ function fileToHref(filePath, base) {
 
 /**
  * Build the Fuse.js search corpus from Markdown docs.
- * @returns {{ generatedAt: string, documents: Array<{ title: string, description: string, body: string, href: string }> }}
+ * @returns {{ generatedAt: string, documents: Array<{ title: string, description: string, body: string, href: string, category: string }> }}
  */
 export function buildSearchIndex() {
 	const repo = resolveRepo()
@@ -111,11 +111,16 @@ export function buildSearchIndex() {
 		const raw = applyTokens(readFileSync(file, 'utf8'), tokens)
 		const { data, plain } = parseMarkdownDoc(raw)
 		const title = data.title || path.basename(file, path.extname(file))
+		let category = 'Overview'
+		if (href.includes('/servers/')) category = 'Server'
+		else if (href.includes('/guides/')) category = 'Guide'
+		else if (href.includes('/reference/')) category = 'Reference'
 		documents.push({
 			title,
 			description: data.description || '',
 			body: plain,
 			href,
+			category,
 		})
 	}
 

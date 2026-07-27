@@ -21,7 +21,7 @@ services:
       STEAM_PASSWORD: ""
       GB_APP_ID: "476400"
       GB_STEAM_APP_ID: "16900"
-      GB_FORCE_UPDATE: "false"
+      GB_FORCE_UPDATE: "${GB_FORCE_UPDATE:-false}"
       GB_PORT: "7777"
       GB_QUERY_PORT: "27015"
       GB_MULTIHOME: "0.0.0.0"
@@ -34,6 +34,12 @@ services:
       WINEARCH: "win64"
       WINEDEBUG: "-all"
       SteamAppId: "16900"
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 300s
     security_opt:
       - no-new-privileges:true
     cap_drop:

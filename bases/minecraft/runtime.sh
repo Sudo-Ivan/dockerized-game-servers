@@ -1,3 +1,4 @@
+#!/bin/sh
 # Shared runtime helpers for Minecraft server containers.
 
 JAVA_SECURE_FLAGS="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -XX:+ExitOnOutOfMemoryError"
@@ -77,5 +78,7 @@ mc_run_java() {
     exec su -s /bin/sh "${MC_RUN_USER}" -c "cd /data && PATH=\"${PATH}\" exec ${java_cmd}"
   fi
 
+  # JVM_FLAGS and JAVA_SECURE_FLAGS are space-separated option lists
+  # shellcheck disable=SC2086
   exec java ${JAVA_SECURE_FLAGS} ${JVM_FLAGS} "$@"
 }

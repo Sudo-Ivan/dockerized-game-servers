@@ -18,7 +18,7 @@ services:
       - ./data:/opt/factorio
     environment:
       FACTORIO_VERSION: "stable"
-      FACTORIO_FORCE_UPDATE: "false"
+      FACTORIO_FORCE_UPDATE: "${FACTORIO_FORCE_UPDATE:-false}"
       SERVER_NAME: "Factorio Server"
       SERVER_DESCRIPTION: "Factorio dedicated server"
       SERVER_PASSWORD: ""
@@ -34,6 +34,12 @@ services:
       AUTOSAVE_INTERVAL: "10"
       AUTO_PAUSE: "true"
       FACTORIO_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 300s
     security_opt:
       - no-new-privileges:true
     cap_drop:

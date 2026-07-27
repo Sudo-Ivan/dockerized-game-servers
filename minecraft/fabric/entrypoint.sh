@@ -1,6 +1,7 @@
 #!/bin/sh
 set -eu
 
+# shellcheck disable=SC1091
 . /runtime.sh
 
 : "${FABRIC_MINECRAFT_VERSION:=26.2}"

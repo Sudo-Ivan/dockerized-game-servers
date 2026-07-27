@@ -20,9 +20,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
       - name: Run checks
         run: |
-          chmod +x ci/*.sh
+          chmod +x ci/*.sh tools/gs
           ./ci/ci-check.sh
 
   trivy-config:

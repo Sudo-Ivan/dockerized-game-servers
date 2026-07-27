@@ -19,7 +19,12 @@ ENV CK_INSTALL_DIR="/opt/corekeeper/server" \
 
 COPY --chmod=755 docker-entrypoint.sh /docker-entrypoint.sh
 COPY --chown=corekeeper:corekeeper --chmod=755 entrypoint.sh /home/corekeeper/entrypoint.sh
+COPY --chown=corekeeper:corekeeper --chmod=755 ready.sh /home/corekeeper/ready.sh
+COPY --chmod=755 healthcheck.sh /healthcheck.sh
 
 WORKDIR /opt/corekeeper
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
+  CMD ["/healthcheck.sh"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

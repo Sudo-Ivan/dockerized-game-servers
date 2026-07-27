@@ -1,0 +1,70 @@
+#!/bin/sh
+# Host ops CLI for dockerized game servers.
+# Usage: tools/gs <list|backup|restore|update|help> ...
+
+# shellcheck shell=sh source-path=SCRIPTDIR
+
+set -eu
+
+GS_ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+export GS_ROOT
+
+# shellcheck source=lib/common.sh
+. "${GS_ROOT}/tools/lib/common.sh"
+# shellcheck source=lib/catalog.sh
+. "${GS_ROOT}/tools/lib/catalog.sh"
+# shellcheck source=cmd/list.sh
+. "${GS_ROOT}/tools/cmd/list.sh"
+# shellcheck source=cmd/backup.sh
+. "${GS_ROOT}/tools/cmd/backup.sh"
+# shellcheck source=cmd/restore.sh
+. "${GS_ROOT}/tools/cmd/restore.sh"
+# shellcheck source=cmd/update.sh
+. "${GS_ROOT}/tools/cmd/update.sh"
+
+gs_usage() {
+  cat <<'EOF'
+Usage: tools/gs <command> [args]
+
+Commands:
+  list                         List registered servers
+  backup <game> [dir]          Stop, tar volumes, start
+  restore <game> <archive>     Stop, extract archive over volumes, start
+  update <game> [--backup]     One-shot FORCE_* recreate (optional pre-backup)
+  help                         Show this help
+
+Environment:
+  IMAGE_OWNER / GITHUB_REPOSITORY  Resolved via ci/repo-meta.sh when unset
+  GS_BACKUP_DIR                    Default backup root (default: <repo>/backups)
+  GS_TEST_MODE=1                   Skip docker stop/start (tar helpers only)
+  GS_DRY_RUN=1                     Print update plan without docker
+EOF
+}
+
+cmd="${1:-}"
+[ -n "${cmd}" ] || {
+  gs_usage >&2
+  exit 2
+}
+shift
+
+case "${cmd}" in
+  list)
+    gs_cmd_list "$@"
+    ;;
+  backup)
+    gs_cmd_backup "$@"
+    ;;
+  restore)
+    gs_cmd_restore "$@"
+    ;;
+  update)
+    gs_cmd_update "$@"
+    ;;
+  help|-h|--help)
+    gs_usage
+    ;;
+  *)
+    gs_die "unknown command: ${cmd}"
+    ;;
+esac

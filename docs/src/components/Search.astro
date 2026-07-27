@@ -38,19 +38,35 @@ const indexUrl = `${base}search-index.json`
 				</button>
 			</div>
 
-			<div class="results-pane">
-				<ul data-results class="results" role="listbox" aria-label={label}></ul>
-				<p data-hint class="hint">Type to search documentation</p>
-				<p data-empty class="empty" hidden></p>
+			<div class="results-pane" data-results-pane>
+				<ul data-results class="results" role="listbox" aria-label={label} hidden></ul>
+				<div data-placeholder class="placeholder">
+					<div data-hint class="state-pane">
+						<svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+							<circle cx="11" cy="11" r="7"></circle>
+							<path d="m20 20-3.5-3.5"></path>
+						</svg>
+						<p>Search pages, guides, and server docs</p>
+						<p class="state-sub">Try <kbd>/</kbd> or <kbd data-mod-hint>Ctrl</kbd><kbd>K</kbd></p>
+					</div>
+					<div data-empty class="state-pane" hidden>
+						<svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+							<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+							<path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a18.45 18.45 0 0 1-2.16 3.19"></path>
+							<path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+							<line x1="2" x2="22" y1="2" y2="22"></line>
+						</svg>
+						<p data-empty-text>No results found</p>
+					</div>
+				</div>
 			</div>
 
 			<div class="search-footer">
-				<span>Search by Fuse.js</span>
+				<span data-footer-status class="footer-status">Search documentation</span>
 				<div class="hints">
-					<span><kbd>/</kbd> search</span>
 					<span><kbd>↑↓</kbd> navigate</span>
-					<span><kbd>↵</kbd> select</span>
-					<span><kbd>Esc</kbd> close</span>
+					<span><kbd>↵</kbd> open</span>
+					<span class="hints-esc"><kbd>Esc</kbd> close</span>
 				</div>
 			</div>
 		</div>
@@ -61,7 +77,7 @@ const indexUrl = `${base}search-index.json`
 	import Fuse from 'fuse.js'
 
 	class SiteSearch extends HTMLElement {
-		/** @type {Fuse<{ title: string, description: string, body: string, href: string }> | null} */
+		/** @type {Fuse<{ title: string, description: string, body: string, href: string, category?: string }> | null} */
 		fuse = null
 		/** @type {AbortController | null} */
 		loadController = null
@@ -73,8 +89,12 @@ const indexUrl = `${base}search-index.json`
 			const dialog = this.querySelector('dialog')
 			const input = this.querySelector('[data-search-input]')
 			const results = this.querySelector('[data-results]')
-			const empty = this.querySelector('[data-empty]')
+			const placeholder = this.querySelector('[data-placeholder]')
 			const hint = this.querySelector('[data-hint]')
+			const empty = this.querySelector('[data-empty]')
+			const emptyText = this.querySelector('[data-empty-text]')
+			const footerStatus = this.querySelector('[data-footer-status]')
+			const modHint = this.querySelector('[data-mod-hint]')
 			const shortcut = this.querySelector('[data-shortcut]')
 			const mod = this.querySelector('[data-mod]')
 			const frame = this.querySelector('.dialog-frame')
@@ -85,6 +105,7 @@ const indexUrl = `${base}search-index.json`
 				!(dialog instanceof HTMLDialogElement) ||
 				!(input instanceof HTMLInputElement) ||
 				!(results instanceof HTMLElement) ||
+				!(placeholder instanceof HTMLElement) ||
 				!(empty instanceof HTMLElement) ||
 				!(hint instanceof HTMLElement) ||
 				!(frame instanceof HTMLElement)
@@ -99,9 +120,36 @@ const indexUrl = `${base}search-index.json`
 				if (/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) || navigator.userAgent.includes('Mac')) {
 					mod.textContent = '⌘'
 					openBtn.setAttribute('aria-keyshortcuts', 'Meta+K')
+					if (modHint instanceof HTMLElement) modHint.textContent = '⌘'
 				}
 				shortcut.hidden = false
 			}
+
+			/** @param {HTMLElement} parent @param {string} text @param {Array<[number, number]> | undefined} indices */
+			const appendHighlighted = (parent, text, indices) => {
+				if (!indices?.length) {
+					parent.appendChild(document.createTextNode(text))
+					return
+				}
+				const sorted = [...indices].sort((a, b) => a[0] - b[0])
+				let cursor = 0
+				for (const [start, end] of sorted) {
+					if (start > cursor) {
+						parent.appendChild(document.createTextNode(text.slice(cursor, start)))
+					}
+					const mark = document.createElement('mark')
+					mark.className = 'result-mark'
+					mark.textContent = text.slice(start, end + 1)
+					parent.appendChild(mark)
+					cursor = end + 1
+				}
+				if (cursor < text.length) {
+					parent.appendChild(document.createTextNode(text.slice(cursor)))
+				}
+			}
+
+			/** @param {import('fuse.js').FuseResultMatch[] | undefined} matches @param {string} key */
+			const indicesForKey = (matches, key) => matches?.find((m) => m.key === key)?.indices
 
 			const snippet = (item, matches) => {
 				const bodyMatch = matches?.find((m) => m.key === 'body' || m.key === 'description')
@@ -127,21 +175,46 @@ const indexUrl = `${base}search-index.json`
 				})
 			}
 
+			const setPane = (mode) => {
+				const showList = mode === 'results'
+				results.hidden = !showList
+				placeholder.hidden = showList
+				if (mode === 'hint') {
+					hint.hidden = false
+					empty.hidden = true
+				} else if (mode === 'empty') {
+					hint.hidden = true
+					empty.hidden = false
+				}
+			}
+
 			const render = (query) => {
 				results.replaceChildren()
-				empty.hidden = true
 				const q = query.trim()
 				if (!q || !this.fuse) {
-					hint.hidden = false
-					return
-				}
-				hint.hidden = true
-				const matches = this.fuse.search(q, { limit: 12 })
-				if (!matches.length) {
-					empty.hidden = false
-					empty.textContent = `No results found for "${q}"`
+					setPane('hint')
+					if (footerStatus instanceof HTMLElement) {
+						footerStatus.textContent = 'Search documentation'
+					}
 					this.selectedIndex = -1
 					return
+				}
+				const matches = this.fuse.search(q, { limit: 10 })
+				if (!matches.length) {
+					setPane('empty')
+					if (emptyText instanceof HTMLElement) {
+						emptyText.textContent = `No results for "${q}"`
+					}
+					if (footerStatus instanceof HTMLElement) {
+						footerStatus.textContent = '0 results'
+					}
+					this.selectedIndex = -1
+					return
+				}
+				setPane('results')
+				if (footerStatus instanceof HTMLElement) {
+					const label = matches.length === 1 ? '1 result' : `${matches.length} results`
+					footerStatus.textContent = label
 				}
 				for (const match of matches) {
 					const item = match.item
@@ -151,22 +224,28 @@ const indexUrl = `${base}search-index.json`
 					a.className = 'result'
 					a.setAttribute('role', 'option')
 
-					const icon = document.createElement('span')
-					icon.className = 'result-icon'
-					icon.setAttribute('aria-hidden', 'true')
-					icon.innerHTML =
-						'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>'
+					const main = document.createElement('span')
+					main.className = 'result-main'
 
-					const text = document.createElement('span')
-					text.className = 'result-text'
+					const head = document.createElement('span')
+					head.className = 'result-head'
+
 					const title = document.createElement('span')
 					title.className = 'result-title'
-					title.textContent = item.title
+					appendHighlighted(title, item.title, indicesForKey(match.matches, 'title'))
+
+					const category = document.createElement('span')
+					category.className = 'result-category'
+					category.textContent = item.category || 'Docs'
+
+					head.append(title, category)
+
 					const desc = document.createElement('span')
 					desc.className = 'result-desc'
 					desc.textContent = snippet(item, match.matches)
-					text.append(title, desc)
-					a.append(icon, text)
+
+					main.append(head, desc)
+					a.append(main)
 					li.append(a)
 					results.append(li)
 				}
@@ -206,9 +285,10 @@ const indexUrl = `${base}search-index.json`
 					await ensureIndex()
 					render(input.value)
 				} catch (err) {
-					hint.hidden = true
-					empty.hidden = false
-					empty.textContent = 'Search index unavailable.'
+					setPane('empty')
+					if (emptyText instanceof HTMLElement) {
+						emptyText.textContent = 'Search index unavailable.'
+					}
 					console.error(err)
 				}
 			}
@@ -288,23 +368,33 @@ const indexUrl = `${base}search-index.json`
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		border: 1px solid #262626;
-		border-radius: 0.5rem;
-		background: #111111;
+		border: 1px solid #2a2a2a;
+		border-radius: 0.625rem;
+		background: linear-gradient(180deg, #141414 0%, #101010 100%);
 		color: #a3a3a3;
 		cursor: pointer;
-		height: 2.25rem;
-		padding-inline: 0.75rem 0.5rem;
+		height: 2.35rem;
+		padding-inline: 0.85rem 0.55rem;
 		font: inherit;
 		font-size: 0.875rem;
 		min-width: 0;
-		width: min(18rem, 42vw);
+		width: min(19rem, 42vw);
 		text-align: left;
+		transition:
+			border-color 0.15s ease,
+			color 0.15s ease,
+			box-shadow 0.15s ease;
 	}
 
 	button[data-open-modal]:hover {
-		border-color: #404040;
+		border-color: #454545;
 		color: #e5e5e5;
+		box-shadow: 0 0 0 1px rgb(255 255 255 / 0.04);
+	}
+
+	button[data-open-modal]:focus-visible {
+		outline: 2px solid #525252;
+		outline-offset: 2px;
 	}
 
 	.trigger-label {
@@ -353,33 +443,48 @@ const indexUrl = `${base}search-index.json`
 		display: flex;
 		align-items: flex-start;
 		justify-content: center;
-		padding: 6rem 1rem 2rem;
+		padding: 5rem 1.25rem 2rem;
 	}
 
 	dialog::backdrop {
-		background: rgb(0 0 0 / 0.55);
-		backdrop-filter: blur(4px);
+		background: rgb(0 0 0 / 0.6);
+		backdrop-filter: blur(8px);
 	}
 
 	.dialog-frame {
 		position: relative;
-		width: min(32rem, 100%);
-		max-height: min(60vh, 32rem);
+		width: min(40rem, 100%);
+		max-height: min(72vh, 36rem);
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		border-radius: 0.75rem;
-		background: #111111;
-		border: 1px solid #262626;
-		box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.65);
+		border-radius: 0.875rem;
+		background: #101010;
+		border: 1px solid #2e2e2e;
+		box-shadow:
+			0 0 0 1px rgb(255 255 255 / 0.04),
+			0 24px 48px -12px rgb(0 0 0 / 0.75);
+		animation: search-dialog-in 0.18s ease-out;
+	}
+
+	@keyframes search-dialog-in {
+		from {
+			opacity: 0;
+			transform: translateY(-0.35rem) scale(0.98);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
 	}
 
 	.search-bar {
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
-		padding: 0.85rem 1rem;
+		padding: 1rem 1.1rem;
 		border-bottom: 1px solid #262626;
+		background: #121212;
 	}
 
 	.search-icon {
@@ -422,75 +527,8 @@ const indexUrl = `${base}search-index.json`
 	.results-pane {
 		flex: 1;
 		overflow: auto;
-		padding: 0.5rem;
-		min-height: 10rem;
-	}
-
-	.results {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: 0.25rem;
-	}
-
-	.result {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 0.75rem;
-		border-radius: 0.5rem;
-		color: inherit;
-		text-decoration: none;
-	}
-
-	.result:hover,
-	.result.is-active {
-		background: #1a1a1a;
-	}
-
-	.result-icon {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 2rem;
-		height: 2rem;
-		border-radius: 0.5rem;
-		background: #171717;
-		color: #737373;
-		flex-shrink: 0;
-	}
-
-	.result-text {
-		display: grid;
-		gap: 0.15rem;
-		min-width: 0;
-	}
-
-	.result-title {
-		font-size: 0.875rem;
-		font-weight: 600;
-		color: #f5f5f5;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.result-desc {
-		font-size: 0.75rem;
-		color: #737373;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.hint,
-	.empty {
-		margin: 0;
-		padding: 3rem 1rem;
-		text-align: center;
-		color: #737373;
-		font-size: 0.875rem;
+		padding: 0.65rem;
+		min-height: 11rem;
 	}
 
 	.search-footer {
@@ -499,11 +537,15 @@ const indexUrl = `${base}search-index.json`
 		justify-content: space-between;
 		gap: 0.75rem;
 		flex-wrap: wrap;
-		padding: 0.55rem 1rem;
+		padding: 0.65rem 1.1rem;
 		border-top: 1px solid #262626;
-		background: #0f0f0f;
+		background: #0c0c0c;
 		color: #737373;
-		font-size: 0.7rem;
+		font-size: 0.75rem;
+	}
+
+	.footer-status {
+		color: #8a8a8a;
 	}
 
 	.hints {
@@ -520,7 +562,7 @@ const indexUrl = `${base}search-index.json`
 
 	@media (max-width: 49.99rem) {
 		button[data-open-modal] {
-			width: 2.25rem;
+			width: 2.35rem;
 			padding-inline: 0;
 			justify-content: center;
 		}
@@ -532,6 +574,7 @@ const indexUrl = `${base}search-index.json`
 
 		dialog[open] {
 			padding: 0;
+			align-items: stretch;
 		}
 
 		.dialog-frame {
@@ -539,6 +582,11 @@ const indexUrl = `${base}search-index.json`
 			max-height: 100%;
 			height: 100%;
 			border-radius: 0;
+			animation: none;
+		}
+
+		.hints-esc {
+			display: none;
 		}
 	}
 </style>
@@ -546,5 +594,150 @@ const indexUrl = `${base}search-index.json`
 <style is:global>
 	[data-search-modal-open] {
 		overflow: hidden;
+	}
+
+	/* Client-rendered result nodes are outside Astro scoped attributes. */
+	site-search .results[hidden],
+	site-search .placeholder[hidden],
+	site-search .state-pane[hidden] {
+		display: none !important;
+	}
+
+	site-search .results {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	site-search a.result,
+	site-search a.result:visited,
+	site-search a.result:hover,
+	site-search a.result:active {
+		display: block;
+		padding: 0.8rem 0.9rem;
+		border-radius: 0.625rem;
+		border: 1px solid transparent;
+		color: #e5e5e5;
+		text-decoration: none;
+		transition:
+			background 0.12s ease,
+			border-color 0.12s ease;
+	}
+
+	site-search a.result:hover,
+	site-search a.result.is-active {
+		background: #181818;
+		border-color: #333333;
+	}
+
+	site-search a.result.is-active {
+		box-shadow: inset 3px 0 0 #d4d4d4;
+	}
+
+	site-search .result-main {
+		display: grid;
+		gap: 0.35rem;
+		min-width: 0;
+	}
+
+	site-search .result-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		min-width: 0;
+	}
+
+	site-search .result-title {
+		display: block;
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: #f5f5f5;
+		line-height: 1.35;
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	site-search .result-category {
+		flex-shrink: 0;
+		font-size: 0.65rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: #a3a3a3;
+		padding: 0.15rem 0.45rem;
+		border-radius: 999px;
+		border: 1px solid #333333;
+		background: #141414;
+	}
+
+	site-search .result-desc {
+		font-size: 0.8125rem;
+		line-height: 1.45;
+		color: #8a8a8a;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	site-search .result-mark {
+		background: rgb(255 255 255 / 0.12);
+		color: #fafafa;
+		border-radius: 0.2rem;
+		padding: 0 0.1rem;
+	}
+
+	site-search .placeholder {
+		display: flex;
+		flex-direction: column;
+		min-height: 10rem;
+	}
+
+	site-search .state-pane {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 2.5rem 1.25rem;
+		text-align: center;
+		color: #737373;
+	}
+
+	site-search .state-pane svg {
+		color: #525252;
+		margin-bottom: 0.25rem;
+	}
+
+	site-search .state-pane p {
+		margin: 0;
+		font-size: 0.9rem;
+		color: #a3a3a3;
+	}
+
+	site-search .state-sub {
+		font-size: 0.8rem;
+		color: #737373;
+	}
+
+	site-search .state-pane kbd {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 1.25rem;
+		padding: 0.1rem 0.35rem;
+		border: 1px solid #333333;
+		border-radius: 0.25rem;
+		background: #1a1a1a;
+		color: #a3a3a3;
+		font-family: inherit;
+		font-size: 0.7rem;
+		line-height: 1.2;
 	}
 </style>

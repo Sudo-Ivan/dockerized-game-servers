@@ -86,7 +86,7 @@ install_server() {
 
     for preserve in saves config mods script-output; do
         if [ -e "/tmp/factorio-keep-${preserve}" ]; then
-            rm -rf "${FACTORIO_DIR}/${preserve}"
+            rm -rf "${FACTORIO_DIR:?}/${preserve}"
             mv "/tmp/factorio-keep-${preserve}" "${FACTORIO_DIR}/${preserve}"
         fi
     done

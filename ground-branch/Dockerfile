@@ -22,8 +22,15 @@ WORKDIR /home/groundbranch
 
 COPY --chown=groundbranch:groundbranch --chmod=755 entrypoint.sh /home/groundbranch/entrypoint.sh
 
+USER root
+COPY --chmod=755 healthcheck.sh /healthcheck.sh
+USER groundbranch
+
 WORKDIR ${GB_INSTALL_DIR}
 
 EXPOSE 7777/udp 27015/udp
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
+  CMD ["/healthcheck.sh"]
 
 ENTRYPOINT ["/bin/bash", "/home/groundbranch/entrypoint.sh"]

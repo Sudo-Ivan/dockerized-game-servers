@@ -15,9 +15,13 @@ ENV VALHEIM_DIR="/opt/valheim" \
 
 COPY --chmod=755 docker-entrypoint.sh /docker-entrypoint.sh
 COPY --chown=valheim:valheim --chmod=755 entrypoint.sh /home/valheim/entrypoint.sh
+COPY --chmod=755 healthcheck.sh /healthcheck.sh
 
 WORKDIR ${VALHEIM_DIR}
 
 EXPOSE 2456/udp 2457/udp 2458/udp
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
+  CMD ["/healthcheck.sh"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -1,6 +1,7 @@
 #!/bin/sh
 set -eu
 
+# shellcheck disable=SC1091
 . /runtime.sh
 
 : "${FORGE_MINECRAFT_VERSION:=1.21.11}"
@@ -33,6 +34,8 @@ download_installer() {
 
 install_forge() {
   echo "Installing Forge server to ${FORGE_INSTALL_DIR}"
+  # JAVA_SECURE_FLAGS is a space-separated option list
+  # shellcheck disable=SC2086
   java ${JAVA_SECURE_FLAGS} -jar /tmp/forge-installer.jar --installServer "${FORGE_INSTALL_DIR}"
   rm -f /tmp/forge-installer.jar
 

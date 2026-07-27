@@ -17,6 +17,9 @@ arma/arma-3/cache/*
 *.log
 .DS_Store
 
+# Host tool backups
+backups/
+
 # Docs (Starlight / Astro)
 docs/node_modules/
 docs/dist/

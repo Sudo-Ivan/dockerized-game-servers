@@ -166,13 +166,24 @@ Server config appears under `ground-branch/data/GroundBranch/ServerConfig/` afte
 
 ### Core Keeper
 
-Defaults to Steam Datagram Relay (SDR). No published ports are required. After start, read the game ID:
+Defaults to Steam Datagram Relay (SDR). No published ports are required. When ready, `docker logs` prints the Game ID and `Status: server ready and ready for players!`. Fallback:
 
 ```bash
 docker exec -it core-keeper cat /opt/corekeeper/server/GameID.txt
 ```
 
 For direct connect, set `SERVER_PORT` and publish that UDP port. World data lives under `core-keeper/data/`. Uses XLibre `xlibre-xserver-xvfb` (not X.Org) for the virtual display.
+
+### Ops
+
+Backup, restore, update, and healthchecks: `./tools/gs` (see docs guides/ops). Examples:
+
+```bash
+export IMAGE_OWNER="$(./ci/repo-meta.sh | sed -n 's/^IMAGE_OWNER=//p')"
+./tools/gs list
+./tools/gs backup core-keeper
+./tools/gs update factorio --backup
+```
 
 ### Factorio
 
@@ -200,7 +211,7 @@ docker pull ghcr.io/$IMAGE_OWNER/minecraft-fabric:latest
 
 ## CI
 
-- `ci` runs on push, pull request, and manually: `ci/ci-check.sh` plus Trivy Dockerfile config scans (HIGH+CRITICAL)
+- `ci` runs on push, pull request, and manually: `ci/ci-check.sh` (catalog-driven compose checks, ShellCheck, health/tools tests) plus Trivy Dockerfile config scans (HIGH+CRITICAL)
 - `build` runs weekly (Sunday 06:00 UTC), on Dockerfile/base/`ci` path changes to `master`/`main`, and manually: builds/pushes GHCR images then Trivy-scans them (CRITICAL fail)
 - `build-minecraft` is manual only: pick Fabric/Vanilla/Forge + a Minecraft version. Java is resolved from Mojang's `javaVersion`, Temurin Alpine JRE is pinned from Adoptium, Fabric loader/installer and Forge promos auto-fill when left blank. Publishes `minecraft-base:javaN` and `minecraft-<flavor>:<tag>` (tag defaults to the MC version, or `mc-forge` for Forge)
 
@@ -229,7 +240,8 @@ After the first publish, set GHCR package visibility to public if the repo is pu
 
 ```text
 bases/           shared Docker bases
-ci/              POSIX CI scripts
+ci/              POSIX CI scripts (repo-meta, server-catalog, checks)
+tools/           host ops CLI (gs)
 docs/            Starlight site (GitHub Pages)
 minecraft/       Fabric, Vanilla, Forge
 valheim/         Vanilla and Plus

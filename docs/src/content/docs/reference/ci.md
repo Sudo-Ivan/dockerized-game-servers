@@ -9,13 +9,24 @@ description: Checks, image builds, and Minecraft versioned builds.
 - build runs weekly (Sunday 06:00 UTC), on Dockerfile, base, or ci path changes to master or main, and manually. It builds and pushes GHCR images, then Trivy-scans them (CRITICAL fails the job).
 - build-minecraft is manual only. Pick Fabric, Vanilla, or Forge plus a Minecraft version. Java is resolved from Mojang's javaVersion. Temurin Alpine JRE is pinned from Adoptium. Fabric loader and installer, and Forge promos, auto-fill when left blank. Publishes minecraft-base:javaN and minecraft-flavor:tag (tag defaults to the MC version, or mc-forge for Forge).
 
+## What ci-check covers
+
+- Image matrix path checks (`ci/image-matrix.sh`)
+- Compose validation from `ci/server-catalog.sh` (no hardcoded compose list)
+- Reject fixed GHCR owners in first-party compose files
+- Shell syntax over catalog-discovered roots
+- ShellCheck (`ci/shellcheck.sh`)
+- Healthcheck presence and offline probes (`ci/test-healthchecks.sh`)
+- Host tools catalog and tar round-trip (`ci/test-tools.sh`)
+- Docs pnpm lockfile conventions
+
 ## Example tags
 
 After a versioned Fabric build for 26.2:
 
 ```text
-{{IMAGE_PREFIX}}/minecraft-base:java25
-{{IMAGE_PREFIX}}/minecraft-fabric:26.2
+__IMAGE_PREFIX__/minecraft-base:java25
+__IMAGE_PREFIX__/minecraft-fabric:26.2
 ```
 
 ## Local resolve preview

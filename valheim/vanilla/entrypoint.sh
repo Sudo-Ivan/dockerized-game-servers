@@ -72,6 +72,8 @@ install_server() {
     export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
     local status=0
     while true; do
+        # steam_login may contain "user pass" as two argv words for steamcmd
+        # shellcheck disable=SC2086
         "${STEAM_DIR}/linux32/steamcmd" \
             +@sSteamCmdForcePlatformType linux \
             +force_install_dir "${VALHEIM_DIR}" \

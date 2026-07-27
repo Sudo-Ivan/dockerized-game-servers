@@ -1,6 +1,7 @@
 #!/bin/sh
 set -eu
 
+# shellcheck disable=SC1091
 . /runtime.sh
 
 : "${VANILLA_VERSION:=1.21.11}"
@@ -13,6 +14,8 @@ MOJANG_HOSTS="piston-meta.mojang.com piston-data.mojang.com launchermeta.mojang.
 
 download_vanilla() {
   if [ -n "${VANILLA_JAR_URL}" ]; then
+    # MOJANG_HOSTS is a space-separated allowlist
+    # shellcheck disable=SC2086
     if ! mc_url_allowed "${VANILLA_JAR_URL}" ${MOJANG_HOSTS}; then
       echo "URL host not allowed: ${VANILLA_JAR_URL}" >&2
       exit 1
@@ -44,6 +47,8 @@ download_vanilla() {
     exit 1
   fi
 
+  # MOJANG_HOSTS is a space-separated allowlist
+  # shellcheck disable=SC2086
   if ! mc_url_allowed "${server_url}" ${MOJANG_HOSTS}; then
     echo "URL host not allowed: ${server_url}" >&2
     exit 1

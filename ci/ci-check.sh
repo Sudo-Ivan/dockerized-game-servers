@@ -20,7 +20,7 @@ echo "  image_owner=${IMAGE_OWNER}"
 echo "  docs_url=${DOCS_URL}"
 
 echo "==> Checking required paths"
-./ci/image-matrix.sh | while IFS="$(printf '\t')" read -r name context dockerfile base; do
+./ci/image-matrix.sh | while IFS="$(printf '\t')" read -r name context dockerfile _base; do
   [ -n "${name}" ] || continue
   if [ ! -d "${context}" ]; then
     echo "missing context: ${context} (${name})" >&2
@@ -33,57 +33,56 @@ echo "==> Checking required paths"
 done || fail=1
 
 echo "==> Checking compose files"
-for compose in \
-  minecraft/fabric/docker-compose.yml \
-  minecraft/vanilla/docker-compose.yml \
-  minecraft/forge/docker-compose.yml \
-  valheim/vanilla/docker-compose.yml \
-  valheim/plus/docker-compose.yml \
-  ground-branch/docker-compose.yml \
-  core-keeper/docker-compose.yml \
-  factorio/docker-compose.yml \
-  arma/arma-3/docker-compose.yml \
-  hytale/docker-compose.yml
-do
+./ci/server-catalog.sh | while IFS="$(printf '\t')" read -r id compose _container _volumes _update_envs _health _first_party; do
+  [ -n "${id}" ] || continue
   if [ ! -f "${compose}" ]; then
-    echo "missing compose: ${compose}" >&2
-    fail=1
-    continue
+    echo "missing compose: ${compose} (${id})" >&2
+    exit 1
   fi
   if command -v docker >/dev/null 2>&1; then
     if ! docker compose -f "${compose}" config >/dev/null; then
-      echo "compose invalid: ${compose}" >&2
-      fail=1
+      echo "compose invalid: ${compose} (${id})" >&2
+      exit 1
     fi
   fi
-done
+done || fail=1
 
 echo "==> Checking for hardcoded image owners in compose"
-compose_hits="$(git ls-files '*docker-compose.yml' | while IFS= read -r compose; do
-  case "${compose}" in
-    hytale/*) continue ;;
-  esac
-  if grep -n -E 'ghcr\.io/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/' "${compose}"; then
-    printf '%s\n' "${compose}"
+hardcoded=0
+./ci/server-catalog.sh | while IFS="$(printf '\t')" read -r id compose _container _volumes _update_envs _health first_party; do
+  [ -n "${id}" ] || continue
+  [ "${first_party}" = "1" ] || continue
+  [ -f "${compose}" ] || continue
+  if grep -n -E 'ghcr\.io/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/' "${compose}" >/dev/null 2>&1; then
+    echo "compose files must use ghcr.io/\${IMAGE_OWNER}/... not a fixed owner" >&2
+    grep -n -E 'ghcr\.io/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/' "${compose}" >&2 || true
+    exit 1
   fi
-done || true)"
-if [ -n "${compose_hits}" ]; then
-  echo "compose files must use ghcr.io/\${IMAGE_OWNER}/... not a fixed owner" >&2
-  printf '%s\n' "${compose_hits}" >&2
+done || hardcoded=1
+if [ "${hardcoded}" -ne 0 ]; then
   fail=1
 fi
 
 echo "==> Checking for Nomad leftovers"
-if [ -n "$(find . -name '*.nomad' -print -quit 2>/dev/null)" ]; then
+if [ -n "$(find . \( -path './docs/node_modules' -o -path '*/data/*' \) -prune -o -name '*.nomad' -print -quit 2>/dev/null)" ]; then
   echo "nomad files still present" >&2
   fail=1
 fi
 
 echo "==> Shell script syntax"
 tmp="$(mktemp)"
-find ci bases minecraft valheim ground-branch core-keeper factorio arma -type f \( \
-  -name '*.sh' -o -name 'entrypoint.sh' -o -name 'docker-entrypoint.sh' -o -name 'runtime.sh' \
-\) >"${tmp}" 2>/dev/null || true
+roots_tmp="$(mktemp)"
+./ci/script-roots.sh | sort -u >"${roots_tmp}"
+while IFS= read -r root; do
+  [ -n "${root}" ] || continue
+  [ -d "${root}" ] || continue
+  find "${root}" \( -path '*/data/*' -o -path '*/node_modules/*' \) -prune -o -type f \( \
+    -name '*.sh' -o -name 'entrypoint.sh' -o -name 'docker-entrypoint.sh' -o -name 'runtime.sh' \
+  \) -print >>"${tmp}" 2>/dev/null || true
+done <"${roots_tmp}"
+rm -f "${roots_tmp}"
+
+sort -u "${tmp}" -o "${tmp}"
 while IFS= read -r script; do
   [ -f "${script}" ] || continue
   shebang="$(head -n 1 "${script}" 2>/dev/null || true)"
@@ -121,6 +120,21 @@ if [ -f docs/package-lock.json ]; then
 fi
 if ! grep -q 'pnpm@11\.' docs/package.json; then
   echo "docs/package.json must pin pnpm 11+" >&2
+  fail=1
+fi
+
+echo "==> ShellCheck"
+if ! ./ci/shellcheck.sh; then
+  fail=1
+fi
+
+echo "==> Healthcheck tests"
+if ! ./ci/test-healthchecks.sh; then
+  fail=1
+fi
+
+echo "==> Tools tests"
+if ! ./ci/test-tools.sh; then
   fail=1
 fi
 

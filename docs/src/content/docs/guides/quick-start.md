@@ -43,3 +43,7 @@ Accept the EULA with EULA=true. World and config live in each server's ./data vo
 ## Steam games
 
 Many titles allow anonymous SteamCMD. Arma 3 usually needs a Steam account that owns the server files. Set Valheim SERVER_PASS with -e or a .env file next to compose.
+
+## Ops
+
+Backup, restore, update, and healthcheck usage: [Ops](./ops/).
