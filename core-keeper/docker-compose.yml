@@ -1,11 +1,11 @@
 services:
   core-keeper:
-    image: ghcr.io/sudo-ivan/dockerized-game-servers/core-keeper:latest
+    image: ghcr.io/${IMAGE_OWNER}/core-keeper:latest
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        BASE_IMAGE: ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
     pull_policy: missing
     container_name: core-keeper
     restart: unless-stopped

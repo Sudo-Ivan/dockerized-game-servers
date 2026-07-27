@@ -1,0 +1,15 @@
+packages:
+  - '.'
+
+# Supply-chain defaults for pnpm 11+, tightened further for CI and forks.
+minimumReleaseAge: 1440
+minimumReleaseAgeStrict: true
+blockExoticSubdeps: true
+strictDepBuilds: true
+trustPolicy: no-downgrade
+verifyDepsBeforeRun: install
+pmOnFail: download
+
+# Only packages that must run install scripts.
+allowBuilds:
+  esbuild: true

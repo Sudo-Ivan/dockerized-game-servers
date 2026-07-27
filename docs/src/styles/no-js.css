@@ -1,0 +1,23 @@
+/* Keep navigation usable when client scripts are unavailable. */
+@media (scripting: none) {
+	.social-icons::after {
+		display: none;
+	}
+
+	starlight-menu-button {
+		display: none !important;
+	}
+
+	.sidebar-pane {
+		--sl-sidebar-visibility: visible;
+		position: static;
+		inset: auto;
+		width: 100%;
+		height: auto;
+		overflow: visible;
+	}
+
+	[data-has-sidebar] .header {
+		padding-inline-end: var(--sl-nav-pad-x);
+	}
+}

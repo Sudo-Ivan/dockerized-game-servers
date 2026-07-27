@@ -66,7 +66,8 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_OWNER: sudo-ivan/dockerized-game-servers
+  IMAGE_OWNER: ${{ github.repository }}
+  GITHUB_REPOSITORY: ${{ github.repository }}
   PLATFORM: linux/amd64
   PUSH: ${{ inputs.push && 'true' || 'false' }}
 

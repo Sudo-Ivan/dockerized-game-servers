@@ -1,0 +1,33 @@
+---
+title: CI
+description: Checks, image builds, and Minecraft versioned builds.
+---
+
+## Workflows
+
+- ci runs on push, pull request, and manually. It runs ci/ci-check.sh plus Trivy Dockerfile config scans (HIGH and CRITICAL).
+- build runs weekly (Sunday 06:00 UTC), on Dockerfile, base, or ci path changes to master or main, and manually. It builds and pushes GHCR images, then Trivy-scans them (CRITICAL fails the job).
+- build-minecraft is manual only. Pick Fabric, Vanilla, or Forge plus a Minecraft version. Java is resolved from Mojang's javaVersion. Temurin Alpine JRE is pinned from Adoptium. Fabric loader and installer, and Forge promos, auto-fill when left blank. Publishes minecraft-base:javaN and minecraft-flavor:tag (tag defaults to the MC version, or mc-forge for Forge).
+
+## Example tags
+
+After a versioned Fabric build for 26.2:
+
+```text
+{{IMAGE_PREFIX}}/minecraft-base:java25
+{{IMAGE_PREFIX}}/minecraft-fabric:26.2
+```
+
+## Local resolve preview
+
+```bash
+./ci/resolve-minecraft-build.sh --flavor fabric --minecraft-version 26.2
+./ci/resolve-minecraft-build.sh --flavor vanilla --minecraft-version 1.20.4
+./ci/resolve-minecraft-build.sh --flavor forge --minecraft-version 1.21.8 --forge-channel latest
+```
+
+## Security scanning
+
+Trivy is installed from a pinned GitHub release tarball with SHA-256 verification (ci/install-trivy.sh). This repo does not use aquasecurity/trivy-action after the March 2026 supply-chain compromise. Shared scan settings live in trivy.yaml.
+
+Base images are always pushed so matrix jobs can reuse them. Manual builds can set the push input for game images.

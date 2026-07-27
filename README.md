@@ -2,7 +2,9 @@
 
 Dockerized dedicated game servers with small images and compose files.
 
-Images publish to GHCR under `ghcr.io/sudo-ivan/dockerized-game-servers/`.
+Docs publish to GitHub Pages for this repository (see Actions / Pages).
+
+Images publish to GHCR under `ghcr.io/$IMAGE_OWNER/` where IMAGE_OWNER is `owner/repo` (from git remote or GITHUB_REPOSITORY). Compose reads IMAGE_OWNER from the environment or a local `.env` file.
 
 ## Servers
 
@@ -15,19 +17,23 @@ Images publish to GHCR under `ghcr.io/sudo-ivan/dockerized-game-servers/`.
 | Valheim Plus | `valheim/plus` | `valheim-plus` |
 | Ground Branch | `ground-branch` | `ground-branch` |
 | Core Keeper | `core-keeper` | `core-keeper` |
+| Factorio | `factorio` | `factorio` |
 | Arma 3 | `arma/arma-3` | `arma-3` |
 | Hytale | `hytale` | external (`deinfreu/hytale-server`) |
 
 Shared bases:
 
 - `minecraft-base` Temurin JRE on Alpine
-- `steam-base` SteamCMD on Arch Linux
+- `steam-base` SteamCMD on Arch Linux with the [XLibre](https://github.com/x11libre/xserver) Arch package repo ([xlibre-arch](https://github.com/xlibre-arch/xlibre-arch)) for X11/Xvfb needs
 
 ## Quick start
 
 ### Compose
 
+Set IMAGE_OWNER to your GitHub owner/repo (lowercase), then start:
+
 ```bash
+export IMAGE_OWNER="$(./ci/repo-meta.sh | sed -n 's/^IMAGE_OWNER=//p')"
 docker compose -f minecraft/fabric/docker-compose.yml up
 ```
 
@@ -37,11 +43,11 @@ Build locally:
 docker compose -f minecraft/fabric/docker-compose.yml up --build
 ```
 
-Compose files set `image:` to GHCR and keep `build:` for local rebuilds. `pull_policy: missing` uses a local image when present, otherwise pulls.
+Compose files set image to GHCR via IMAGE_OWNER and keep build for local rebuilds. pull_policy missing uses a local image when present, otherwise pulls.
 
 ### Docker run
 
-Image prefix: `ghcr.io/sudo-ivan/dockerized-game-servers`
+Image prefix: ghcr.io/$IMAGE_OWNER
 
 Minecraft Fabric:
 
@@ -50,7 +56,7 @@ docker run -d --name fabric --restart unless-stopped --init \
   -p 25565:25565/tcp -p 25565:25565/udp \
   -v "$PWD/minecraft/fabric/data:/data" \
   -e EULA=true \
-  ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
+  ghcr.io/$IMAGE_OWNER/minecraft-fabric:latest
 ```
 
 Minecraft Vanilla:
@@ -60,7 +66,7 @@ docker run -d --name vanilla --restart unless-stopped --init \
   -p 25565:25565/tcp -p 25565:25565/udp \
   -v "$PWD/minecraft/vanilla/data:/data" \
   -e EULA=true \
-  ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-vanilla:latest
+  ghcr.io/$IMAGE_OWNER/minecraft-vanilla:latest
 ```
 
 Minecraft Forge:
@@ -70,7 +76,7 @@ docker run -d --name forge --restart unless-stopped --init \
   -p 25565:25565/tcp -p 25565:25565/udp \
   -v "$PWD/minecraft/forge/data:/data" \
   -e EULA=true \
-  ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-forge:latest
+  ghcr.io/$IMAGE_OWNER/minecraft-forge:latest
 ```
 
 Valheim:
@@ -80,7 +86,7 @@ docker run -d --name valheim --restart unless-stopped --init \
   -p 2456-2458:2456-2458/udp \
   -v "$PWD/valheim/vanilla/data:/opt/valheim" \
   -e SERVER_PASS=changeme \
-  ghcr.io/sudo-ivan/dockerized-game-servers/valheim:latest
+  ghcr.io/$IMAGE_OWNER/valheim:latest
 ```
 
 Valheim Plus:
@@ -90,7 +96,7 @@ docker run -d --name valheim-plus --restart unless-stopped --init \
   -p 2456-2458:2456-2458/udp \
   -v "$PWD/valheim/plus/data:/opt/valheim" \
   -e SERVER_PASS=changeme \
-  ghcr.io/sudo-ivan/dockerized-game-servers/valheim-plus:latest
+  ghcr.io/$IMAGE_OWNER/valheim-plus:latest
 ```
 
 Ground Branch:
@@ -99,7 +105,7 @@ Ground Branch:
 docker run -d --name ground-branch --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp \
   -v "$PWD/ground-branch/data:/opt/groundbranch" \
-  ghcr.io/sudo-ivan/dockerized-game-servers/ground-branch:latest
+  ghcr.io/$IMAGE_OWNER/ground-branch:latest
 ```
 
 Core Keeper (SDR, no ports):
@@ -107,7 +113,17 @@ Core Keeper (SDR, no ports):
 ```bash
 docker run -d --name core-keeper --restart unless-stopped --init \
   -v "$PWD/core-keeper/data:/opt/corekeeper" \
-  ghcr.io/sudo-ivan/dockerized-game-servers/core-keeper:latest
+  ghcr.io/$IMAGE_OWNER/core-keeper:latest
+```
+
+Factorio:
+
+```bash
+docker run -d --name factorio --restart unless-stopped --init \
+  -p 34197:34197/udp -p 27015:27015/tcp \
+  -v "$PWD/factorio/data:/opt/factorio" \
+  -e RCON_PASSWORD=changeme \
+  ghcr.io/$IMAGE_OWNER/factorio:latest
 ```
 
 Arma 3:
@@ -121,7 +137,7 @@ docker run -d --name arma3 --restart unless-stopped \
   -v "$PWD/arma/arma-3/cache:/home/arma3/cache" \
   -e STEAM_USERNAME=youruser \
   -e STEAM_PASSWORD=yourpass \
-  ghcr.io/sudo-ivan/dockerized-game-servers/arma-3:latest
+  ghcr.io/$IMAGE_OWNER/arma-3:latest
 ```
 
 Hytale (external image):
@@ -156,14 +172,18 @@ Defaults to Steam Datagram Relay (SDR). No published ports are required. After s
 docker exec -it core-keeper cat /opt/corekeeper/server/GameID.txt
 ```
 
-For direct connect, set `SERVER_PORT` and publish that UDP port. World data lives under `core-keeper/data/`.
+For direct connect, set `SERVER_PORT` and publish that UDP port. World data lives under `core-keeper/data/`. Uses XLibre `xlibre-xserver-xvfb` (not X.Org) for the virtual display.
+
+### Factorio
+
+Downloads the official headless package from factorio.com (`FACTORIO_VERSION`, default `stable`). Creates `saves/<SAVE_NAME>.zip` on first start and writes `config/server-settings.json` if missing. Game traffic is UDP `34197`. Set `RCON_PASSWORD` to enable RCON on TCP `27015`. Edit settings under `factorio/data/config/` after the first run.
 
 ## Images
 
 | Name | Notes |
 | --- | --- |
 | `minecraft-base` | Shared Minecraft runtime |
-| `steam-base` | Shared SteamCMD runtime (Arch) |
+| `steam-base` | Shared SteamCMD runtime (Arch + XLibre repo) |
 | `minecraft-fabric` | Fabric |
 | `minecraft-vanilla` | Vanilla |
 | `minecraft-forge` | Forge |
@@ -171,10 +191,11 @@ For direct connect, set `SERVER_PORT` and publish that UDP port. World data live
 | `valheim-plus` | Valheim Plus |
 | `ground-branch` | Ground Branch (Wine) |
 | `core-keeper` | Core Keeper dedicated |
+| `factorio` | Factorio dedicated |
 | `arma-3` | Arma 3 dedicated |
 
 ```bash
-docker pull ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
+docker pull ghcr.io/$IMAGE_OWNER/minecraft-fabric:latest
 ```
 
 ## CI
@@ -186,8 +207,8 @@ docker pull ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
 Example tags after a versioned Fabric build for `26.2`:
 
 ```text
-ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-base:java25
-ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:26.2
+ghcr.io/$IMAGE_OWNER/minecraft-base:java25
+ghcr.io/$IMAGE_OWNER/minecraft-fabric:26.2
 ```
 
 Local resolve preview:
@@ -209,10 +230,12 @@ After the first publish, set GHCR package visibility to public if the repo is pu
 ```text
 bases/           shared Docker bases
 ci/              POSIX CI scripts
+docs/            Starlight site (GitHub Pages)
 minecraft/       Fabric, Vanilla, Forge
 valheim/         Vanilla and Plus
 ground-branch/   Ground Branch
 core-keeper/     Core Keeper
+factorio/         Factorio
 arma/arma-3/     Arma 3
 hytale/          external image compose
 ```

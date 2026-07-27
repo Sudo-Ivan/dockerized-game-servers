@@ -36,7 +36,8 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_OWNER: sudo-ivan/dockerized-game-servers
+  IMAGE_OWNER: ${{ github.repository }}
+  GITHUB_REPOSITORY: ${{ github.repository }}
   TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || 'latest' }}
   PUSH: ${{ github.event_name != 'workflow_dispatch' && 'true' || (inputs.push && 'true' || 'false') }}
   PLATFORM: linux/amd64
@@ -119,6 +120,10 @@ jobs:
           - name: core-keeper
             context: core-keeper
             dockerfile: core-keeper/Dockerfile
+            base: steam-base
+          - name: factorio
+            context: factorio
+            dockerfile: factorio/Dockerfile
             base: steam-base
           - name: arma-3
             context: arma/arma-3

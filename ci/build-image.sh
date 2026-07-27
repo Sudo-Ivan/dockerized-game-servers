@@ -16,8 +16,11 @@ CONTEXT="${2:?context required}"
 DOCKERFILE="${3:?dockerfile required}"
 BASE_IMAGE="${4:-}"
 
+ROOT="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1090
+eval "$("${ROOT}/ci/repo-meta.sh")"
+
 REGISTRY="${REGISTRY:-ghcr.io}"
-IMAGE_OWNER="${IMAGE_OWNER:-sudo-ivan/dockerized-game-servers}"
 TAG="${TAG:-latest}"
 PUSH="${PUSH:-false}"
 PLATFORM="${PLATFORM:-linux/amd64}"
@@ -30,6 +33,7 @@ echo "  context=${CONTEXT}"
 echo "  dockerfile=${DOCKERFILE}"
 echo "  platform=${PLATFORM}"
 echo "  push=${PUSH}"
+echo "  source=${GITHUB_URL}"
 
 if [ "${PUSH}" = "true" ]; then
   set -- \
@@ -38,7 +42,7 @@ if [ "${PUSH}" = "true" ]; then
     --file "${DOCKERFILE}" \
     --tag "${IMAGE}" \
     --tag "${SHA_TAG}" \
-    --label "org.opencontainers.image.source=https://github.com/Sudo-Ivan/dockerized-game-servers" \
+    --label "org.opencontainers.image.source=${GITHUB_URL}" \
     --label "org.opencontainers.image.revision=${GITHUB_SHA:-local}" \
     --cache-from "type=gha,scope=${NAME}" \
     --cache-to "type=gha,mode=max,scope=${NAME}" \
@@ -50,7 +54,7 @@ else
     --file "${DOCKERFILE}" \
     --tag "${IMAGE}" \
     --tag "${SHA_TAG}" \
-    --label "org.opencontainers.image.source=https://github.com/Sudo-Ivan/dockerized-game-servers" \
+    --label "org.opencontainers.image.source=${GITHUB_URL}" \
     --label "org.opencontainers.image.revision=${GITHUB_SHA:-local}"
 fi
 

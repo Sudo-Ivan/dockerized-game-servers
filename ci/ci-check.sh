@@ -8,6 +8,17 @@ cd "${ROOT}"
 
 fail=0
 
+chmod +x ci/*.sh
+# shellcheck disable=SC1090
+eval "$(./ci/repo-meta.sh)"
+export IMAGE_OWNER
+export GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-${REPO}}"
+
+echo "==> Repository identity"
+echo "  repo=${REPO}"
+echo "  image_owner=${IMAGE_OWNER}"
+echo "  docs_url=${DOCS_URL}"
+
 echo "==> Checking required paths"
 ./ci/image-matrix.sh | while IFS="$(printf '\t')" read -r name context dockerfile base; do
   [ -n "${name}" ] || continue
@@ -30,6 +41,7 @@ for compose in \
   valheim/plus/docker-compose.yml \
   ground-branch/docker-compose.yml \
   core-keeper/docker-compose.yml \
+  factorio/docker-compose.yml \
   arma/arma-3/docker-compose.yml \
   hytale/docker-compose.yml
 do
@@ -46,6 +58,21 @@ do
   fi
 done
 
+echo "==> Checking for hardcoded image owners in compose"
+compose_hits="$(git ls-files '*docker-compose.yml' | while IFS= read -r compose; do
+  case "${compose}" in
+    hytale/*) continue ;;
+  esac
+  if grep -n -E 'ghcr\.io/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/' "${compose}"; then
+    printf '%s\n' "${compose}"
+  fi
+done || true)"
+if [ -n "${compose_hits}" ]; then
+  echo "compose files must use ghcr.io/\${IMAGE_OWNER}/... not a fixed owner" >&2
+  printf '%s\n' "${compose_hits}" >&2
+  fail=1
+fi
+
 echo "==> Checking for Nomad leftovers"
 if [ -n "$(find . -name '*.nomad' -print -quit 2>/dev/null)" ]; then
   echo "nomad files still present" >&2
@@ -54,7 +81,7 @@ fi
 
 echo "==> Shell script syntax"
 tmp="$(mktemp)"
-find ci bases minecraft valheim ground-branch core-keeper arma -type f \( \
+find ci bases minecraft valheim ground-branch core-keeper factorio arma -type f \( \
   -name '*.sh' -o -name 'entrypoint.sh' -o -name 'docker-entrypoint.sh' -o -name 'runtime.sh' \
 \) >"${tmp}" 2>/dev/null || true
 while IFS= read -r script; do
@@ -80,6 +107,20 @@ rm -f "${tmp}"
 echo "==> Python syntax"
 if ! python3 -m py_compile ci/resolve-minecraft-build.py; then
   echo "python syntax error: ci/resolve-minecraft-build.py" >&2
+  fail=1
+fi
+
+echo "==> Docs package manager"
+if [ ! -f docs/pnpm-lock.yaml ]; then
+  echo "missing docs/pnpm-lock.yaml" >&2
+  fail=1
+fi
+if [ -f docs/package-lock.json ]; then
+  echo "docs/package-lock.json must not exist when using pnpm" >&2
+  fail=1
+fi
+if ! grep -q 'pnpm@11\.' docs/package.json; then
+  echo "docs/package.json must pin pnpm 11+" >&2
   fail=1
 fi
 

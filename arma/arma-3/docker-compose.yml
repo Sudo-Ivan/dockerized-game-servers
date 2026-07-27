@@ -1,11 +1,11 @@
 services:
   arma3:
-    image: ghcr.io/sudo-ivan/dockerized-game-servers/arma-3:latest
+    image: ghcr.io/${IMAGE_OWNER}/arma-3:latest
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        BASE_IMAGE: ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
     pull_policy: missing
     container_name: arma3
     restart: unless-stopped

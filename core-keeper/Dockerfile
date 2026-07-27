@@ -2,7 +2,7 @@ ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
 FROM ${BASE_IMAGE}
 
 RUN pacman -Sy --noconfirm --needed \
-    xorg-server-xvfb \
+    xlibre-xserver-xvfb \
     libxi \
   && pacman -Scc --noconfirm \
   && useradd -m -u 1000 corekeeper \

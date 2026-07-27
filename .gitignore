@@ -16,3 +16,9 @@ arma/arma-3/cache/*
 !.env.example
 *.log
 .DS_Store
+
+# Docs (Starlight / Astro)
+docs/node_modules/
+docs/dist/
+docs/.astro/
+docs/package-lock.json

@@ -1,0 +1,41 @@
+services:
+  factorio:
+    image: ghcr.io/${IMAGE_OWNER}/factorio:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: factorio
+    restart: unless-stopped
+    stop_grace_period: 90s
+    init: true
+    ports:
+      - "34197:34197/udp"
+      - "27015:27015/tcp"
+    volumes:
+      - ./data:/opt/factorio
+    environment:
+      FACTORIO_VERSION: "stable"
+      FACTORIO_FORCE_UPDATE: "false"
+      SERVER_NAME: "Factorio Server"
+      SERVER_DESCRIPTION: "Factorio dedicated server"
+      SERVER_PASSWORD: ""
+      MAX_PLAYERS: "0"
+      SAVE_NAME: "world"
+      LOAD_LATEST: "false"
+      PORT: "34197"
+      BIND: "0.0.0.0"
+      RCON_PORT: "27015"
+      RCON_PASSWORD: "${RCON_PASSWORD:-}"
+      PUBLIC_VISIBILITY: "false"
+      LAN_VISIBILITY: "true"
+      AUTOSAVE_INTERVAL: "10"
+      AUTO_PAUSE: "true"
+      FACTORIO_EXTRA_ARGS: ""
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 4096M
