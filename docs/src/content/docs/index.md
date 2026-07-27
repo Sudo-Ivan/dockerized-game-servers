@@ -1,48 +1,35 @@
 ---
-title: Overview
+title: Home
 description: Dockerized dedicated game servers with small images and compose files.
+template: splash
+editUrl: false
+lastUpdated: false
+hero:
+  title: Dockerized Game Servers
+  tagline: Small container images and Compose files for dedicated game servers.
+  actions:
+    - text: Quick start
+      link: /guides/quick-start/
+      icon: right-arrow
+    - text: All servers
+      link: /reference/servers/
+      variant: minimal
 ---
 
-Images publish to GHCR under {{IMAGE_PREFIX}}/.
+Published images live on GHCR at `{{IMAGE_PREFIX}}/`. Set `IMAGE_OWNER` when you fork and publish your own packages.
 
-This site is static HTML. Reading and navigation work without JavaScript. Fuzzy search is available when JavaScript is enabled.
-
-## Servers
-
-| Server | Compose path | Image name |
-| --- | --- | --- |
-| Minecraft Fabric | minecraft/fabric | minecraft-fabric |
-| Minecraft Vanilla | minecraft/vanilla | minecraft-vanilla |
-| Minecraft Forge | minecraft/forge | minecraft-forge |
-| Valheim | valheim/vanilla | valheim |
-| Valheim Plus | valheim/plus | valheim-plus |
-| Ground Branch | ground-branch | ground-branch |
-| Core Keeper | core-keeper | core-keeper |
-| Factorio | factorio | factorio |
-| 7 Days to Die | 7-days-to-die | 7-days-to-die |
-| Project Zomboid | project-zomboid | project-zomboid |
-| Terraria | terraria | terraria |
-| Left 4 Dead 2 | l4d2 | l4d2 |
-| Insurgency (Source) | insurgency-source | insurgency-source |
-| Insurgency: Sandstorm | insurgency-sandstorm | insurgency-sandstorm |
-| Counter-Strike: Source | cs-source | cs-source |
-| Killing Floor 2 | kf2 | kf2 |
-| Icarus | icarus | icarus |
-| Palworld | palworld | palworld |
-| Starbound | starbound | starbound |
-| OpenMoHAA | openmohaa | openmohaa |
-| Arma 3 | arma/arma-3 | arma-3 |
-| Hytale | hytale | external (deinfreu/hytale-server) |
-| Stardew Valley | stardew-valley | external (JunimoServer sdvd/server) |
+- Compose-first workflows with optional local builds
+- Shared bases for Minecraft (Java), SteamCMD, and glibc runtimes
+- Static documentation that works without JavaScript, plus optional search
 
 ## Shared bases
 
-- minecraft-base: Temurin JRE on Alpine
-- steam-base: SteamCMD on Arch Linux
-- runtime-base: Debian slim for non-Steam non-Java servers
+- **minecraft-base**: Temurin JRE on Alpine
+- **steam-base**: SteamCMD on Arch Linux
+- **runtime-base**: Debian slim for non-Steam, non-Java servers
 
-## Next steps
+## Learn more
 
-1. Follow [Quick start](guides/quick-start/) to run a server with Compose or Docker.
-2. Open the matching page under Servers for ports, volumes, and env notes.
-3. See [Images](reference/images/) and [CI](reference/ci/) when you build or publish.
+1. [Quick start](guides/quick-start/) to run a server with Compose or Docker.
+2. [All servers](reference/servers/) for compose paths, image names, and doc links.
+3. [Images](reference/images/) and [CI](reference/ci/) when you build or publish.

@@ -13,6 +13,7 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Minecraft Fabric | `minecraft/fabric` | `minecraft-fabric` |
 | Minecraft Vanilla | `minecraft/vanilla` | `minecraft-vanilla` |
 | Minecraft Forge | `minecraft/forge` | `minecraft-forge` |
+| Minecraft NeoForge | `minecraft/neoforge` | `minecraft-neoforge` |
 | Valheim | `valheim/vanilla` | `valheim` |
 | Valheim Plus | `valheim/plus` | `valheim-plus` |
 | Ground Branch | `ground-branch` | `ground-branch` |
@@ -311,6 +312,8 @@ UDP **24642** (game), UDP **27015** (query), TCP **5800** (VNC), TCP **8080** (A
 
 Accept the EULA with `EULA=true`. World and config live in each server's `./data` volume.
 
+Default game versions for the regular compose files are in `minecraft/defaults.env` (vanilla and forge `26.2`, fabric `26.2` / loader `0.19.3`, forge build `65.0.9`, neoforge `26.2.0.35-beta`). To pick other versions, use `docker-compose.scaffold.yml` with a copied `.env.example`, or pass `-e VANILLA_VERSION=…` / `FABRIC_*` / `FORGE_*` / `NEOFORGE_VERSION` on `docker run`. See the [Minecraft docs](https://sudo-ivan.github.io/dockerized-game-servers/servers/minecraft/) for details.
+
 ### Steam games
 
 Many titles still allow anonymous SteamCMD. Valve has removed anonymous access for some dedicated servers (for example Left 4 Dead 2 and Counter-Strike: Source). Those need `STEAM_USERNAME` and `STEAM_PASSWORD` for an account that owns the game, plus optional `STEAM_GUARD_CODE`. Linux installs use a shared SteamCMD workaround in `steam-base` (rebuild `steam-base` before game images when updating install logic). Arma 3 usually needs a Steam account that owns the server files. Set Valheim `SERVER_PASS` via `-e` or a `.env` file next to compose.
@@ -411,6 +414,7 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 | `minecraft-fabric` | Fabric |
 | `minecraft-vanilla` | Vanilla |
 | `minecraft-forge` | Forge |
+| `minecraft-neoforge` | NeoForge |
 | `valheim` | Valheim dedicated |
 | `valheim-plus` | Valheim Plus |
 | `ground-branch` | Ground Branch (Wine) |

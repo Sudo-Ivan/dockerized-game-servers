@@ -1,0 +1,42 @@
+services:
+  minecraft:
+    image: ghcr.io/${IMAGE_OWNER}/minecraft-neoforge:latest
+    build:
+      context: ..
+      dockerfile: neoforge/Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/minecraft-base:latest
+    pull_policy: missing
+    container_name: neoforge
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 90s
+    read_only: true
+    tmpfs:
+      - /tmp:exec,size=1G,mode=1777
+    ports:
+      - "25565:25565/tcp"
+      - "25565:25565/udp"
+    volumes:
+      - ./data:/data
+    env_file:
+      - ../defaults.env
+    environment:
+      NEOFORGE_INSTALLER_URL: ""
+      NEOFORGE_FORCE_INSTALL: "${NEOFORGE_FORCE_INSTALL:-false}"
+      NEOFORGE_INSTALL_DIR: "/data"
+      NEOFORGE_SERVER_JAR: ""
+      SERVER_JAR: ""
+      EULA: "true"
+      JVM_FLAGS: "-Xms3G -Xmx3G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=40 -XX:G1MaxNewSizePercent=50 -XX:G1HeapRegionSize=16M -XX:G1ReservePercent=15 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=20 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1"
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 4096M

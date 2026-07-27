@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-base:latest
 FROM ${BASE_IMAGE}
 
-ARG VANILLA_VERSION=1.21.11
+ARG VANILLA_VERSION=26.2
 
 LABEL org.opencontainers.image.title="minecraft-vanilla" \
       org.opencontainers.image.description="Minecraft Vanilla dedicated server" \

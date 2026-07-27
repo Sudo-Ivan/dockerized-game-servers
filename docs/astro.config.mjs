@@ -54,7 +54,7 @@ export default defineConfig({
 				{
 					label: 'Start',
 					items: [
-						{ label: 'Overview', slug: '' },
+						{ label: 'Home', slug: '' },
 						{ label: 'Quick start', slug: 'guides/quick-start' },
 						{ label: 'Ops', slug: 'guides/ops' },
 					],

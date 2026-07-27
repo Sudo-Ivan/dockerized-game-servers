@@ -19,6 +19,12 @@ Downloads the Linux dedicated server (Steam App 232130) on first start. Data vol
 
 Do not run `validate` on routine manual SteamCMD updates if you rely on custom `PCServer-KFGame.ini` tweaks (see [KF2 wiki](https://wiki.killingfloor2.com/index.php?title=Dedicated_Server_(Killing_Floor_2))). This image validates on first install and when `KF2_FORCE_UPDATE=true`.
 
+## Compose
+
+```bash
+docker compose -f kf2/docker-compose.yml up -d
+```
+
 ## Docker run
 
 ```bash

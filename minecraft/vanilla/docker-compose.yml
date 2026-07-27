@@ -19,8 +19,9 @@ services:
       - "25565:25565/udp"
     volumes:
       - ./data:/data
+    env_file:
+      - ../defaults.env
     environment:
-      VANILLA_VERSION: "1.21.11"
       VANILLA_JAR_URL: ""
       VANILLA_FORCE_DOWNLOAD: "${VANILLA_FORCE_DOWNLOAD:-false}"
       SERVER_JAR: "server.jar"

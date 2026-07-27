@@ -14,6 +14,14 @@ Downloads the Linux dedicated server (Steam App 237410) on first start. Data vol
 - Game config under `insurgency-source/data/insurgency/cfg/` after first run
 - Updates: `INS_SOURCE_FORCE_UPDATE=true` or `./tools/gs update insurgency-source`
 
+SteamCMD may require an account that owns the game for some installs. Set `STEAM_USERNAME`, `STEAM_PASSWORD`, and optional `STEAM_GUARD_CODE` in compose when anonymous login fails.
+
+## Compose
+
+```bash
+docker compose -f insurgency-source/docker-compose.yml up -d
+```
+
 ## Docker run
 
 ```bash

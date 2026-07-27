@@ -24,6 +24,8 @@ RUN chmod 755 /tmp/install-legacy32-libs.sh /usr/local/bin/linuxgsm-tar-install.
     procps \
     libc6-i386 \
     lib32gcc-s1 \
+    libstdc++6 \
+    libstdc++6:i386 \
   && bash /tmp/install-legacy32-libs.sh \
   && rm -f /tmp/install-legacy32-libs.sh \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

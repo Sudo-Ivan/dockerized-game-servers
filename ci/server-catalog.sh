@@ -24,6 +24,7 @@ emit() {
 emit "fabric" "minecraft/fabric/docker-compose.yml" "fabric" "data" "FABRIC_FORCE_DOWNLOAD" "tcp" "1"
 emit "vanilla" "minecraft/vanilla/docker-compose.yml" "vanilla" "data" "VANILLA_FORCE_DOWNLOAD" "tcp" "1"
 emit "forge" "minecraft/forge/docker-compose.yml" "forge" "data" "FORGE_FORCE_INSTALL" "tcp" "1"
+emit "neoforge" "minecraft/neoforge/docker-compose.yml" "neoforge" "data" "NEOFORGE_FORCE_INSTALL" "tcp" "1"
 emit "valheim" "valheim/vanilla/docker-compose.yml" "valheim" "data" "VALHEIM_FORCE_UPDATE" "process" "1"
 emit "valheim-plus" "valheim/plus/docker-compose.yml" "valheim-plus" "data" "VALHEIM_FORCE_UPDATE,VALHEIM_PLUS_FORCE_INSTALL" "process" "1"
 emit "ground-branch" "ground-branch/docker-compose.yml" "ground-branch" "data" "GB_FORCE_UPDATE" "process" "1"

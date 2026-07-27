@@ -16,6 +16,12 @@ Downloads the Linux dedicated server (Steam App 2394010) on first start. World a
 
 Edit `Pal/Saved/Config/LinuxServer/PalWorldSettings.ini` in the data volume for server name, passwords, and rates.
 
+## Compose
+
+```bash
+docker compose -f palworld/docker-compose.yml up -d
+```
+
 ## Docker run
 
 ```bash

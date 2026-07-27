@@ -41,3 +41,11 @@ docker run -d --name openmohaa --restart unless-stopped --init \
 ```
 
 Populate `openmohaa/data/main` (and expansion folders as needed) **before** the server can stay healthy.
+
+## Compose
+
+```bash
+docker compose -f openmohaa/docker-compose.yml up -d
+```
+
+## Docker run

@@ -15,6 +15,13 @@ Downloads the Linux dedicated server (Steam App 380870) on first start. Server f
 - GOG or non-Steam clients: set `PZ_NO_STEAM=true`
 - Updates: `PZ_FORCE_UPDATE=true` or `./tools/gs update project-zomboid`
 
+## Compose
+
+```bash
+export PZ_ADMIN_PASSWORD=changeme
+docker compose -f project-zomboid/docker-compose.yml up -d
+```
+
 ## Docker run
 
 ```bash

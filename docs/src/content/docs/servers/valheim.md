@@ -14,6 +14,32 @@ description: Valheim and Valheim Plus dedicated servers.
 - Publish UDP **2456-2458**
 :::
 
+## Configuration
+
+Common environment variables (vanilla and Plus unless noted):
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `SERVER_NAME` | `Valheim Server` | Public server name |
+| `SERVER_PORT` | `2456` | Game port (publish UDP 2456-2458) |
+| `WORLD_NAME` | `Dedicated` | Save name under the data volume |
+| `SERVER_PASS` | `secret` | Join password (set a real value) |
+| `SERVER_PUBLIC` | `1` | List on public server browser |
+| `SERVER_LOGINTOKEN` | empty | Optional [Steam Game Server Login Token](https://steamcommunity.com/dev/managegameservers) |
+| `VALHEIM_FORCE_UPDATE` | `false` | Set `true` to force SteamCMD update |
+
+Valheim Plus adds install/update env vars for the Plus package (see `valheim/plus/docker-compose.yml`).
+
+World and config files live under `valheim/<variant>/data/` on the host after first start.
+
+## Compose
+
+```bash
+docker compose -f valheim/vanilla/docker-compose.yml up -d
+```
+
+Use `valheim/plus/docker-compose.yml` for Valheim Plus.
+
 ## Docker run
 
 Valheim:

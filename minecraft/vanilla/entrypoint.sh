@@ -4,7 +4,7 @@ set -eu
 # shellcheck disable=SC1091
 . /runtime.sh
 
-: "${VANILLA_VERSION:=1.21.11}"
+: "${VANILLA_VERSION:=26.2}"
 : "${VANILLA_JAR_URL:=}"
 : "${VANILLA_FORCE_DOWNLOAD:=false}"
 : "${SERVER_JAR:=server.jar}"

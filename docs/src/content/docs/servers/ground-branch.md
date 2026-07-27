@@ -10,7 +10,13 @@ Compose path: ground-branch. Image: ground-branch.
 - UDP 7777 and UDP 27015
 - Data volume: ground-branch/data mounted at /opt/groundbranch
 
-Server config appears under ground-branch/data/GroundBranch/ServerConfig/ after first start. Optional map and mission via GB_MAP and GB_MISSION.
+Server config appears under `ground-branch/data/GroundBranch/ServerConfig/` after first start. Optional map and mission via `GB_MAP` and `GB_MISSION`. Set `GB_FORCE_UPDATE=true` to refresh the Steam install.
+
+## Compose
+
+```bash
+docker compose -f ground-branch/docker-compose.yml up -d
+```
 
 ## Docker run
 

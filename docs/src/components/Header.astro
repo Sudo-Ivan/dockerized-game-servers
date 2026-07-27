@@ -9,11 +9,13 @@ import ThemeSelect from 'virtual:starlight/components/ThemeSelect'
 
 const shouldRenderSearch =
 	config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro'
+
+const hideSiteTitle = Astro.locals.starlightRoute.entry.id === 'index'
 ---
 
 <div class="header">
 	<div class="title-wrapper sl-flex">
-		<SiteTitle />
+		{!hideSiteTitle && <SiteTitle />}
 	</div>
 	<div class="header-end sl-flex print:hidden">
 		{shouldRenderSearch && <Search />}

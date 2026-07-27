@@ -9,7 +9,7 @@ hero:
   title: Offline
   tagline: Reconnect to load the latest docs. Cached pages still work when available.
   actions:
-    - text: Overview
+    - text: Home
       link: /
       icon: right-arrow
     - text: Retry

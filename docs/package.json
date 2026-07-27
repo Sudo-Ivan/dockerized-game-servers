@@ -23,6 +23,7 @@
     "dev": "node scripts/build-assets.mjs && astro dev",
     "start": "node scripts/build-assets.mjs && astro dev",
     "build": "node scripts/build-assets.mjs && astro build && node scripts/check-tokens.mjs",
+    "test": "node scripts/check-doc-links.mjs && node scripts/check-doc-catalog.mjs",
     "icons": "node scripts/fetch-game-icons.mjs",
     "preview": "astro preview",
     "astro": "astro",

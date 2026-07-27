@@ -15,6 +15,7 @@ MOJANG_MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.js
 FABRIC_LOADER = "https://meta.fabricmc.net/v2/versions/loader/{version}"
 FABRIC_INSTALLER = "https://meta.fabricmc.net/v2/versions/installer"
 FORGE_PROMOS = "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json"
+NEOFORGE_VERSIONS = "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge"
 ADOPTIUM_LATEST = (
     "https://api.adoptium.net/v3/assets/latest/{major}/hotspot"
     "?os=alpine-linux&architecture=x64&image_type=jre"
@@ -102,11 +103,38 @@ def resolve_forge(minecraft_version: str, forge_version: str | None, channel: st
     return str(promos[key])
 
 
-def derive_tag(flavor: str, minecraft_version: str, forge_version: str | None, tag: str | None) -> str:
+def neoforge_version_prefix(minecraft_version: str) -> str:
+    parts = minecraft_version.split(".")
+    if len(parts) >= 3 and parts[0] == "1":
+        return f"{parts[1]}.{parts[2]}."
+    return f"{minecraft_version}."
+
+
+def resolve_neoforge(minecraft_version: str, neoforge_version: str | None) -> str:
+    if neoforge_version:
+        return neoforge_version
+
+    prefix = neoforge_version_prefix(minecraft_version)
+    versions = http_json(NEOFORGE_VERSIONS).get("versions", [])
+    candidates = [v for v in versions if v.startswith(prefix)]
+    if not candidates:
+        raise SystemExit(
+            f"No NeoForge versions with prefix {prefix!r} for Minecraft {minecraft_version}. "
+            "Set --neoforge-version explicitly. See https://neoforged.net/"
+        )
+
+    stable = [v for v in candidates if "beta" not in v and "alpha" not in v]
+    pool = stable if stable else candidates
+    return str(pool[-1])
+
+
+def derive_tag(flavor: str, minecraft_version: str, forge_version: str | None, neoforge_version: str | None, tag: str | None) -> str:
     if tag:
         return tag
     if flavor == "forge":
         return f"{minecraft_version}-{forge_version}"
+    if flavor == "neoforge":
+        return f"{minecraft_version}-{neoforge_version}"
     return minecraft_version
 
 
@@ -121,12 +149,13 @@ def emit(out, key: str, value: str) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--flavor", required=True, choices=("fabric", "vanilla", "forge"))
+    parser.add_argument("--flavor", required=True, choices=("fabric", "vanilla", "forge", "neoforge"))
     parser.add_argument("--minecraft-version", required=True)
     parser.add_argument("--fabric-loader-version", default="")
     parser.add_argument("--fabric-installer-version", default="")
     parser.add_argument("--forge-version", default="")
     parser.add_argument("--forge-channel", default="recommended", choices=("recommended", "latest"))
+    parser.add_argument("--neoforge-version", default="")
     parser.add_argument("--java-major", default="")
     parser.add_argument("--tag", default="")
     parser.add_argument("--github-output", default="")
@@ -142,6 +171,7 @@ def main() -> int:
     fabric_loader = ""
     fabric_installer = ""
     forge_version = ""
+    neoforge_version = ""
 
     if args.flavor == "fabric":
         fabric_loader, fabric_installer = resolve_fabric(
@@ -152,15 +182,24 @@ def main() -> int:
         image_name = "minecraft-fabric"
     elif args.flavor == "vanilla":
         image_name = "minecraft-vanilla"
-    else:
+    elif args.flavor == "forge":
         forge_version = resolve_forge(
             mc,
             args.forge_version.strip() or None,
             args.forge_channel,
         )
         image_name = "minecraft-forge"
+    else:
+        neoforge_version = resolve_neoforge(mc, args.neoforge_version.strip() or None)
+        image_name = "minecraft-neoforge"
 
-    image_tag = derive_tag(args.flavor, mc, forge_version or None, args.tag.strip() or None)
+    image_tag = derive_tag(
+        args.flavor,
+        mc,
+        forge_version or None,
+        neoforge_version or None,
+        args.tag.strip() or None,
+    )
     base_tag = f"java{java_major}"
 
     gh_out = open(args.github_output, "a", encoding="utf-8") if args.github_output else None
@@ -174,6 +213,7 @@ def main() -> int:
         emit(gh_out, "FABRIC_LOADER_VERSION", fabric_loader)
         emit(gh_out, "FABRIC_INSTALLER_VERSION", fabric_installer)
         emit(gh_out, "FORGE_VERSION", forge_version)
+        emit(gh_out, "NEOFORGE_VERSION", neoforge_version)
         emit(gh_out, "IMAGE_NAME", image_name)
         emit(gh_out, "IMAGE_TAG", image_tag)
         emit(gh_out, "BASE_TAG", base_tag)

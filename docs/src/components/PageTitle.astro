@@ -1,5 +1,5 @@
 ---
-import { gameIcons } from '../generated/game-icons.mjs'
+import { gameIcons, gameIconFit } from '../generated/game-icons.mjs'
 
 const title = Astro.locals.starlightRoute.entry.data.title
 const slug = Astro.locals.starlightRoute.entry.id
@@ -9,18 +9,19 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 	: `${import.meta.env.BASE_URL}/`
 const iconFile = serverSlug ? gameIcons[serverSlug] : undefined
 const iconSrc = iconFile ? `${base}game-icons/${iconFile}` : undefined
+const iconFit = serverSlug ? gameIconFit[serverSlug] ?? 'cover' : 'cover'
 ---
 
 <div class:list={['page-title', { 'has-game-icon': Boolean(iconSrc) }]}>
 	{
 		iconSrc && (
-			<span class="game-title-icon-wrap">
+			<span class:list={['game-title-icon-wrap', { 'fit-contain': iconFit === 'contain' }]}>
 				<img
 					class="game-title-icon"
 					src={iconSrc}
 					alt=""
 					width="64"
-					height="96"
+					height="64"
 					decoding="async"
 				/>
 			</span>
@@ -47,6 +48,18 @@ const iconSrc = iconFile ? `${base}game-icons/${iconFile}` : undefined
 		background: #141414;
 		border: 1px solid var(--sl-color-hairline);
 		box-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset;
+	}
+
+	.game-title-icon-wrap.fit-contain {
+		height: 4rem;
+		aspect-ratio: 1;
+		padding: 0.4rem;
+		background: #101010;
+	}
+
+	.game-title-icon-wrap.fit-contain .game-title-icon {
+		object-fit: contain;
+		object-position: center;
 	}
 
 	.game-title-icon {

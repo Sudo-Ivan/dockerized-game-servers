@@ -19,6 +19,7 @@ emit "runtime-base" "bases/runtime" "bases/runtime/Dockerfile" ""
 emit "minecraft-fabric" "minecraft" "minecraft/fabric/Dockerfile" "minecraft-base"
 emit "minecraft-vanilla" "minecraft" "minecraft/vanilla/Dockerfile" "minecraft-base"
 emit "minecraft-forge" "minecraft" "minecraft/forge/Dockerfile" "minecraft-base"
+emit "minecraft-neoforge" "minecraft" "minecraft/neoforge/Dockerfile" "minecraft-base"
 
 emit "valheim" "valheim/vanilla" "valheim/vanilla/Dockerfile" "steam-base"
 emit "valheim-plus" "valheim/plus" "valheim/plus/Dockerfile" "steam-base"

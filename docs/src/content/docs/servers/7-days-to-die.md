@@ -13,6 +13,12 @@ Downloads the Linux dedicated server (Steam App 294420) on first start. World an
 - Default config: `serverconfig.xml` in the data volume (Steam updates may overwrite this file, use a custom name via `CONFIG_FILE` if you edit settings)
 - Updates: set `SEVENDTD_FORCE_UPDATE=true` or run `./tools/gs update 7-days-to-die`
 
+## Compose
+
+```bash
+docker compose -f 7-days-to-die/docker-compose.yml up -d
+```
+
 ## Docker run
 
 ```bash

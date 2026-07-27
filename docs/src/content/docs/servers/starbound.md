@@ -13,6 +13,12 @@ Downloads the Linux dedicated server (Steam App 211820) on first start. Config a
 - Writes `starbound_server.config` on first start if missing
 - Updates: `STARBOUND_FORCE_UPDATE=true` or `./tools/gs update starbound`
 
+## Compose
+
+```bash
+docker compose -f starbound/docker-compose.yml up -d
+```
+
 ## Docker run
 
 ```bash

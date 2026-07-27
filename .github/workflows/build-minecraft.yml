@@ -10,6 +10,7 @@ on:
           - fabric
           - vanilla
           - forge
+          - neoforge
         default: fabric
       minecraft_version:
         description: Minecraft version (for example 26.2 or 1.21.8)
@@ -37,6 +38,11 @@ on:
           - recommended
           - latest
         default: recommended
+      neoforge_version:
+        description: NeoForge version (empty = latest stable/beta for that MC version)
+        type: string
+        required: false
+        default: ""
       java_major:
         description: Override Java major (empty = Mojang javaVersion for that MC release)
         type: string
@@ -91,6 +97,7 @@ jobs:
           INPUT_FABRIC_INSTALLER_VERSION: ${{ inputs.fabric_installer_version }}
           INPUT_FORGE_VERSION: ${{ inputs.forge_version }}
           INPUT_FORGE_CHANNEL: ${{ inputs.forge_channel }}
+          INPUT_NEOFORGE_VERSION: ${{ inputs.neoforge_version }}
           INPUT_JAVA_MAJOR: ${{ inputs.java_major }}
           INPUT_TAG: ${{ inputs.tag }}
         run: |
@@ -102,6 +109,7 @@ jobs:
             --fabric-installer-version "${INPUT_FABRIC_INSTALLER_VERSION}" \
             --forge-version "${INPUT_FORGE_VERSION}" \
             --forge-channel "${INPUT_FORGE_CHANNEL}" \
+            --neoforge-version "${INPUT_NEOFORGE_VERSION}" \
             --java-major "${INPUT_JAVA_MAJOR}" \
             --tag "${INPUT_TAG}" \
             --github-output "${GITHUB_OUTPUT}"
@@ -147,6 +155,7 @@ jobs:
           FABRIC_LOADER_VERSION: ${{ steps.resolve.outputs.FABRIC_LOADER_VERSION }}
           FABRIC_INSTALLER_VERSION: ${{ steps.resolve.outputs.FABRIC_INSTALLER_VERSION }}
           FORGE_VERSION: ${{ steps.resolve.outputs.FORGE_VERSION }}
+          NEOFORGE_VERSION: ${{ steps.resolve.outputs.NEOFORGE_VERSION }}
         run: |
           case "${FLAVOR}" in
             fabric)
@@ -169,6 +178,12 @@ jobs:
                 echo "FORGE_VERSION=${FORGE_VERSION}"
               } > /tmp/mc-game.args
               echo "DOCKERFILE=minecraft/forge/Dockerfile" >> "${GITHUB_ENV}"
+              ;;
+            neoforge)
+              {
+                echo "NEOFORGE_VERSION=${NEOFORGE_VERSION}"
+              } > /tmp/mc-game.args
+              echo "DOCKERFILE=minecraft/neoforge/Dockerfile" >> "${GITHUB_ENV}"
               ;;
             *)
               echo "unknown flavor: ${FLAVOR}" >&2

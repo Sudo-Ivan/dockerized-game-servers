@@ -19,9 +19,9 @@ services:
       - "25565:25565/udp"
     volumes:
       - ./data:/data
+    env_file:
+      - ../defaults.env
     environment:
-      FORGE_MINECRAFT_VERSION: "1.21.11"
-      FORGE_VERSION: "61.0.8"
       FORGE_INSTALLER_URL: ""
       FORGE_FORCE_INSTALL: "${FORGE_FORCE_INSTALL:-false}"
       FORGE_INSTALL_DIR: "/data"

@@ -1,0 +1,44 @@
+services:
+  minecraft:
+    image: ghcr.io/${IMAGE_OWNER}/minecraft-fabric:latest
+    build:
+      context: ..
+      dockerfile: fabric/Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/minecraft-base:latest
+    pull_policy: missing
+    container_name: fabric
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 90s
+    read_only: true
+    tmpfs:
+      - /tmp:exec,size=1G,mode=1777
+    ports:
+      - "25565:25565/tcp"
+      - "25565:25565/udp"
+    volumes:
+      - ./data:/data
+    env_file:
+      - ../defaults.env
+      - path: .env
+        required: false
+    environment:
+      FABRIC_MINECRAFT_VERSION: ${FABRIC_MINECRAFT_VERSION}
+      FABRIC_LOADER_VERSION: ${FABRIC_LOADER_VERSION}
+      FABRIC_INSTALLER_VERSION: ${FABRIC_INSTALLER_VERSION}
+      FABRIC_FORCE_DOWNLOAD: "${FABRIC_FORCE_DOWNLOAD:-false}"
+      SERVER_JAR: ""
+      EULA: "true"
+      JVM_FLAGS: "-Xms2G -Xmx2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=40 -XX:G1MaxNewSizePercent=50 -XX:G1HeapRegionSize=16M -XX:G1ReservePercent=15 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=20 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1"
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 3072M

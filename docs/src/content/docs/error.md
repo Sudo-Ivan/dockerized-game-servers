@@ -9,7 +9,7 @@ hero:
   title: Something went wrong
   tagline: The docs site hit an unexpected error while loading this view.
   actions:
-    - text: Overview
+    - text: Home
       link: /
       icon: right-arrow
     - text: Quick start

@@ -1,8 +1,8 @@
 ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-base:latest
 FROM ${BASE_IMAGE}
 
-ARG FORGE_MINECRAFT_VERSION=1.21.11
-ARG FORGE_VERSION=61.0.8
+ARG FORGE_MINECRAFT_VERSION=26.2
+ARG FORGE_VERSION=65.0.9
 
 LABEL org.opencontainers.image.title="minecraft-forge" \
       org.opencontainers.image.description="Minecraft Forge dedicated server" \

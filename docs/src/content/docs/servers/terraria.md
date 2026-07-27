@@ -13,6 +13,12 @@ Downloads the dedicated server (Steam App 105600) on first start. Worlds and `se
 - First start writes `serverconfig.txt` if missing
 - Updates: `TERRARIA_FORCE_UPDATE=true` or `./tools/gs update terraria`
 
+## Compose
+
+```bash
+docker compose -f terraria/docker-compose.yml up -d
+```
+
 ## Docker run
 
 ```bash

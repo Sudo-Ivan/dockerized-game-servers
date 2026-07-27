@@ -31,10 +31,16 @@ For direct connect, set SERVER_PORT and publish that UDP port.
 
 Force a Steam reinstall on next recreate with `CK_FORCE_UPDATE=true` (or `./tools/gs update core-keeper`). See [Ops](../guides/ops/).
 
+## Compose
+
+```bash
+docker compose -f core-keeper/docker-compose.yml up -d
+```
+
 ## Docker run
 
 ```bash
 docker run -d --name core-keeper --restart unless-stopped --init \
   -v "$PWD/core-keeper/data:/opt/corekeeper" \
-  __IMAGE_PREFIX__/core-keeper:latest
+  {{IMAGE_PREFIX}}/core-keeper:latest
 ```

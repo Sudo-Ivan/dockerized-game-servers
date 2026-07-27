@@ -7,7 +7,7 @@ description: Checks, image builds, and Minecraft versioned builds.
 
 - ci on push and pull request when CI-relevant paths change (see `.github/workflows/ci.yml`), plus manual runs. It runs repository checks (`ci/ci-check.sh`), Trivy Dockerfile config scans (MEDIUM, HIGH, and CRITICAL), and on pull requests with Docker-related diffs local Docker builds for shared base images (no registry push).
 - build runs weekly (Sunday 06:00 UTC), on Dockerfile, base, or ci path changes to master or main, and manually. The job matrix comes from `ci/image-matrix.sh` (`ci/github-matrix.py`). It builds and pushes GHCR images through the reusable `docker-image` workflow, then Trivy-scans them (CRITICAL fails the job).
-- build-minecraft is manual only. Pick Fabric, Vanilla, or Forge plus a Minecraft version. Java is resolved from Mojang's javaVersion. Temurin Alpine JRE is pinned from Adoptium. Fabric loader and installer, and Forge promos, auto-fill when left blank. Publishes minecraft-base:javaN and minecraft-flavor:tag (tag defaults to the MC version, or mc-forge for Forge).
+- build-minecraft is manual only. Pick Fabric, Vanilla, Forge, or NeoForge plus a Minecraft version. Java is resolved from Mojang's javaVersion. Temurin Alpine JRE is pinned from Adoptium. Fabric loader and installer, and Forge promos, auto-fill when left blank. NeoForge resolves from Maven when omitted. Publishes minecraft-base:javaN and minecraft-flavor:tag.
 
 ## What ci-check covers
 
@@ -19,6 +19,7 @@ description: Checks, image builds, and Minecraft versioned builds.
 - Healthcheck presence and offline probes (`ci/test-healthchecks.sh`)
 - Host tools catalog and tar round-trip (`ci/test-tools.sh`)
 - Docs pnpm lockfile conventions
+- Docs static build, internal link validation, and server catalog guide coverage (`ci/test-docs.sh`)
 - Valid GitHub Actions matrix JSON from `ci/github-matrix.py`
 
 ## Example tags

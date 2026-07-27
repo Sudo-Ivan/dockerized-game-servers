@@ -9,7 +9,7 @@ hero:
   title: Gone
   tagline: This page used to exist and has been removed or renamed.
   actions:
-    - text: Overview
+    - text: Home
       link: /
       icon: right-arrow
     - text: Repository layout

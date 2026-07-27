@@ -47,6 +47,25 @@ echo "==> Checking compose files"
   fi
 done || fail=1
 
+echo "==> Minecraft default versions"
+chmod +x ci/check-minecraft-defaults.sh
+./ci/check-minecraft-defaults.sh || fail=1
+
+echo "==> Minecraft scaffold compose"
+if command -v docker >/dev/null 2>&1; then
+  for scaffold in \
+    minecraft/fabric/docker-compose.scaffold.yml \
+    minecraft/vanilla/docker-compose.scaffold.yml \
+    minecraft/forge/docker-compose.scaffold.yml \
+    minecraft/neoforge/docker-compose.scaffold.yml
+  do
+    if ! docker compose -f "${scaffold}" --env-file minecraft/defaults.env config >/dev/null; then
+      echo "compose invalid: ${scaffold}" >&2
+      fail=1
+    fi
+  done
+fi
+
 echo "==> Checking for hardcoded image owners in compose"
 hardcoded=0
 ./ci/server-catalog.sh | while IFS="$(printf '\t')" read -r id compose _container _volumes _update_envs _health first_party; do
@@ -138,6 +157,12 @@ if [ -f docs/package-lock.json ]; then
 fi
 if ! grep -q 'pnpm@11\.' docs/package.json; then
   echo "docs/package.json must pin pnpm 11+" >&2
+  fail=1
+fi
+
+echo "==> Docs build and link checks"
+chmod +x ci/test-docs.sh
+if ! ./ci/test-docs.sh; then
   fail=1
 fi
 

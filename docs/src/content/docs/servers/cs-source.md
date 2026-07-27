@@ -15,6 +15,14 @@ Downloads the Linux dedicated server (Steam App 232330) on first start. Data vol
 - Public listing: set `CSS_GSLT` (token from [Steam game server management](https://steamcommunity.com/dev/managegameservers), game ID 240)
 - Updates: `CSS_FORCE_UPDATE=true` or `./tools/gs update cs-source`
 
+Set `STEAM_USERNAME` / `STEAM_PASSWORD` when anonymous SteamCMD login fails.
+
+## Compose
+
+```bash
+docker compose -f cs-source/docker-compose.yml up -d
+```
+
 ## Docker run
 
 ```bash
