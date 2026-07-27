@@ -17,6 +17,8 @@ factorio/         Factorio
 project-zomboid/  Project Zomboid
 terraria/         Terraria
 l4d2/             Left 4 Dead 2
+insurgency-source/   Insurgency (Source)
+insurgency-sandstorm/ Insurgency: Sandstorm
 palworld/         Palworld
 starbound/        Starbound
 openmohaa/       OpenMoHAA (BYO game assets)

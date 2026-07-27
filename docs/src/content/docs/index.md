@@ -23,6 +23,8 @@ This site is static HTML. Reading and navigation work without JavaScript. Fuzzy 
 | Project Zomboid | project-zomboid | project-zomboid |
 | Terraria | terraria | terraria |
 | Left 4 Dead 2 | l4d2 | l4d2 |
+| Insurgency (Source) | insurgency-source | insurgency-source |
+| Insurgency: Sandstorm | insurgency-sandstorm | insurgency-sandstorm |
 | Palworld | palworld | palworld |
 | Starbound | starbound | starbound |
 | OpenMoHAA | openmohaa | openmohaa |

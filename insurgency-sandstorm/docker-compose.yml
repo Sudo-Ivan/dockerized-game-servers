@@ -1,0 +1,43 @@
+services:
+  insurgency-sandstorm:
+    image: ghcr.io/${IMAGE_OWNER}/insurgency-sandstorm:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: insurgency-sandstorm
+    restart: unless-stopped
+    stop_grace_period: 120s
+    init: true
+    ports:
+      - "27102:27102/udp"
+      - "27131:27131/udp"
+    volumes:
+      - ./data:/opt/insurgency-sandstorm
+    environment:
+      STEAM_USERNAME: "anonymous"
+      STEAM_PASSWORD: ""
+      INS_SANDSTORM_APP_ID: "581330"
+      INS_SANDSTORM_FORCE_UPDATE: "${INS_SANDSTORM_FORCE_UPDATE:-false}"
+      INS_SANDSTORM_PORT: "27102"
+      INS_SANDSTORM_QUERY_PORT: "27131"
+      INS_SANDSTORM_MAXPLAYERS: "28"
+      INS_SANDSTORM_MAP: "Oilfield"
+      INS_SANDSTORM_SCENARIO: "Scenario_Refinery_Push_Security"
+      INS_SANDSTORM_HOSTNAME: "Sandstorm Server"
+      INS_SANDSTORM_GSLT: ""
+      INS_SANDSTORM_GAMESTATS_TOKEN: ""
+      INS_SANDSTORM_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 900s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 8192M

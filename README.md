@@ -23,6 +23,8 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Project Zomboid | `project-zomboid` | `project-zomboid` |
 | Terraria | `terraria` | `terraria` |
 | Left 4 Dead 2 | `l4d2` | `l4d2` |
+| Insurgency (Source) | `insurgency-source` | `insurgency-source` |
+| Insurgency: Sandstorm | `insurgency-sandstorm` | `insurgency-sandstorm` |
 | Palworld | `palworld` | `palworld` |
 | Starbound | `starbound` | `starbound` |
 | OpenMoHAA | `openmohaa` | `openmohaa` |
@@ -191,6 +193,24 @@ docker run -d --name l4d2 --restart unless-stopped --init \
   ghcr.io/sudo-ivan/dockerized-game-servers/l4d2:latest
 ```
 
+Insurgency (Source):
+
+```bash
+docker run -d --name insurgency-source --restart unless-stopped --init \
+  -p 27015:27015/tcp -p 27015:27015/udp -p 27016:27016/udp \
+  -v "$PWD/insurgency-source/data:/opt/insurgency-source" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/insurgency-source:latest
+```
+
+Insurgency: Sandstorm:
+
+```bash
+docker run -d --name insurgency-sandstorm --restart unless-stopped --init \
+  -p 27102:27102/udp -p 27131:27131/udp \
+  -v "$PWD/insurgency-sandstorm/data:/opt/insurgency-sandstorm" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/insurgency-sandstorm:latest
+```
+
 Palworld:
 
 ```bash
@@ -302,6 +322,14 @@ Steam App 105600. Official dedicated server binary and `serverconfig.txt` under 
 
 Steam App 222860. Source dedicated server via `srcds_run`. Default map `c1m1_hotel`, port 27015 TCP/UDP. Set `L4D2_STARTMAP`, `L4D2_MAXPLAYERS`, and `L4D2_EXTRA_ARGS` as needed.
 
+### Insurgency (Source)
+
+Steam App 237410. Source dedicated server via `srcds_run` (`-game insurgency`). Default map `ministry`, ports 27015 and 27016. Config under `insurgency-source/data/insurgency/cfg/` after first run.
+
+### Insurgency: Sandstorm
+
+Steam App 581330. Linux dedicated binary under `insurgency-sandstorm/data`. Default UDP 27102 (game) and 27131 (query). Set `INS_SANDSTORM_MAP`, `INS_SANDSTORM_SCENARIO`, `INS_SANDSTORM_GSLT`, and `INS_SANDSTORM_GAMESTATS_TOKEN` for listing and GameStats. Use `INS_SANDSTORM_EXTRA_ARGS` for mutators, `-mods`, and `ModDownloadTravelTo`. Mod config files live under `insurgency-sandstorm/data/Insurgency/Config/Server/`. See the [Insurgency Sandstorm](https://sudo-ivan.github.io/dockerized-game-servers/servers/insurgency-sandstorm/) docs page for a full modding guide. Allocate at least 8 GB RAM.
+
 ### Palworld
 
 Steam App 2394010. Saves and `PalWorldSettings.ini` under `palworld/data/Pal/Saved/` after first run. Default UDP 8211. Allocate at least 8 GB RAM for the container.
@@ -334,6 +362,8 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 | `project-zomboid` | Project Zomboid dedicated |
 | `terraria` | Terraria dedicated |
 | `l4d2` | Left 4 Dead 2 dedicated |
+| `insurgency-source` | Insurgency (Source) dedicated |
+| `insurgency-sandstorm` | Insurgency: Sandstorm dedicated |
 | `palworld` | Palworld dedicated |
 | `starbound` | Starbound dedicated |
 | `openmohaa` | OpenMoHAA (BYO MOHAA assets) |
@@ -401,6 +431,8 @@ factorio/         Factorio
 project-zomboid/  Project Zomboid
 terraria/         Terraria
 l4d2/             Left 4 Dead 2
+insurgency-source/   Insurgency (Source)
+insurgency-sandstorm/ Insurgency: Sandstorm
 palworld/         Palworld
 starbound/        Starbound
 openmohaa/       OpenMoHAA
