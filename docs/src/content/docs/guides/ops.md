@@ -50,6 +50,6 @@ docker inspect --format '{{.State.Health.Status}}' core-keeper
 
 Probe kinds come from the catalog:
 
-- `tcp` — Minecraft listen port (default 25565)
-- `process` — dedicated server process is running
-- `gameid` — Core Keeper process plus non-empty `GameID.txt`
+- `tcp`: Minecraft listen port (default 25565)
+- `process`: dedicated server process is running
+- `gameid`: Core Keeper process plus non-empty `GameID.txt`

@@ -11,7 +11,7 @@ description: Valheim and Valheim Plus dedicated servers.
 :::note[Requirements]
 - Set `SERVER_PASS` (via `-e` or a `.env` next to compose)
 - Persist data under `/opt/valheim` in the container
-- Publish UDP **2456–2458**
+- Publish UDP **2456-2458**
 :::
 
 ## Docker run
