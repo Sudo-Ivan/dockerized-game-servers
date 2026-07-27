@@ -21,6 +21,9 @@ Prefix: {{IMAGE_PREFIX}}
 | 7-days-to-die | 7 Days to Die dedicated |
 | project-zomboid | Project Zomboid dedicated |
 | terraria | Terraria dedicated |
+| l4d2 | Left 4 Dead 2 dedicated |
+| palworld | Palworld dedicated |
+| starbound | Starbound dedicated |
 | openmohaa | OpenMoHAA (bring your own MOHAA assets) |
 | arma-3 | Arma 3 dedicated |
 

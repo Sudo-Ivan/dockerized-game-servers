@@ -17,6 +17,10 @@ arma/arma-3/cache/*
 *.log
 .DS_Store
 
+# Python
+__pycache__/
+*.py[cod]
+
 # Host tool backups
 backups/
 

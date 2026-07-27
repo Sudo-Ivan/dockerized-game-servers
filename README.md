@@ -21,6 +21,9 @@ Images publish to GHCR under `ghcr.io/$IMAGE_OWNER/` where IMAGE_OWNER is `owner
 | 7 Days to Die | `7-days-to-die` | `7-days-to-die` |
 | Project Zomboid | `project-zomboid` | `project-zomboid` |
 | Terraria | `terraria` | `terraria` |
+| Left 4 Dead 2 | `l4d2` | `l4d2` |
+| Palworld | `palworld` | `palworld` |
+| Starbound | `starbound` | `starbound` |
 | OpenMoHAA | `openmohaa` | `openmohaa` |
 | Arma 3 | `arma/arma-3` | `arma-3` |
 | Hytale | `hytale` | external (`deinfreu/hytale-server`) |
@@ -160,6 +163,33 @@ docker run -d --name terraria --restart unless-stopped --init \
   ghcr.io/$IMAGE_OWNER/terraria:latest
 ```
 
+Left 4 Dead 2:
+
+```bash
+docker run -d --name l4d2 --restart unless-stopped --init \
+  -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
+  -v "$PWD/l4d2/data:/opt/l4d2" \
+  ghcr.io/$IMAGE_OWNER/l4d2:latest
+```
+
+Palworld:
+
+```bash
+docker run -d --name palworld --restart unless-stopped --init \
+  -p 8211:8211/udp \
+  -v "$PWD/palworld/data:/opt/palworld" \
+  ghcr.io/$IMAGE_OWNER/palworld:latest
+```
+
+Starbound:
+
+```bash
+docker run -d --name starbound --restart unless-stopped --init \
+  -p 21025:21025/tcp \
+  -v "$PWD/starbound/data:/opt/starbound" \
+  ghcr.io/$IMAGE_OWNER/starbound:latest
+```
+
 OpenMoHAA (copy your owned MOHAA `main` / `mainta` / `maintt` PK3s into `openmohaa/data` first):
 
 ```bash
@@ -244,6 +274,18 @@ Steam App 380870. Server binaries under `project-zomboid/data/server`. Saves and
 
 Steam App 105600. Official dedicated server binary and `serverconfig.txt` under `terraria/data`. Default TCP port 7777.
 
+### Left 4 Dead 2
+
+Steam App 222860. Source dedicated server via `srcds_run`. Default map `c1m1_hotel`, port 27015 TCP/UDP. Set `L4D2_STARTMAP`, `L4D2_MAXPLAYERS`, and `L4D2_EXTRA_ARGS` as needed.
+
+### Palworld
+
+Steam App 2394010. Saves and `PalWorldSettings.ini` under `palworld/data/Pal/Saved/` after first run. Default UDP 8211. Allocate at least 8 GB RAM for the container.
+
+### Starbound
+
+Steam App 211820. Writes `starbound_server.config` on first start if missing. Default TCP 21025.
+
 ### OpenMoHAA
 
 Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You must copy licensed Allied Assault game data** (`main`, and optionally `mainta` / `maintt` PK3s) into `openmohaa/data/` before the server can run. Defaults: UDP `12203` (game) and UDP `12300` (GameSpy). Server config: `openmohaa/data/home/main/settings/server.cfg` (a default is created on first start). See [OpenMoHAA docs](https://docs.openmohaa.org/).
@@ -266,6 +308,9 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 | `7-days-to-die` | 7 Days to Die dedicated |
 | `project-zomboid` | Project Zomboid dedicated |
 | `terraria` | Terraria dedicated |
+| `l4d2` | Left 4 Dead 2 dedicated |
+| `palworld` | Palworld dedicated |
+| `starbound` | Starbound dedicated |
 | `openmohaa` | OpenMoHAA (BYO MOHAA assets) |
 | `arma-3` | Arma 3 dedicated |
 
@@ -275,8 +320,11 @@ docker pull ghcr.io/$IMAGE_OWNER/minecraft-fabric:latest
 
 ## CI
 
-- `ci` runs on push, pull request, and manually: `ci/ci-check.sh` (catalog-driven compose checks, ShellCheck, health/tools tests) plus Trivy Dockerfile config scans (MEDIUM+HIGH+CRITICAL)
-- `build` runs weekly (Sunday 06:00 UTC), on Dockerfile/base/`ci` path changes to `master`/`main`, and manually: builds/pushes GHCR images then Trivy-scans them (CRITICAL fail)
+- `ci` on push and pull request (docs-only changes are skipped), plus manual runs:
+  - `repository checks`: `ci/ci-check.sh` (catalog-driven compose checks, ShellCheck, health/tools tests, GitHub matrix JSON)
+  - `trivy / dockerfiles`: Trivy Dockerfile config scans (MEDIUM, HIGH, CRITICAL)
+  - On pull requests: local Docker builds for shared base images (`verify-bases`, no registry push)
+- `build` runs weekly (Sunday 06:00 UTC), on Dockerfile/base/`ci` path changes to `master`/`main`, and manually: matrix is generated from `ci/image-matrix.sh` via `ci/github-matrix.py`, builds/pushes GHCR images through the reusable `docker-image` workflow, then Trivy-scans them (CRITICAL fail)
 - `build-minecraft` is manual only: pick Fabric/Vanilla/Forge + a Minecraft version. Java is resolved from Mojang's `javaVersion`, Temurin Alpine JRE is pinned from Adoptium, Fabric loader/installer and Forge promos auto-fill when left blank. Publishes `minecraft-base:javaN` and `minecraft-<flavor>:<tag>` (tag defaults to the MC version, or `mc-forge` for Forge)
 
 Example tags after a versioned Fabric build for `26.2`:
@@ -315,6 +363,9 @@ factorio/         Factorio
 7-days-to-die/    7 Days to Die
 project-zomboid/  Project Zomboid
 terraria/         Terraria
+l4d2/             Left 4 Dead 2
+palworld/         Palworld
+starbound/        Starbound
 openmohaa/       OpenMoHAA
 arma/arma-3/     Arma 3
 hytale/          external image compose

@@ -22,6 +22,9 @@ This site is static HTML. Reading and navigation work without JavaScript. Fuzzy 
 | 7 Days to Die | 7-days-to-die | 7-days-to-die |
 | Project Zomboid | project-zomboid | project-zomboid |
 | Terraria | terraria | terraria |
+| Left 4 Dead 2 | l4d2 | l4d2 |
+| Palworld | palworld | palworld |
+| Starbound | starbound | starbound |
 | OpenMoHAA | openmohaa | openmohaa |
 | Arma 3 | arma/arma-3 | arma-3 |
 | Hytale | hytale | external (deinfreu/hytale-server) |

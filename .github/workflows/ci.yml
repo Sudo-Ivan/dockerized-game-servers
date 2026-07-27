@@ -2,19 +2,45 @@ name: ci
 
 on:
   push:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
   workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
+  matrix:
+    name: prepare matrix
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    outputs:
+      bases: ${{ steps.set.outputs.bases }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Resolve image matrix
+        id: set
+        run: |
+          bases="$(python3 ci/github-matrix.py bases)"
+          {
+            echo "bases<<EOF"
+            echo "${bases}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
   check:
-    name: check
+    name: repository checks
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -39,3 +65,19 @@ jobs:
         run: |
           chmod +x ci/install-trivy.sh ci/trivy-config.sh
           ./ci/trivy-config.sh
+
+  verify-bases:
+    name: verify / ${{ matrix.name }}
+    if: github.event_name == 'pull_request'
+    needs: matrix
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.matrix.outputs.bases) }}
+    uses: ./.github/workflows/docker-image.yml
+    with:
+      name: ${{ matrix.name }}
+      push: false
+      tag: ci
+      scan: false
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

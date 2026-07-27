@@ -1,0 +1,63 @@
+name: docker-image
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        required: true
+        type: string
+      push:
+        required: true
+        type: boolean
+      tag:
+        required: false
+        type: string
+        default: latest
+      scan:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    name: ${{ inputs.name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Docker Buildx
+        if: inputs.push
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Log in to GHCR
+        if: inputs.push
+        uses: docker/login-action@abd2ef45e78c5afb21d64d4ca52ee8550d9572c7 # v4.5.1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        env:
+          PUSH: ${{ inputs.push && 'true' || 'false' }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          chmod +x ci/*.sh
+          ./ci/build-one-image.sh "${{ inputs.name }}"
+
+      - name: Scan image with pinned Trivy CLI
+        if: inputs.scan && inputs.push
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          eval "$(./ci/repo-meta.sh)"
+          ./ci/trivy-image.sh \
+            "ghcr.io/${IMAGE_OWNER}/${{ inputs.name }}:${TAG}"

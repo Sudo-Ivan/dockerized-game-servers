@@ -4,7 +4,7 @@ description: Top-level directories in this repository.
 ---
 
 ```text
-bases/           shared Docker bases
+bases/           shared Docker bases (minecraft, steam, runtime)
 ci/              POSIX CI scripts (repo-meta, server-catalog, image-matrix, checks)
 tools/           host ops CLI (gs backup restore update)
 docs/            Starlight site (this documentation)
@@ -16,6 +16,9 @@ factorio/         Factorio
 7-days-to-die/    7 Days to Die
 project-zomboid/  Project Zomboid
 terraria/         Terraria
+l4d2/             Left 4 Dead 2
+palworld/         Palworld
+starbound/        Starbound
 openmohaa/       OpenMoHAA (BYO game assets)
 arma/arma-3/     Arma 3
 hytale/          external image compose
