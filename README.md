@@ -29,6 +29,14 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Counter-Strike: Source | `cs-source` | `cs-source` |
 | Killing Floor 2 | `kf2` | `kf2` |
 | Icarus | `icarus` | `icarus` |
+| Battlefield 1942 | `bf1942` | `bf1942` |
+| Battlefield Vietnam | `bfv` | `bfv` |
+| Call of Duty | `cod` | `cod` |
+| Call of Duty 2 | `cod2` | `cod2` |
+| Call of Duty: World at War | `codwaw` | `codwaw` |
+| Call of Duty 4 | `cod4` | `cod4` |
+| Quake 3: Arena | `quake3` | `quake3` |
+| Eco | `eco` | `eco` |
 | Palworld | `palworld` | `palworld` |
 | Starbound | `starbound` | `starbound` |
 | OpenMoHAA | `openmohaa` | `openmohaa` |
@@ -40,7 +48,7 @@ Shared bases:
 
 - `minecraft-base` Temurin JRE on Alpine
 - `steam-base` SteamCMD on Arch Linux with the [XLibre](https://github.com/x11libre/xserver) Arch package repo ([xlibre-arch](https://github.com/xlibre-arch/xlibre-arch)) for X11/Xvfb needs
-- `runtime-base` Debian slim glibc runtime for non-Steam non-Java servers (Factorio, OpenMoHAA)
+- `runtime-base` Debian slim glibc runtime for non-Steam non-Java servers (Factorio, OpenMoHAA, LinuxGSM legacy binaries)
 
 ## Quick start
 
@@ -388,6 +396,22 @@ Steam App 232130. Linux binary `KFGameSteamServer.bin.x86_64`. UDP 7777 game, 27
 
 Steam App 2089300 (Windows server via Wine). UDP 17777 and 27015 query. Set `ICARUS_GAME_MODE`, `ICARUS_SESSION_NAME`, and related env vars. Persist `icarus/data` including `.wine`. Allocate at least 8 GB RAM.
 
+### Battlefield 1942 / Vietnam
+
+Linux dedicated files from [LinuxGSM](http://linuxgsm.download/) (same archives as LinuxGSM `install_server_files.sh`). You must own the game. Images bake the server payload; first start copies into `bf1942/data` or `bfv/data`. BF1942: UDP 14567 and TCP 23000. BFV: see `bfv/docker-compose.yml` for ports.
+
+### Call of Duty (1 / 2 / WaW / 4)
+
+LinuxGSM-hosted dedicated binaries (`cod_lnxded`, `cod2_lnxded`, `codwaw_lnxded`, CoD4x `cod4x18_dedrun`). Data volumes are large for CoD2 and WaW. Default game UDP is 28960 for all four: change compose ports and `*_PORT` env vars if you run more than one on a host. CoD4 sets `sv_authorizemode -1` like typical LGSM configs.
+
+### Quake 3: Arena
+
+LinuxGSM Q3 dedicated archive. Default UDP 27960, map `q3dm17`. Data under `quake3/data`.
+
+### Eco
+
+Steam App 739590. **Requires `ECO_USER_TOKEN`** from the Eco client. UDP 3000 and 3001. Allocate at least 4 GB RAM. Updates: `ECO_FORCE_UPDATE=true`.
+
 ### Palworld
 
 Steam App 2394010. Saves and `PalWorldSettings.ini` under `palworld/data/Pal/Saved/` after first run. Default UDP 8211. Allocate at least 8 GB RAM for the container.
@@ -430,6 +454,14 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 | `cs-source` | Counter-Strike: Source dedicated |
 | `kf2` | Killing Floor 2 dedicated |
 | `icarus` | Icarus dedicated (Wine) |
+| `bf1942` | Battlefield 1942 dedicated (LinuxGSM files) |
+| `bfv` | Battlefield Vietnam dedicated (LinuxGSM files) |
+| `cod` | Call of Duty dedicated (LinuxGSM files) |
+| `cod2` | Call of Duty 2 dedicated (LinuxGSM files) |
+| `codwaw` | Call of Duty: World at War dedicated (LinuxGSM files) |
+| `cod4` | Call of Duty 4 dedicated (CoD4x / LinuxGSM files) |
+| `quake3` | Quake 3: Arena dedicated (LinuxGSM files) |
+| `eco` | Eco dedicated (Steam) |
 | `palworld` | Palworld dedicated |
 | `starbound` | Starbound dedicated |
 | `openmohaa` | OpenMoHAA (BYO MOHAA assets) |

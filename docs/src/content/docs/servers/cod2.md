@@ -1,25 +1,19 @@
 ---
 title: Call of Duty 2
-description: Call of Duty 2 dedicated server (LinuxGSM bundle).
+description: Call of Duty 2 dedicated server (LinuxGSM archive).
 ---
 
-Compose path: `cod2`. Image: `cod2`.
+Compose path: cod2. Image: cod2.
 
-Seeds Linux dedicated files into `cod2/data` on first start.
+Files from [LinuxGSM Call of Duty 2](http://linuxgsm.download/CallOfDuty2/). You must own the game. Volume `cod2/data` at `/opt/cod2` (several GB after seeding).
 
-## Ports
+## Defaults
 
-UDP **28960** (see compose for published port).
+- UDP 28960 (`COD2_PORT`)
+- Map `mp_leningrad` (`COD2_STARTMAP`)
+- `COD2_MAXPLAYERS`, `COD2_HOSTNAME`, `COD2_EXTRA_ARGS`
 
-## Configuration
-
-Same pattern as Call of Duty: `COD2_PORT`, `COD2_MAXPLAYERS`, `COD2_STARTMAP`, `COD2_HOSTNAME`, `COD2_EXTRA_ARGS`.
-
-## Compose
-
-```bash
-docker compose -f cod2/docker-compose.yml up -d
-```
+Change host and container ports if you run multiple CoD-family servers on one machine.
 
 ## Docker run
 

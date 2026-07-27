@@ -44,6 +44,9 @@ while IFS= read -r script; do
   if grep -q '/opt/steamcmd/steamcmd-app-update.sh' "${script}" 2>/dev/null; then
     sc_exclude="${sc_exclude},SC1091"
   fi
+  if grep -q 'linuxgsm-tar-install.sh' "${script}" 2>/dev/null; then
+    sc_exclude="${sc_exclude},SC1091"
+  fi
   if ! shellcheck -x -e "${sc_exclude}" "${script}"; then
     echo "shellcheck failed: ${script}" >&2
     fail=1

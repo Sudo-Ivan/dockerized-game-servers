@@ -1,33 +1,19 @@
 ---
 title: Call of Duty
-description: Call of Duty dedicated server (LinuxGSM bundle).
+description: Call of Duty (2003) dedicated server (LinuxGSM archive).
 ---
 
-Compose path: `cod`. Image: `cod`.
+Compose path: cod. Image: cod.
 
-Linux dedicated server files seed from the image into `cod/data`. Comply with Activision licensing.
+Linux dedicated files from [LinuxGSM](http://linuxgsm.download/CallOfDuty/). You must own Call of Duty. Data volume `cod/data` maps to `/opt/cod`.
 
-## Ports
+## Defaults
 
-UDP **28960** (`COD_PORT`).
+- UDP 28960 (`COD_PORT`)
+- Map `mp_neuville` (`COD_STARTMAP`)
+- `COD_MAXPLAYERS`, `COD_HOSTNAME`, `COD_EXTRA_ARGS`
 
-## Configuration
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `COD_PORT` | `28960` | Game port |
-| `COD_MAXPLAYERS` | `20` | Player cap |
-| `COD_STARTMAP` | `mp_neuville` | First map |
-| `COD_HOSTNAME` | `Call of Duty Server` | Browser name |
-| `COD_EXTRA_ARGS` | empty | Extra `+` arguments |
-
-`server.cfg` is created on first start if missing.
-
-## Compose
-
-```bash
-docker compose -f cod/docker-compose.yml up -d
-```
+Only one container should bind host UDP 28960 unless you change `COD_PORT` and compose ports.
 
 ## Docker run
 
@@ -37,3 +23,5 @@ docker run -d --name cod --restart unless-stopped --init \
   -v "$PWD/cod/data:/opt/cod" \
   {{IMAGE_PREFIX}}/cod:latest
 ```
+
+Server config: `cod/data/server.cfg` (a default is created on first start).

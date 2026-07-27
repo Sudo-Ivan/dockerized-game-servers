@@ -81,6 +81,7 @@ echo "--- Starting Eco dedicated server ---"
 # shellcheck disable=SC2206
 args=( -nogui "-userToken=${ECO_USER_TOKEN}" )
 if [ -n "${ECO_EXTRA_ARGS}" ]; then
+    # shellcheck disable=SC2206
     extra=( ${ECO_EXTRA_ARGS} )
     args+=("${extra[@]}")
 fi

@@ -4,6 +4,9 @@ set -eu
 # shellcheck source=/usr/local/bin/linuxgsm-tar-install.sh
 . /usr/local/bin/linuxgsm-tar-install.sh
 
+CODWAW_DIR="${CODWAW_DIR:-/opt/codwaw}"
+CODWAW_SEED_DIR="${CODWAW_SEED_DIR:-/usr/share/codwaw-seed}"
+
 CODWAW_IP="${CODWAW_IP:-0.0.0.0}"
 CODWAW_PORT="${CODWAW_PORT:-28960}"
 CODWAW_MAXPLAYERS="${CODWAW_MAXPLAYERS:-20}"

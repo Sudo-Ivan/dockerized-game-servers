@@ -1,25 +1,19 @@
 ---
-title: Call of Duty World at War
-description: Call of Duty World at War dedicated server (LinuxGSM bundle).
+title: 'Call of Duty: World at War'
+description: Call of Duty World at War dedicated server (LinuxGSM archive).
 ---
 
-Compose path: `codwaw`. Image: `codwaw`.
+Compose path: codwaw. Image: codwaw.
 
-Seeds dedicated files into `codwaw/data` on first start.
+Files from [LinuxGSM CoD: WaW](http://linuxgsm.download/CallOfDutyWorldAtWar/). You must own the game. The data volume is large (about 8 GB after the first seed).
 
-## Ports
+## Defaults
 
-UDP **28960** (default game port in compose).
+- UDP 28960 (`CODWAW_PORT`)
+- Map `mp_castle` (`CODWAW_STARTMAP`)
+- `CODWAW_MAXPLAYERS`, `CODWAW_HOSTNAME`, `CODWAW_EXTRA_ARGS`
 
-## Configuration
-
-`CODWAW_PORT`, `CODWAW_MAXPLAYERS`, `CODWAW_STARTMAP`, `CODWAW_HOSTNAME`, `CODWAW_EXTRA_ARGS`.
-
-## Compose
-
-```bash
-docker compose -f codwaw/docker-compose.yml up -d
-```
+Allocate at least 2 GB RAM for the container.
 
 ## Docker run
 

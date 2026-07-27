@@ -1,30 +1,18 @@
 ---
 title: Call of Duty 4
-description: Call of Duty 4 dedicated server (CoD4x LinuxGSM bundle).
+description: Call of Duty 4 dedicated server via CoD4x (LinuxGSM archive).
 ---
 
-Compose path: `cod4`. Image: `cod4`.
+Compose path: cod4. Image: cod4.
 
-CoD4x Linux dedicated binary seeds into `cod4/data` on first start.
+Uses the [CoD4x LinuxGSM archive](http://linuxgsm.download/CallOfDuty4/) (`cod4x18_dedrun`). You must own Call of Duty 4. Data: `cod4/data` at `/opt/cod4`.
 
-## Ports
+## Defaults
 
-UDP **28960** (`COD4_PORT`).
-
-## Configuration
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `COD4_PORT` | `28960` | Game port |
-| `COD4_MAXPLAYERS` | `32` | Player cap |
-| `COD4_STARTMAP` | `mp_crossfire` | First map |
-| `COD4_HOSTNAME` | `Call of Duty 4 Server` | Browser name |
-
-## Compose
-
-```bash
-docker compose -f cod4/docker-compose.yml up -d
-```
+- UDP 28960 (`COD4_PORT`)
+- Map `mp_crossfire` (`COD4_STARTMAP`)
+- `COD4_MAXPLAYERS`, `COD4_HOSTNAME`, `COD4_EXTRA_ARGS`
+- Runs with `sv_authorizemode -1` for LAN-style auth (same idea as LGSM)
 
 ## Docker run
 
@@ -34,5 +22,3 @@ docker run -d --name cod4 --restart unless-stopped --init \
   -v "$PWD/cod4/data:/opt/cod4" \
   {{IMAGE_PREFIX}}/cod4:latest
 ```
-
-Edit `cod4/data/server.cfg` after first start for rcon and rules.

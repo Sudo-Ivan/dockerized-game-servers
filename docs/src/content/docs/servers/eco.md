@@ -1,23 +1,20 @@
 ---
 title: Eco
 description: Eco dedicated server via SteamCMD.
-steamAppId: "739590"
 ---
 
-Compose path: `eco`. Image: `eco`.
+Compose path: eco. Image: eco.
 
-Steam App **739590**. Downloads on first start into `eco/data`. Set `ECO_USER_TOKEN` from your Eco account.
+Steam App 739590. Installs on first start into `eco/data` (`/opt/eco`). **Requires `ECO_USER_TOKEN`**: create a server registration token in the Eco client. The container exits if the token is missing.
 
-## Ports
+## Ports and volume
 
-UDP **3000** and **3001**.
+- UDP 3000 and 3001
+- Data: `eco/data`
+- Updates: `ECO_FORCE_UPDATE=true`
+- Extra args: `ECO_EXTRA_ARGS`
 
-## Compose
-
-```bash
-export ECO_USER_TOKEN=your-token
-docker compose -f eco/docker-compose.yml up -d
-```
+Allocate at least 4 GB RAM.
 
 ## Docker run
 
@@ -25,8 +22,8 @@ docker compose -f eco/docker-compose.yml up -d
 docker run -d --name eco --restart unless-stopped --init \
   -p 3000:3000/udp -p 3001:3001/udp \
   -v "$PWD/eco/data:/opt/eco" \
-  -e ECO_USER_TOKEN=your-token \
+  -e ECO_USER_TOKEN="your-token-here" \
   {{IMAGE_PREFIX}}/eco:latest
 ```
 
-Set `ECO_FORCE_UPDATE=true` to refresh the Steam install. Use `ECO_EXTRA_ARGS` for extra dedicated flags.
+SteamCMD uses anonymous login for the dedicated app where Valve allows it. If install fails, use `STEAM_USERNAME` and `STEAM_PASSWORD` for an account that owns Eco.

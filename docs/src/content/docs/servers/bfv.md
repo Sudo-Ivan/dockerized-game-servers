@@ -1,28 +1,17 @@
 ---
 title: Battlefield Vietnam
-description: Battlefield Vietnam dedicated server (LinuxGSM bundle).
+description: Battlefield Vietnam dedicated server (LinuxGSM archive).
 ---
 
-Compose path: `bfv`. Image: `bfv`.
+Compose path: bfv. Image: bfv.
 
-Linux dedicated files seed into `bfv/data` from the image on first start. Comply with EA licensing for Battlefield Vietnam.
+Server files come from the [LinuxGSM Battlefield Vietnam archive](http://linuxgsm.download/BattlefieldVietnam/). You must own the game. First start seeds `bfv/data` at `/opt/bfv`.
 
-## Ports
+## Ports and volume
 
-- UDP **4755** (game)
-- UDP **27900** (query)
-
-## Configuration
-
-| Variable | Purpose |
-| --- | --- |
-| `BFV_EXTRA_ARGS` | Extra `+` arguments for the dedicated binary |
-
-## Compose
-
-```bash
-docker compose -f bfv/docker-compose.yml up -d
-```
+- UDP 4755 (game) and UDP 27900 (query, LGSM default)
+- Data: `bfv/data`
+- Extra args: `BFV_EXTRA_ARGS`
 
 ## Docker run
 

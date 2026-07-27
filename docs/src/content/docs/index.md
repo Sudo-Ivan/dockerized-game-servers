@@ -26,7 +26,7 @@ Published images live on GHCR at `{{IMAGE_PREFIX}}/`. Set `IMAGE_OWNER` when you
 
 - **minecraft-base**: Temurin JRE on Alpine
 - **steam-base**: SteamCMD on Arch Linux
-- **runtime-base**: Debian slim for non-Steam, non-Java servers
+- **runtime-base**: Debian slim for non-Steam, non-Java servers (i386 and legacy libs for LinuxGSM binaries)
 
 ## Learn more
 
