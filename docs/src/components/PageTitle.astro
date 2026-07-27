@@ -1,0 +1,64 @@
+---
+import { gameIcons } from '../generated/game-icons.mjs'
+
+const title = Astro.locals.starlightRoute.entry.data.title
+const slug = Astro.locals.starlightRoute.entry.id
+const serverSlug = slug.match(/^servers\/([^/]+)$/)?.[1]
+const base = import.meta.env.BASE_URL.endsWith('/')
+	? import.meta.env.BASE_URL
+	: `${import.meta.env.BASE_URL}/`
+const iconFile = serverSlug ? gameIcons[serverSlug] : undefined
+const iconSrc = iconFile ? `${base}game-icons/${iconFile}` : undefined
+---
+
+<div class:list={['page-title', { 'has-game-icon': Boolean(iconSrc) }]}>
+	{
+		iconSrc && (
+			<img
+				class="game-title-icon"
+				src={iconSrc}
+				alt=""
+				width="48"
+				height="48"
+				decoding="async"
+			/>
+		)
+	}
+	<h1 id="_top">{title}</h1>
+</div>
+
+<style>
+	.page-title {
+		display: flex;
+		align-items: center;
+		gap: 0.85rem;
+		margin-top: 1rem;
+	}
+
+	.game-title-icon {
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 0.7rem;
+		object-fit: cover;
+		flex-shrink: 0;
+		background: #141414;
+		border: 1px solid var(--sl-color-hairline);
+		box-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset;
+	}
+
+	h1 {
+		margin: 0;
+		font-size: var(--sl-text-h1);
+		line-height: var(--sl-line-height-headings);
+		font-weight: 600;
+		color: var(--sl-color-white);
+	}
+
+	@media (min-width: 50rem) {
+		.game-title-icon {
+			width: 3.25rem;
+			height: 3.25rem;
+			border-radius: 0.8rem;
+		}
+	}
+</style>

@@ -33,7 +33,7 @@ Build writes public assets then emits static HTML to dist/:
 - robots.txt and generated site identity for SEO/JSON-LD
 - Web app manifest and service worker (network-first HTML so docs do not stay stale)
 - SVG favicon and app icon
-- Server sidebar icons from Steam CDN (or Wikipedia fallback), via scripts/fetch-game-icons.mjs
+- Server page title icons from Steam CDN (or Wikipedia fallback), via scripts/fetch-game-icons.mjs
 
 Search UI and the PWA service worker load only for JavaScript clients. GitHub Pages deploys from .github/workflows/docs.yml with full git history so last-updated dates resolve.
 
