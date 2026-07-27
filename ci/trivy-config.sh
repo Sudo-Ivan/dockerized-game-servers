@@ -14,6 +14,6 @@ echo "==> Trivy Dockerfile config scan"
 trivy config \
   --config trivy.yaml \
   --misconfig-scanners dockerfile \
-  --severity HIGH,CRITICAL \
+  --severity MEDIUM,HIGH,CRITICAL \
   --exit-code 1 \
   .

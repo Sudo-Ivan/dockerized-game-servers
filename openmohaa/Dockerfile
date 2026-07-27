@@ -1,21 +1,40 @@
 ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
-FROM ${BASE_IMAGE}
+FROM ${BASE_IMAGE} AS fetch
 
 ARG OPENMOHAA_VERSION=v0.82.1
 
 RUN pacman -Sy --noconfirm --needed \
-    socat \
+    curl \
     unzip \
-  && pacman -Scc --noconfirm \
-  && useradd -m -u 1000 openmohaa \
-  && mkdir -p /opt/openmohaa/lib/openmohaa /usr/local/share/mohaa \
+    ca-certificates \
+  && mkdir -p /opt/openmohaa/lib/openmohaa \
   && curl -fsSL --retry 3 --retry-delay 2 \
     -o /tmp/openmohaa.zip \
     "https://github.com/openmoh/openmohaa/releases/download/${OPENMOHAA_VERSION}/openmohaa-${OPENMOHAA_VERSION}-linux-amd64.zip" \
   && unzip -q /tmp/openmohaa.zip -d /opt/openmohaa/lib/openmohaa \
   && chmod +x /opt/openmohaa/lib/openmohaa/omohaaded \
   && rm -f /tmp/openmohaa.zip \
+  && pacman -Scc --noconfirm \
+  && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/*
+
+ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
+FROM ${BASE_IMAGE}
+
+ARG OPENMOHAA_VERSION=v0.82.1
+
+LABEL org.opencontainers.image.title="openmohaa" \
+      org.opencontainers.image.description="OpenMoHAA dedicated server" \
+      org.opencontainers.image.licenses="ISC"
+
+RUN pacman -Sy --noconfirm --needed \
+    socat \
+  && pacman -Scc --noconfirm \
+  && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/* \
+  && useradd -m -u 1000 openmohaa \
+  && mkdir -p /opt/openmohaa /usr/local/share/mohaa \
   && chown -R openmohaa:openmohaa /opt/openmohaa /usr/local/share/mohaa /home/openmohaa
+
+COPY --from=fetch --chown=openmohaa:openmohaa /opt/openmohaa /opt/openmohaa
 
 ENV MOHAA_INSTALL_DIR="/opt/openmohaa" \
     MOHAA_DATA_DIR="/usr/local/share/mohaa" \
@@ -31,7 +50,11 @@ WORKDIR ${MOHAA_DATA_DIR}
 
 EXPOSE 12203/udp 12300/udp
 
+USER openmohaa
+
 HEALTHCHECK --interval=30s --timeout=20s --start-period=60s --retries=3 \
   CMD ["/healthcheck.sh"]
+
+STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

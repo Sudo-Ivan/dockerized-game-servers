@@ -1,0 +1,14 @@
+data
+.gitignore
+.gitkeep
+docker-compose.yml
+*.md
+.env
+*.env
+*~
+*.swp
+.DS_Store
+cache
+configs
+profiles
+server

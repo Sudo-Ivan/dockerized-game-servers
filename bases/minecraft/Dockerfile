@@ -17,19 +17,23 @@ RUN apk add --no-cache ca-certificates curl tar \
   && echo "$(awk '{print $1}' /tmp/temurin.sha256.txt)  /tmp/temurin.tar.gz" | sha256sum -c - \
   && mkdir -p /opt/java \
   && tar -xzf /tmp/temurin.tar.gz -C /opt/java --strip-components=1 \
-  && rm /tmp/temurin.tar.gz /tmp/temurin.sha256.txt
+  && rm -f /tmp/temurin.tar.gz /tmp/temurin.sha256.txt
 
 FROM alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
 
 ARG TEMURIN_MAJOR=25
 
+LABEL org.opencontainers.image.title="minecraft-base" \
+      org.opencontainers.image.description="Shared Alpine + Temurin JRE base for Minecraft servers" \
+      org.opencontainers.image.licenses="ISC"
+
 RUN apk add --no-cache ca-certificates curl jq shadow \
   && addgroup -g 1000 minecraft \
-  && adduser -D -u 1000 -G minecraft -h /home/minecraft minecraft
+  && adduser -D -u 1000 -G minecraft -h /home/minecraft minecraft \
+  && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 COPY --from=temurin /opt/java /opt/java
-COPY runtime.sh /runtime.sh
-RUN chmod +x /runtime.sh
+COPY --chmod=755 runtime.sh /runtime.sh
 
 WORKDIR /data
 RUN chown minecraft:minecraft /data
@@ -42,3 +46,5 @@ ENV JAVA_HOME="/opt/java" \
     MC_JAVA_MAJOR="${TEMURIN_MAJOR}"
 
 USER minecraft
+
+STOPSIGNAL SIGTERM

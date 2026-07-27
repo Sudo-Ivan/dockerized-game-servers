@@ -4,6 +4,10 @@ FROM ${BASE_IMAGE}
 ARG FORGE_MINECRAFT_VERSION=1.21.11
 ARG FORGE_VERSION=61.0.8
 
+LABEL org.opencontainers.image.title="minecraft-forge" \
+      org.opencontainers.image.description="Minecraft Forge dedicated server" \
+      org.opencontainers.image.licenses="ISC"
+
 USER root
 COPY --chmod=755 forge/entrypoint.sh /entrypoint.sh
 COPY --chmod=755 forge/healthcheck.sh /healthcheck.sh
@@ -16,5 +20,7 @@ USER minecraft
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 \
   CMD ["/healthcheck.sh"]
+
+STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/entrypoint.sh"]

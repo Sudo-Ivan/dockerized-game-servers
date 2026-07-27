@@ -1,2 +1,6 @@
-# Entrypoints start as root to fix mounted volume ownership then drop via runuser/USER.
+# steam-base stays root so child images can install packages.
+# Game images default to non-root USER. Entrypoints still accept --user root for volume chown.
 DS-0002
+
+# Child images use ARG BASE_IMAGE (default includes :latest). CI passes a tagged or digested ref.
+DS-0001

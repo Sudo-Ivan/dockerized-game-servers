@@ -5,6 +5,10 @@ ARG FABRIC_MINECRAFT_VERSION=26.2
 ARG FABRIC_LOADER_VERSION=0.19.3
 ARG FABRIC_INSTALLER_VERSION=1.1.1
 
+LABEL org.opencontainers.image.title="minecraft-fabric" \
+      org.opencontainers.image.description="Minecraft Fabric dedicated server" \
+      org.opencontainers.image.licenses="ISC"
+
 USER root
 COPY --chmod=755 fabric/entrypoint.sh /entrypoint.sh
 COPY --chmod=755 fabric/healthcheck.sh /healthcheck.sh
@@ -18,5 +22,7 @@ USER minecraft
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 \
   CMD ["/healthcheck.sh"]
+
+STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/entrypoint.sh"]

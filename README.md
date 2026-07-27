@@ -226,7 +226,7 @@ docker pull ghcr.io/$IMAGE_OWNER/minecraft-fabric:latest
 
 ## CI
 
-- `ci` runs on push, pull request, and manually: `ci/ci-check.sh` (catalog-driven compose checks, ShellCheck, health/tools tests) plus Trivy Dockerfile config scans (HIGH+CRITICAL)
+- `ci` runs on push, pull request, and manually: `ci/ci-check.sh` (catalog-driven compose checks, ShellCheck, health/tools tests) plus Trivy Dockerfile config scans (MEDIUM+HIGH+CRITICAL)
 - `build` runs weekly (Sunday 06:00 UTC), on Dockerfile/base/`ci` path changes to `master`/`main`, and manually: builds/pushes GHCR images then Trivy-scans them (CRITICAL fail)
 - `build-minecraft` is manual only: pick Fabric/Vanilla/Forge + a Minecraft version. Java is resolved from Mojang's `javaVersion`, Temurin Alpine JRE is pinned from Adoptium, Fabric loader/installer and Forge promos auto-fill when left blank. Publishes `minecraft-base:javaN` and `minecraft-<flavor>:<tag>` (tag defaults to the MC version, or `mc-forge` for Forge)
 

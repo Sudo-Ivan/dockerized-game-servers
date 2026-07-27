@@ -1,9 +1,14 @@
 ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/steam-base:latest
 FROM ${BASE_IMAGE}
 
+LABEL org.opencontainers.image.title="factorio" \
+      org.opencontainers.image.description="Factorio dedicated server" \
+      org.opencontainers.image.licenses="ISC"
+
 RUN pacman -Sy --noconfirm --needed \
     xz \
   && pacman -Scc --noconfirm \
+  && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/* \
   && useradd -m -u 1000 factorio \
   && mkdir -p /opt/factorio \
   && chown -R factorio:factorio /opt/factorio /home/factorio
@@ -19,7 +24,11 @@ WORKDIR ${FACTORIO_DIR}
 
 EXPOSE 34197/udp 27015/tcp
 
+USER factorio
+
 HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
   CMD ["/healthcheck.sh"]
+
+STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -5,7 +5,7 @@ description: Checks, image builds, and Minecraft versioned builds.
 
 ## Workflows
 
-- ci runs on push, pull request, and manually. It runs ci/ci-check.sh plus Trivy Dockerfile config scans (HIGH and CRITICAL).
+- ci runs on push, pull request, and manually. It runs ci/ci-check.sh plus Trivy Dockerfile config scans (MEDIUM, HIGH, and CRITICAL).
 - build runs weekly (Sunday 06:00 UTC), on Dockerfile, base, or ci path changes to master or main, and manually. It builds and pushes GHCR images, then Trivy-scans them (CRITICAL fails the job).
 - build-minecraft is manual only. Pick Fabric, Vanilla, or Forge plus a Minecraft version. Java is resolved from Mojang's javaVersion. Temurin Alpine JRE is pinned from Adoptium. Fabric loader and installer, and Forge promos, auto-fill when left blank. Publishes minecraft-base:javaN and minecraft-flavor:tag (tag defaults to the MC version, or mc-forge for Forge).
 

@@ -151,6 +151,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image
+        env:
+          PUSH: "true"
         run: |
           chmod +x ci/*.sh
           eval "$(./ci/repo-meta.sh)"

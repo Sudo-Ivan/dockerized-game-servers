@@ -17,6 +17,10 @@ chmod +x "${ROOT}/ci/install-trivy.sh"
 export PATH="${HOME}/.local/bin:${PATH}"
 
 echo "==> Trivy image scan: ${IMAGE_REF}"
+if ! docker image inspect "${IMAGE_REF}" >/dev/null 2>&1; then
+  echo "Local image missing, pulling ${IMAGE_REF}"
+  docker pull "${IMAGE_REF}"
+fi
 trivy image \
   --config trivy.yaml \
   --scanners vuln,secret,misconfig \

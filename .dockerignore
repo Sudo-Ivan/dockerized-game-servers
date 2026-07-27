@@ -1,4 +1,8 @@
 **/.git
+**/.github
+**/.cursor
+**/docs
+**/node_modules
 **/data
 **/.gitignore
 **/.gitkeep
@@ -6,4 +10,11 @@
 **/docker-compose.yml
 **/.env
 **/*.env
+**/.env.example
 **/LICENSE
+**/.trivyignore
+**/trivy.yaml
+**/agent-transcripts
+**/*~
+**/*.swp
+**/.DS_Store

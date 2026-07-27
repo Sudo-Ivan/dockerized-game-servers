@@ -3,6 +3,10 @@ FROM ${BASE_IMAGE}
 
 ARG VANILLA_VERSION=1.21.11
 
+LABEL org.opencontainers.image.title="minecraft-vanilla" \
+      org.opencontainers.image.description="Minecraft Vanilla dedicated server" \
+      org.opencontainers.image.licenses="ISC"
+
 USER root
 COPY --chmod=755 vanilla/entrypoint.sh /entrypoint.sh
 COPY --chmod=755 vanilla/healthcheck.sh /healthcheck.sh
@@ -14,5 +18,7 @@ USER minecraft
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 \
   CMD ["/healthcheck.sh"]
+
+STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/entrypoint.sh"]
