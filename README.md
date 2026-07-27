@@ -30,6 +30,7 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | OpenMoHAA | `openmohaa` | `openmohaa` |
 | Arma 3 | `arma/arma-3` | `arma-3` |
 | Hytale | `hytale` | external (`deinfreu/hytale-server`) |
+| Stardew Valley | `stardew-valley` | external ([JunimoServer](https://github.com/stardew-valley-dedicated-server/server) `sdvd/server`) |
 
 Shared bases:
 
@@ -264,6 +265,17 @@ docker run -d --name hytale-server --restart unless-stopped \
   deinfreu/hytale-server:latest
 ```
 
+Stardew Valley (JunimoServer, external images). Copy `stardew-valley/.env.example` to `.env`, set Steam credentials and `SDVD_VNC_PASSWORD`, then run Steam setup once before `up`:
+
+```bash
+cd stardew-valley
+cp .env.example .env
+docker compose run --rm -it steam-auth setup
+docker compose up -d
+```
+
+UDP **24642** (game), UDP **27015** (query), TCP **5800** (VNC), TCP **8080** (API). Saves and game files under `stardew-valley/data/`. See [Stardew Valley docs](https://sudo-ivan.github.io/dockerized-game-servers/servers/stardew-valley/) and [JunimoServer](https://github.com/stardew-valley-dedicated-server/server).
+
 ### Minecraft
 
 Accept the EULA with `EULA=true`. World and config live in each server's `./data` volume.
@@ -337,6 +349,10 @@ Steam App 2394010. Saves and `PalWorldSettings.ini` under `palworld/data/Pal/Sav
 ### Starbound
 
 Steam App 211820. Writes `starbound_server.config` on first start if missing. Default TCP 21025.
+
+### Stardew Valley
+
+Uses [JunimoServer](https://github.com/stardew-valley-dedicated-server/server) (`sdvd/server` on Docker Hub), not a first-party image from this repo. Requires Steam credentials that own Stardew Valley. Two-service compose: `server` plus `steam-auth`. First-time `docker compose run --rm -it steam-auth setup` for Steam Guard and game download. Farm saves under `stardew-valley/data/saves`, settings in `data/settings/server-settings.json`. Optional Discord bot: `docker compose --profile discord up -d`.
 
 ### OpenMoHAA
 
@@ -438,6 +454,7 @@ starbound/        Starbound
 openmohaa/       OpenMoHAA
 arma/arma-3/     Arma 3
 hytale/          external image compose
+stardew-valley/  JunimoServer (external images)
 ```
 
 ## License

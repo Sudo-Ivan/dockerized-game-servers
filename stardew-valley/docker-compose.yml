@@ -1,0 +1,80 @@
+# JunimoServer (stardew-valley-dedicated-server). Upstream: https://github.com/stardew-valley-dedicated-server/server
+# Images: https://hub.docker.com/r/sdvd/server
+
+services:
+  server:
+    image: sdvd/server:${SDVD_IMAGE_VERSION:-latest}
+    container_name: stardew-valley-server
+    init: true
+    stdin_open: true
+    tty: true
+    ports:
+      - "${SDVD_VNC_PORT:-5800}:5800"
+      - "${SDVD_API_PORT:-8080}:8080"
+      - "${SDVD_GAME_PORT:-24642}:24642/udp"
+      - "${SDVD_QUERY_PORT:-27015}:27015/udp"
+    cap_add:
+      - SYS_TIME
+    volumes:
+      - ./data/game:/data/game
+      - ./data/saves:/config/xdg/config/StardewValley
+      - ./data/settings:/data/settings
+    environment:
+      STEAM_AUTH_URL: "http://steam-auth:${SDVD_STEAM_AUTH_PORT:-3001}"
+      VNC_PASSWORD: "${SDVD_VNC_PASSWORD:-}"
+      ALLOW_INSECURE_SETUP: "${SDVD_ALLOW_INSECURE_SETUP:-false}"
+      SERVER_TPS: "${SDVD_SERVER_TPS:-60}"
+      SERVER_FPS: "${SDVD_SERVER_FPS:-0}"
+      SETTINGS_PATH: "/data/settings/server-settings.json"
+      API_ENABLED: "${SDVD_API_ENABLED:-true}"
+      API_PORT: "${SDVD_API_PORT:-8080}"
+      API_KEY: "${SDVD_API_KEY:-}"
+      SERVER_PASSWORD: "${SDVD_SERVER_PASSWORD:-}"
+      MAX_LOGIN_ATTEMPTS: "${SDVD_MAX_LOGIN_ATTEMPTS:-3}"
+      AUTH_TIMEOUT_SECONDS: "${SDVD_AUTH_TIMEOUT_SECONDS:-120}"
+    depends_on:
+      steam-auth:
+        condition: service_healthy
+    restart: unless-stopped
+    stop_grace_period: 120s
+    mem_limit: 4096M
+
+  steam-auth:
+    image: sdvd/steam-service:${SDVD_IMAGE_VERSION:-latest}
+    container_name: stardew-valley-steam-auth
+    init: true
+    stdin_open: true
+    tty: true
+    expose:
+      - "${SDVD_STEAM_AUTH_PORT:-3001}"
+    volumes:
+      - ./data/steam-session:/data/steam-session
+      - ./data/game:/data/game
+    environment:
+      PORT: "${SDVD_STEAM_AUTH_PORT:-3001}"
+      GAME_DIR: "/data/game"
+      SESSION_DIR: "/data/steam-session"
+      STEAM_USERNAME: "${STEAM_USERNAME:-}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_REFRESH_TOKEN: "${STEAM_REFRESH_TOKEN:-}"
+      STEAM_KEEP_LANGUAGES: "${SDVD_STEAM_KEEP_LANGUAGES:-}"
+    restart: unless-stopped
+    mem_limit: 2048M
+
+  discord-bot:
+    profiles: ["discord"]
+    image: sdvd/discord-bot:${SDVD_IMAGE_VERSION:-latest}
+    container_name: stardew-valley-discord-bot
+    init: true
+    environment:
+      DISCORD_BOT_TOKEN: "${SDVD_DISCORD_BOT_TOKEN:-}"
+      API_URL: "http://server:${SDVD_API_PORT:-8080}"
+      UPDATE_INTERVAL_MS: "${SDVD_DISCORD_UPDATE_INTERVAL_MS:-30000}"
+      DISCORD_BOT_NICKNAME: "${SDVD_DISCORD_BOT_NICKNAME:-}"
+      DISCORD_CHAT_CHANNEL_ID: "${SDVD_DISCORD_CHAT_CHANNEL_ID:-}"
+      STATUS_DASHBOARD_CHANNEL_ID: "${SDVD_DISCORD_STATUS_CHANNEL_ID:-}"
+      STATUS_DASHBOARD_REFRESH_RATE: "${SDVD_DISCORD_STATUS_REFRESH_RATE:-}"
+      API_KEY: "${SDVD_API_KEY:-}"
+    depends_on:
+      - server
+    restart: on-failure

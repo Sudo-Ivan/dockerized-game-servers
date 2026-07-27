@@ -24,6 +24,7 @@ starbound/        Starbound
 openmohaa/       OpenMoHAA (BYO game assets)
 arma/arma-3/     Arma 3
 hytale/          external image compose
+stardew-valley/  JunimoServer (external sdvd/* images)
 backups/         local gs backup archives (gitignored)
 ```
 

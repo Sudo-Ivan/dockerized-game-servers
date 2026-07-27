@@ -30,6 +30,7 @@ This site is static HTML. Reading and navigation work without JavaScript. Fuzzy 
 | OpenMoHAA | openmohaa | openmohaa |
 | Arma 3 | arma/arma-3 | arma-3 |
 | Hytale | hytale | external (deinfreu/hytale-server) |
+| Stardew Valley | stardew-valley | external (JunimoServer sdvd/server) |
 
 ## Shared bases
 
