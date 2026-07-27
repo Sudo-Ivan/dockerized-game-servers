@@ -22,13 +22,14 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && node scripts/check-tokens.mjs",
+    "build": "node scripts/build-search-index.mjs && astro build && node scripts/check-tokens.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "audit": "pnpm audit --prod"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.41.4",
-    "astro": "^7.0.2"
+    "astro": "^7.0.2",
+    "fuse.js": "7.5.0"
   }
 }

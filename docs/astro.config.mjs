@@ -32,6 +32,7 @@ export default defineConfig({
 				ThemeSelect: './src/components/Empty.astro',
 				TableOfContents: './src/components/TableOfContents.astro',
 				MobileTableOfContents: './src/components/MobileTableOfContents.astro',
+				Search: './src/components/Search.astro',
 			},
 			social: [
 				{

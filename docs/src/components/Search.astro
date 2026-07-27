@@ -1,0 +1,363 @@
+---
+const label = Astro.locals.t('search.label')
+const cancelLabel = Astro.locals.t('search.cancelLabel')
+const ctrlKey = Astro.locals.t('search.ctrlKey')
+const base = import.meta.env.BASE_URL.endsWith('/')
+	? import.meta.env.BASE_URL
+	: `${import.meta.env.BASE_URL}/`
+const indexUrl = `${base}search-index.json`
+---
+
+<site-search class={Astro.props.class} data-index-url={indexUrl}>
+	<button
+		type="button"
+		data-open-modal
+		disabled
+		hidden
+		aria-label={label}
+		aria-keyshortcuts="Control+K"
+	>
+		<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+			<path
+				d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7Z"
+			></path>
+		</svg>
+		<span class="sl-hidden md:sl-block" aria-hidden="true">{label}</span>
+		<kbd class="sl-hidden md:sl-flex" data-shortcut hidden>
+			<kbd data-mod>{ctrlKey}</kbd><kbd>K</kbd>
+		</kbd>
+	</button>
+
+	<dialog aria-label={label}>
+		<div class="dialog-frame">
+			<button type="button" data-close-modal class="sl-flex md:sl-hidden">{cancelLabel}</button>
+			<label class="search-field">
+				<span class="sr-only">{label}</span>
+				<input type="search" data-search-input placeholder={label} autocomplete="off" />
+			</label>
+			<ul data-results class="results" role="listbox" aria-label={label}></ul>
+			<p data-empty class="empty" hidden>No matching pages.</p>
+		</div>
+	</dialog>
+</site-search>
+
+<script>
+	import Fuse from 'fuse.js'
+
+	class SiteSearch extends HTMLElement {
+		/** @type {Fuse<{ title: string, description: string, body: string, href: string }> | null} */
+		fuse = null
+		/** @type {AbortController | null} */
+		loadController = null
+
+		connectedCallback() {
+			const openBtn = this.querySelector('[data-open-modal]')
+			const closeBtn = this.querySelector('[data-close-modal]')
+			const dialog = this.querySelector('dialog')
+			const input = this.querySelector('[data-search-input]')
+			const results = this.querySelector('[data-results]')
+			const empty = this.querySelector('[data-empty]')
+			const shortcut = this.querySelector('[data-shortcut]')
+			const mod = this.querySelector('[data-mod]')
+			const frame = this.querySelector('.dialog-frame')
+
+			if (
+				!(openBtn instanceof HTMLButtonElement) ||
+				!(closeBtn instanceof HTMLButtonElement) ||
+				!(dialog instanceof HTMLDialogElement) ||
+				!(input instanceof HTMLInputElement) ||
+				!(results instanceof HTMLElement) ||
+				!(empty instanceof HTMLElement) ||
+				!(frame instanceof HTMLElement)
+			) {
+				return
+			}
+
+			openBtn.hidden = false
+			openBtn.disabled = false
+
+			if (shortcut instanceof HTMLElement && mod instanceof HTMLElement) {
+				if (/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+					mod.textContent = '⌘'
+					openBtn.setAttribute('aria-keyshortcuts', 'Meta+K')
+				}
+				shortcut.hidden = false
+			}
+
+			const onOutsideClick = (event) => {
+				const target = event.target
+				if (!(target instanceof Node)) return
+				const el = target instanceof Element ? target : target.parentElement
+				if (!el) return
+				if (el.closest('a') || !frame.contains(el)) dialog.close()
+			}
+
+			const render = (query) => {
+				results.replaceChildren()
+				const q = query.trim()
+				if (!q || !this.fuse) {
+					empty.hidden = true
+					return
+				}
+				const matches = this.fuse.search(q, { limit: 12 })
+				empty.hidden = matches.length > 0
+				for (const match of matches) {
+					const item = match.item
+					const li = document.createElement('li')
+					const a = document.createElement('a')
+					a.href = item.href
+					a.className = 'result'
+					const title = document.createElement('span')
+					title.className = 'result-title'
+					title.textContent = item.title
+					a.append(title)
+					if (item.description) {
+						const desc = document.createElement('span')
+						desc.className = 'result-desc'
+						desc.textContent = item.description
+						a.append(desc)
+					}
+					li.append(a)
+					results.append(li)
+				}
+			}
+
+			const ensureIndex = async () => {
+				if (this.fuse) return
+				this.loadController?.abort()
+				this.loadController = new AbortController()
+				const url = this.dataset.indexUrl
+				if (!url) throw new Error('missing search index url')
+				const res = await fetch(url, { signal: this.loadController.signal })
+				if (!res.ok) throw new Error(`search index HTTP ${res.status}`)
+				const data = await res.json()
+				this.fuse = new Fuse(data.documents || [], {
+					keys: [
+						{ name: 'title', weight: 0.5 },
+						{ name: 'description', weight: 0.3 },
+						{ name: 'body', weight: 0.2 },
+					],
+					threshold: 0.35,
+					ignoreLocation: true,
+					includeScore: true,
+					useTokenSearch: true,
+					tokenMatch: 'all',
+				})
+			}
+
+			const openModal = async (event) => {
+				event?.stopPropagation()
+				dialog.showModal()
+				document.body.toggleAttribute('data-search-modal-open', true)
+				window.addEventListener('click', onOutsideClick)
+				input.focus()
+				try {
+					await ensureIndex()
+					render(input.value)
+				} catch (err) {
+					empty.hidden = false
+					empty.textContent = 'Search index unavailable.'
+					console.error(err)
+				}
+			}
+
+			const closeModal = () => dialog.close()
+
+			openBtn.addEventListener('click', (event) => {
+				void openModal(event)
+			})
+			closeBtn.addEventListener('click', closeModal)
+			dialog.addEventListener('close', () => {
+				document.body.toggleAttribute('data-search-modal-open', false)
+				window.removeEventListener('click', onOutsideClick)
+			})
+			input.addEventListener('input', () => render(input.value))
+			results.addEventListener('click', (event) => {
+				if (event.target instanceof Element && event.target.closest('a')) closeModal()
+			})
+
+			window.addEventListener('keydown', (event) => {
+				if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+					event.preventDefault()
+					if (dialog.open) closeModal()
+					else void openModal()
+				}
+			})
+		}
+	}
+
+	customElements.define('site-search', SiteSearch)
+</script>
+
+<style>
+	@layer starlight.core {
+		site-search {
+			display: contents;
+		}
+
+		button[data-open-modal] {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			border: 0;
+			background-color: transparent;
+			color: var(--sl-color-gray-1);
+			cursor: pointer;
+			height: 2.5rem;
+			font-size: var(--sl-text-xl);
+		}
+
+		@media (min-width: 50rem) {
+			button[data-open-modal] {
+				border: 1px solid var(--sl-color-gray-5);
+				border-radius: 0.5rem;
+				padding-inline-start: 0.75rem;
+				padding-inline-end: 0.5rem;
+				background-color: var(--sl-color-black);
+				color: var(--sl-color-gray-2);
+				font-size: var(--sl-text-sm);
+				width: 100%;
+				max-width: 22rem;
+			}
+
+			button[data-open-modal]:hover {
+				border-color: var(--sl-color-gray-2);
+				color: var(--sl-color-white);
+			}
+
+			button[data-open-modal] > :last-child {
+				margin-inline-start: auto;
+			}
+		}
+
+		button > kbd {
+			border-radius: 0.25rem;
+			font-size: var(--sl-text-2xs);
+			gap: 0.25em;
+			padding-inline: 0.375rem;
+			background-color: var(--sl-color-gray-6);
+		}
+
+		kbd {
+			font-family: var(--__sl-font);
+		}
+
+		dialog {
+			margin: 0;
+			padding: 0;
+			background-color: var(--sl-color-gray-6);
+			border: 1px solid var(--sl-color-gray-5);
+			width: 100%;
+			max-width: 100%;
+			height: 100%;
+			max-height: 100%;
+			box-shadow: var(--sl-shadow-lg);
+			color: var(--sl-color-text);
+		}
+
+		dialog[open] {
+			display: flex;
+		}
+
+		dialog::backdrop {
+			background-color: var(--sl-color-backdrop-overlay);
+			backdrop-filter: blur(0.25rem);
+		}
+
+		.dialog-frame {
+			position: relative;
+			overflow: auto;
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+			gap: 1rem;
+			padding: 1rem;
+			width: 100%;
+		}
+
+		button[data-close-modal] {
+			align-self: flex-end;
+			border: 0;
+			background: transparent;
+			color: var(--sl-color-text-accent);
+			cursor: pointer;
+			padding: 0.25rem;
+		}
+
+		.search-field input {
+			width: 100%;
+			border: 1px solid var(--sl-color-gray-5);
+			border-radius: 0.5rem;
+			background: var(--sl-color-black);
+			color: var(--sl-color-white);
+			font: inherit;
+			padding: 0.75rem 1rem;
+		}
+
+		.search-field input:focus {
+			outline: 1px solid var(--sl-color-accent);
+			border-color: var(--sl-color-accent);
+		}
+
+		.results {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: grid;
+			gap: 0.5rem;
+		}
+
+		.result {
+			display: grid;
+			gap: 0.25rem;
+			padding: 0.75rem 1rem;
+			border-radius: 0.5rem;
+			background: var(--sl-color-black);
+			color: var(--sl-color-white);
+			text-decoration: none;
+		}
+
+		.result:hover,
+		.result:focus {
+			outline: 1px solid var(--sl-color-accent-high);
+		}
+
+		.result-title {
+			font-weight: 600;
+		}
+
+		.result-desc {
+			color: var(--sl-color-gray-2);
+			font-size: var(--sl-text-sm);
+		}
+
+		.empty {
+			margin: 0;
+			color: var(--sl-color-gray-2);
+		}
+
+		@media (min-width: 50rem) {
+			dialog {
+				margin: 4rem auto auto;
+				border-radius: 0.5rem;
+				width: 90%;
+				max-width: 40rem;
+				height: max-content;
+				min-height: 15rem;
+				max-height: calc(100% - 8rem);
+			}
+
+			.dialog-frame {
+				padding: 1.5rem;
+			}
+		}
+	}
+</style>
+
+<style is:global>
+	@layer starlight.core {
+		[data-search-modal-open] {
+			overflow: hidden;
+		}
+	}
+</style>

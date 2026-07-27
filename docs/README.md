@@ -26,4 +26,4 @@ pnpm audit --prod
 pnpm run build
 ```
 
-Output lands in dist/. GitHub Pages deploys from .github/workflows/docs.yml.
+Build writes a Fuse.js search index to public/search-index.json, then emits static HTML to dist/. Search UI loads only for JavaScript clients. GitHub Pages deploys from .github/workflows/docs.yml.

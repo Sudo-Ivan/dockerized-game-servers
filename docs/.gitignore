@@ -3,6 +3,9 @@ dist/
 # generated types
 .astro/
 
+# generated search corpus for Fuse.js
+public/search-index.json
+
 # dependencies
 node_modules/
 

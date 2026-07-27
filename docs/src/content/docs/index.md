@@ -5,7 +5,7 @@ description: Dockerized dedicated game servers with small images and compose fil
 
 Images publish to GHCR under {{IMAGE_PREFIX}}/.
 
-This site is static HTML. Reading and navigation work without JavaScript.
+This site is static HTML. Reading and navigation work without JavaScript. Fuzzy search is available when JavaScript is enabled.
 
 ## Servers
 

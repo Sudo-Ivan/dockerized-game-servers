@@ -8,6 +8,10 @@
 		display: none !important;
 	}
 
+	site-search {
+		display: none !important;
+	}
+
 	.sidebar-pane {
 		--sl-sidebar-visibility: visible;
 		position: static;
