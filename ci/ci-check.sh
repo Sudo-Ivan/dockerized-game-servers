@@ -108,6 +108,20 @@ if ! python3 -m py_compile ci/resolve-minecraft-build.py; then
   echo "python syntax error: ci/resolve-minecraft-build.py" >&2
   fail=1
 fi
+if ! python3 -m py_compile ci/github-matrix.py; then
+  echo "python syntax error: ci/github-matrix.py" >&2
+  fail=1
+fi
+
+echo "==> GitHub Actions image matrix"
+if ! python3 ci/github-matrix.py bases | python3 -c "import json,sys; json.load(sys.stdin)"; then
+  echo "invalid bases matrix json" >&2
+  fail=1
+fi
+if ! python3 ci/github-matrix.py images | python3 -c "import json,sys; json.load(sys.stdin)"; then
+  echo "invalid images matrix json" >&2
+  fail=1
+fi
 
 echo "==> Docs package manager"
 if [ ! -f docs/pnpm-lock.yaml ]; then
