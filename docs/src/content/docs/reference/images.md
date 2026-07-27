@@ -36,6 +36,8 @@ Prefix: {{IMAGE_PREFIX}}
 | codwaw | Call of Duty: World at War dedicated (LinuxGSM files) |
 | cod4 | Call of Duty 4 dedicated (CoD4x / LinuxGSM files) |
 | quake3 | Quake 3: Arena dedicated (LinuxGSM files) |
+| rtcw | Return to Castle Wolfenstein dedicated (ioRTCW / LinuxGSM files) |
+| etl | ET: Legacy dedicated (etlserver-build) |
 | eco | Eco dedicated (Steam) |
 | palworld | Palworld dedicated |
 | starbound | Starbound dedicated |

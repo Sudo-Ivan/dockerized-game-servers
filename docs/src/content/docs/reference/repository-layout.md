@@ -29,6 +29,8 @@ cod2/             Call of Duty 2 (LinuxGSM)
 codwaw/           Call of Duty: World at War (LinuxGSM)
 cod4/             Call of Duty 4 (LinuxGSM / CoD4x)
 quake3/           Quake 3: Arena (LinuxGSM)
+rtcw/             Return to Castle Wolfenstein (ioRTCW / LinuxGSM)
+etl/              ET: Legacy (etlserver-build)
 eco/              Eco (Steam)
 palworld/         Palworld
 starbound/        Starbound

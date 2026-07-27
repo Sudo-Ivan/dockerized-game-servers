@@ -36,6 +36,8 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Call of Duty: World at War | `codwaw` | `codwaw` |
 | Call of Duty 4 | `cod4` | `cod4` |
 | Quake 3: Arena | `quake3` | `quake3` |
+| Return to Castle Wolfenstein | `rtcw` | `rtcw` |
+| ET: Legacy | `etl` | `etl` |
 | Eco | `eco` | `eco` |
 | Palworld | `palworld` | `palworld` |
 | Starbound | `starbound` | `starbound` |
@@ -410,6 +412,14 @@ LinuxGSM-hosted dedicated binaries (`cod_lnxded`, `cod2_lnxded`, `codwaw_lnxded`
 
 LinuxGSM Q3 dedicated archive. Default UDP 27960, map `q3dm17`. Data under `quake3/data`.
 
+### Return to Castle Wolfenstein
+
+LinuxGSM [ioRTCW](http://linuxgsm.download/ReturnToCastleWolfenstein/) server archive. Default UDP 27960, map `mp_beach`. Data under `rtcw/data`.
+
+### ET: Legacy
+
+[GameServerManagers etlserver-build](https://github.com/GameServerManagers/etlserver-build) bundle (32-bit `etlded`). Default UDP 27960 (game) and 27961 (status). Map `oasis`, gametype `4` (objective). Set `ETL_FORCE_UPDATE=true` to re-fetch the bundle into the volume. Data under `etl/data`.
+
 ### Eco
 
 Steam App 739590. **Requires `ECO_USER_TOKEN`** from the Eco client. UDP 3000 and 3001. Allocate at least 4 GB RAM. Updates: `ECO_FORCE_UPDATE=true`.
@@ -471,6 +481,8 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `codwaw` | Call of Duty: World at War dedicated (LinuxGSM files) |
 | `cod4` | Call of Duty 4 dedicated (CoD4x / LinuxGSM files) |
 | `quake3` | Quake 3: Arena dedicated (LinuxGSM files) |
+| `rtcw` | Return to Castle Wolfenstein dedicated (ioRTCW / LinuxGSM files) |
+| `etl` | ET: Legacy dedicated (etlserver-build) |
 | `eco` | Eco dedicated (Steam) |
 | `palworld` | Palworld dedicated |
 | `starbound` | Starbound dedicated |

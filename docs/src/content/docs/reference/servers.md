@@ -33,6 +33,8 @@ Runnable servers are defined in `ci/server-catalog.sh`. First-party images publi
 | Call of Duty: World at War | codwaw | codwaw | [Guide](../servers/codwaw/) |
 | Call of Duty 4 | cod4 | cod4 | [Guide](../servers/cod4/) |
 | Quake III Arena | quake3 | quake3 | [Guide](../servers/quake3/) |
+| Return to Castle Wolfenstein | rtcw | rtcw | [Guide](../servers/rtcw/) |
+| ET: Legacy | etl | etl | [Guide](../servers/etl/) |
 | Eco | eco | eco | [Guide](../servers/eco/) |
 | Palworld | palworld | palworld | [Guide](../servers/palworld/) |
 | Starbound | starbound | starbound | [Guide](../servers/starbound/) |
