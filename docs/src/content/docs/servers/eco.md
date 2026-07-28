@@ -5,10 +5,10 @@ description: Eco dedicated server via SteamCMD, requires a server registration t
 
 Compose path: eco. Image: eco. Built from the shared [steam-base](/reference/images/) image (Arch Linux with SteamCMD).
 
-Eco installs Steam App **739590** into the data volume on first start. The server will not start without `ECO_USER_TOKEN`, a registration token you generate from the Eco client so the dedicated server can register itself with your account.
+Eco installs Steam App **739590** into the data volume on first start. Since Eco v11, the `EcoServer` binary refuses to start without Strange Loop Games (Strange Cloud) authentication. Use `ECO_USER_TOKEN` (recommended) or `ECO_OFFLINE=true` for offline mode.
 
 :::note[Requirements]
-- Set `ECO_USER_TOKEN` from the Eco client, the container installs the game then exits if it is missing
+- Eco v11+: set `ECO_USER_TOKEN` from [play.eco/account](https://play.eco/account) (Server Authentication), or `ECO_OFFLINE=true` for offline-only (no Strange Cloud)
 - Persist `./data` for the installed server and Eco's own save data
 - Publish UDP **3000** and **3001**
 - Allocate at least 4 GB RAM
@@ -31,7 +31,8 @@ Eco installs Steam App **739590** into the data volume on first start. The serve
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `ECO_USER_TOKEN` | *(none, required)* | Server registration token from the Eco client, the container exits if unset |
+| `ECO_USER_TOKEN` | *(empty)* | Server auth token from [play.eco/account](https://play.eco/account), passed as `-userToken=...` |
+| `ECO_OFFLINE` | `false` | Set `true` to pass `-offline` and skip token (offline mode, no Strange Cloud) |
 | `ECO_EXTRA_ARGS` | *(empty)* | Extra arguments appended after `-nogui -userToken=...` |
 | `ECO_FORCE_UPDATE` | `false` | Re-run SteamCMD for App 739590 on next start |
 | `ECO_APP_ID` | `739590` | Steam app id to install, only change for testing a different build |

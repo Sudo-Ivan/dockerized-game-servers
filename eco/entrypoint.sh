@@ -12,6 +12,7 @@ ECO_FORCE_UPDATE="${ECO_FORCE_UPDATE:-false}"
 STEAMCMD_WINDOWS_WORKAROUND="${STEAMCMD_WINDOWS_WORKAROUND:-prime}"
 
 ECO_USER_TOKEN="${ECO_USER_TOKEN:-}"
+ECO_OFFLINE="${ECO_OFFLINE:-false}"
 ECO_EXTRA_ARGS="${ECO_EXTRA_ARGS:-}"
 
 SERVER_BIN="${ECO_DIR}/EcoServer"
@@ -71,15 +72,19 @@ if ! server_present || [ "${ECO_FORCE_UPDATE}" = "true" ]; then
     install_server
 fi
 
-if [ -z "${ECO_USER_TOKEN}" ]; then
-    echo "ECO_USER_TOKEN is required. Create one in the Eco client (server registration)." >&2
-    exit 1
-fi
-
 cd "${ECO_DIR}"
 echo "--- Starting Eco dedicated server ---"
 # shellcheck disable=SC2206
-args=( -nogui "-userToken=${ECO_USER_TOKEN}" )
+args=( -nogui )
+if [ "${ECO_OFFLINE}" = "true" ]; then
+    args+=( -offline )
+elif [ -n "${ECO_USER_TOKEN}" ]; then
+    args+=( "-userToken=${ECO_USER_TOKEN}" )
+else
+    echo "Eco v11+ requires Strange Loop Games authentication." >&2
+    echo "Set ECO_USER_TOKEN (from https://play.eco/account) or ECO_OFFLINE=true for offline mode." >&2
+    exit 1
+fi
 if [ -n "${ECO_EXTRA_ARGS}" ]; then
     # shellcheck disable=SC2206
     extra=( ${ECO_EXTRA_ARGS} )

@@ -22,6 +22,7 @@ services:
       ECO_APP_ID: "739590"
       ECO_FORCE_UPDATE: "${ECO_FORCE_UPDATE:-false}"
       ECO_USER_TOKEN: "${ECO_USER_TOKEN:-}"
+      ECO_OFFLINE: "${ECO_OFFLINE:-false}"
       ECO_EXTRA_ARGS: ""
     healthcheck:
       test: ["CMD", "/healthcheck.sh"]

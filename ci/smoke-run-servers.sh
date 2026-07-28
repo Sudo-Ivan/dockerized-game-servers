@@ -121,8 +121,8 @@ while IFS= read -r line || [ -n "${line}" ]; do
   [ "${first_party}" = "1" ] || continue
   in_smoke_only "${id}" || continue
 
-  if [ "${id}" = "eco" ] && [ -z "${ECO_USER_TOKEN:-}" ]; then
-    echo "SKIP ${id}: ECO_USER_TOKEN not set" | tee -a "${REPORT}"
+  if [ "${id}" = "eco" ] && [ -z "${ECO_USER_TOKEN:-}" ] && [ "${ECO_OFFLINE:-false}" != "true" ]; then
+    echo "SKIP ${id}: ECO_USER_TOKEN not set (set ECO_OFFLINE=true to skip)" | tee -a "${REPORT}"
     continue
   fi
 
