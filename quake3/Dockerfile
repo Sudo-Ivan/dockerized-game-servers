@@ -14,5 +14,4 @@ WORKDIR ${Q3_DIR}
 EXPOSE 27960/udp
 HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 CMD ["/healthcheck.sh"]
 STOPSIGNAL SIGTERM
-USER quake3
 ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -12,7 +12,7 @@ Downloads the dedicated server tool (Steam App **2465200**) with SteamCMD and ru
 - Publish UDP **8766** (game), UDP **27016** (query), and UDP **9700** (BlobSync)
 - First start downloads through SteamCMD and initializes a Wine prefix, `start_period` in the healthcheck is 900 seconds for this reason
 - `mem_limit` is set to 6144M in compose, allocate at least that much RAM
-- Runs as the non-root `sotf` user (UID 1000) by default, see Permissions below
+- Starts as root and self-heals `sons-of-the-forest/data` ownership on every start, see Permissions below
 :::
 
 ## Ports
@@ -62,7 +62,7 @@ If SteamCMD lays the depot out under a nested `steamapps/common/<name>` folder i
 
 ## Permissions
 
-The image runs as the non-root `sotf` user (UID 1000) by default. The container only chowns `/opt/sotf` when actually started as root (for example with `user: root`), so if the host `sons-of-the-forest/data` directory is owned by a different UID, `chown` it to `1000:1000` yourself before first start.
+The container starts as root, `docker-entrypoint.sh` creates `/opt/sotf`, chowns it to `sotf` (UID 1000), then drops privileges via `runuser` before running `entrypoint.sh`, so a fresh or root-owned host `sons-of-the-forest/data` directory is fixed up automatically on every start.
 
 ## Updates
 

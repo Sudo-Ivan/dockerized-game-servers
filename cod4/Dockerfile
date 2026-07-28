@@ -17,5 +17,4 @@ WORKDIR ${COD4_DIR}
 EXPOSE 28960/udp
 HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 CMD ["/healthcheck.sh"]
 STOPSIGNAL SIGTERM
-USER cod4
 ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -35,6 +35,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=900s --retries=3 \
 
 STOPSIGNAL SIGTERM
 
-USER sotf
-
 ENTRYPOINT ["/docker-entrypoint.sh"]

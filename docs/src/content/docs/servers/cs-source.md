@@ -66,7 +66,7 @@ Set `CSS_FORCE_UPDATE=true` or run `./tools/gs update cs-source` from the [Ops](
 
 ## Notes
 
-- The Dockerfile sets `USER cssource`, so the container runs as that unprivileged user (uid 1000) by default. `docker-entrypoint.sh` only chowns `/opt/cs-source` when it is invoked as root, match host `./data` ownership to uid 1000 if you never run as root.
+- The container starts as root, `docker-entrypoint.sh` creates `/opt/cs-source`, chowns it to `cssource` (uid 1000), then drops privileges via `runuser` before running `entrypoint.sh`, so a fresh or root-owned host `./data` directory is fixed up automatically on every start.
 - `entrypoint.sh` strips Windows line endings from `srcds_run` (`sed -i 's/\r$//'`) on every start, not only on install.
 - Unlike L4D2 and Insurgency Source, this entrypoint exports `LD_LIBRARY_PATH="${CSS_DIR}/bin:${CSS_DIR}:/usr/lib32:/usr/lib"` before launch, CS:S's older engine binaries need the bundled 32-bit libraries in `bin/`.
 - `-secure` (VAC) is always passed and cannot be disabled through any environment variable.

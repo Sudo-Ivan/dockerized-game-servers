@@ -30,6 +30,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=1200s --retries=3 \
 
 STOPSIGNAL SIGTERM
 
-USER dayz
-
 ENTRYPOINT ["/docker-entrypoint.sh"]

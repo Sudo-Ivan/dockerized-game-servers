@@ -12,7 +12,7 @@ Downloads the dedicated server tool (Steam App **2089300**) with SteamCMD and ru
 - Publish UDP **17777** (game) and UDP **27015** (query)
 - First start downloads through SteamCMD and initializes a Wine prefix, `start_period` in the healthcheck is 1200 seconds (20 minutes) for this reason
 - `mem_limit` is set to 8192M in compose, allocate at least that much RAM
-- Runs as the non-root `icarus` user (UID 1000) by default, see Permissions below
+- Starts as root and self-heals `icarus/data` ownership on every start, see Permissions below
 :::
 
 ## Ports
@@ -56,7 +56,7 @@ The entrypoint does not write a session or server config file, every setting abo
 
 ## Permissions
 
-The image runs as the non-root `icarus` user (UID 1000) by default. `docker-entrypoint.sh` only chowns `/opt/icarus` when the container is actually started as root (for example with `user: root`), so if the host `icarus/data` directory is owned by a different UID, `chown` it to `1000:1000` yourself before first start.
+The container starts as root, `docker-entrypoint.sh` creates `/opt/icarus`, chowns it to `icarus` (UID 1000), then drops privileges via `runuser` before running `entrypoint.sh`, so a fresh or root-owned host `icarus/data` directory is fixed up automatically on every start.
 
 ## Updates
 

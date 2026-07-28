@@ -16,5 +16,4 @@ EXPOSE 14567/udp
 EXPOSE 23000/tcp
 HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 CMD ["/healthcheck.sh"]
 STOPSIGNAL SIGTERM
-USER bf1942
 ENTRYPOINT ["/docker-entrypoint.sh"]

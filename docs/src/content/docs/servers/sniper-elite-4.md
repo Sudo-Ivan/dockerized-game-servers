@@ -12,7 +12,7 @@ Downloads the dedicated server tool (Steam App **568880**) with SteamCMD and run
 - Publish UDP **27000** (auth), UDP **27005** (game), TCP **27010** (lobby), and UDP **27015** (update)
 - First start downloads through SteamCMD and initializes a Wine prefix, which takes noticeably longer than later restarts
 - `mem_limit` is set to 2048M in compose, the lightest Wine-based game covered under Servers
-- Runs as the non-root `se4` user (UID 1000) by default, see Permissions below
+- Starts as root and self-heals `sniper-elite-4/data` ownership on every start, see Permissions below
 :::
 
 ## Ports
@@ -73,7 +73,7 @@ Stop the container, edit `sniper-elite-4/data/server.cfg`, and start it again, `
 
 ## Permissions
 
-The image runs as the non-root `se4` user (UID 1000) by default. The container only chowns `/opt/se4` when actually started as root (for example with `user: root`), so if the host `sniper-elite-4/data` directory is owned by a different UID, `chown` it to `1000:1000` yourself before first start.
+The container starts as root, `docker-entrypoint.sh` creates `/opt/se4`, chowns it to `se4` (UID 1000), then drops privileges via `runuser` before running `entrypoint.sh`, so a fresh or root-owned host `sniper-elite-4/data` directory is fixed up automatically on every start.
 
 ## Updates
 

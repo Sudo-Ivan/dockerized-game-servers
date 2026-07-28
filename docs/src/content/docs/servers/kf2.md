@@ -61,7 +61,7 @@ Every install and forced update runs `app_update 232130 validate`. If you keep h
 
 ## Notes
 
-- The Dockerfile sets `USER kf2`, so the container runs as that unprivileged user (uid 1000) by default. `docker-entrypoint.sh` only chowns `/opt/kf2` when it is invoked as root, match host `./data` ownership to uid 1000 if you never run as root.
+- The container starts as root, `docker-entrypoint.sh` creates `/opt/kf2`, chowns it to `kf2` (uid 1000), then drops privileges via `runuser` before running `entrypoint.sh`, so a fresh or root-owned host `./data` directory is fixed up automatically on every start.
 - The Steam runtime library copy (`linux64/steamclient.so`, `linux32/steamclient.so`) runs on every start, even when `KF2_FORCE_UPDATE` is not set, do not rely on those folders staying empty.
 - `LD_LIBRARY_PATH` is set to `${KF2_DIR}/linux64:${KF2_DIR}/Binaries/Linux` before launch, distinct from the `bin/` path CS:S uses.
 - The image sends `SIGTERM` on stop (unlike the `SIGINT` used by the other three games here), and compose sets `mem_limit: 4096M` and `stop_grace_period: 90s`.

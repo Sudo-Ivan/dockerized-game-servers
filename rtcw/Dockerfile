@@ -36,6 +36,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 \
 
 STOPSIGNAL SIGTERM
 
-USER rtcw
-
 ENTRYPOINT ["/docker-entrypoint.sh"]

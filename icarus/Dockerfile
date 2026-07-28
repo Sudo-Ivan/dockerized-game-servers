@@ -34,6 +34,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=1200s --retries=3 \
 
 STOPSIGNAL SIGTERM
 
-USER icarus
-
 ENTRYPOINT ["/docker-entrypoint.sh"]

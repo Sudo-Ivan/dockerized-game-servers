@@ -28,6 +28,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=600s --retries=3 \
 
 STOPSIGNAL SIGINT
 
-USER cssource
-
 ENTRYPOINT ["/docker-entrypoint.sh"]

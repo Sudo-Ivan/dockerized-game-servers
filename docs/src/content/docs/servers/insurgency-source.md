@@ -58,7 +58,7 @@ Set `INS_SOURCE_FORCE_UPDATE=true` or run `./tools/gs update insurgency-source` 
 
 ## Notes
 
-- The Dockerfile sets `USER inssource`, so the container runs as that unprivileged user (uid 1000) by default. `docker-entrypoint.sh` only chowns `/opt/insurgency-source` when it is invoked as root, if the host `./data` directory is owned by a different uid and you never run as root, the container may hit permission errors, match host ownership to uid 1000 or override `user: root` once to let it self-heal.
+- The container starts as root, `docker-entrypoint.sh` creates `/opt/insurgency-source`, chowns it to `inssource` (uid 1000), then drops privileges via `runuser` before running `entrypoint.sh`, so a fresh or root-owned host `./data` directory is fixed up automatically on every start.
 - `entrypoint.sh` strips Windows line endings from `srcds_run` (`sed -i 's/\r$//'`) on every start, not only on install, this is a known artifact of the Insurgency Source depot.
 - There is no dedicated RCON environment variable. TCP 27015 is the RCON channel once you set `rcon_password` yourself, and `-usercon` is always passed to open the engine's console socket.
 - `-strictportbind` is always passed, so the server exits immediately rather than silently rebinding if `INS_SOURCE_PORT` or `INS_SOURCE_CLIENT_PORT` are already taken.
