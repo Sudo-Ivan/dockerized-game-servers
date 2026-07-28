@@ -12,7 +12,7 @@ Downloads the Linux dedicated server (Steam App 581330) on first start. Data vol
 - Game: UDP 27102 (`INS_SANDSTORM_PORT`)
 - Query: UDP 27131 (`INS_SANDSTORM_QUERY_PORT`)
 - Default map and scenario: `Oilfield` / `Scenario_Refinery_Push_Security`
-- Updates: `INS_SANDSTORM_FORCE_UPDATE=true` or `./tools/gs update insurgency-sandstorm`
+- Updates: `INS_SANDSTORM_FORCE_UPDATE=true` or `./tools/gs update insurgency-sandstorm`, see [Ops](/guides/ops/) for `backup` and `restore` too
 - Allocate at least 8 GB RAM for the container
 
 ## Docker run
@@ -28,17 +28,25 @@ docker run -d --name insurgency-sandstorm --restart unless-stopped --init \
 
 ## Environment
 
-| Variable | Purpose |
-| --- | --- |
-| `INS_SANDSTORM_MAP` | Map name (default `Oilfield`) |
-| `INS_SANDSTORM_SCENARIO` | Scenario id (default `Scenario_Refinery_Push_Security`) |
-| `INS_SANDSTORM_MAXPLAYERS` | Player cap (default `28`) |
-| `INS_SANDSTORM_HOSTNAME` | Server browser name |
-| `INS_SANDSTORM_GSLT` | Game Server Login Token for Steam listing |
-| `INS_SANDSTORM_GAMESTATS_TOKEN` | Enables `-GameStats` and passes `-GameStatsToken=...` |
-| `INS_SANDSTORM_EXTRA_ARGS` | Extra CLI flags (mutators, `-mods`, travel, and so on) |
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `STEAM_USERNAME` | `anonymous` | Steam login for the install step |
+| `STEAM_PASSWORD` | (empty) | Steam password, needed alongside a real `STEAM_USERNAME` |
+| `STEAM_GUARD_CODE` | (empty) | Steam Guard code, only needed if Steam challenges the login |
+| `STEAMCMD_WINDOWS_WORKAROUND` | `prime` | SteamCMD depot fetch mode (`full`, `prime`, or `off`), inherited from the shared SteamCMD helper |
+| `INS_SANDSTORM_APP_ID` | `581330` | SteamCMD app id for the dedicated server depot |
+| `INS_SANDSTORM_FORCE_UPDATE` | `false` | Set `true` to force `app_update 581330 validate` on next start, same var `./tools/gs update insurgency-sandstorm` sets |
+| `INS_SANDSTORM_PORT` | `27102` | Game UDP port |
+| `INS_SANDSTORM_QUERY_PORT` | `27131` | Query UDP port |
+| `INS_SANDSTORM_MAP` | `Oilfield` | Map name |
+| `INS_SANDSTORM_SCENARIO` | `Scenario_Refinery_Push_Security` | Scenario id |
+| `INS_SANDSTORM_MAXPLAYERS` | `28` | Player cap |
+| `INS_SANDSTORM_HOSTNAME` | `Sandstorm Server` | Server browser name |
+| `INS_SANDSTORM_GSLT` | (empty) | Game Server Login Token for Steam listing |
+| `INS_SANDSTORM_GAMESTATS_TOKEN` | (empty) | Enables `-GameStats` and passes `-GameStatsToken=...` |
+| `INS_SANDSTORM_EXTRA_ARGS` | (empty) | Extra CLI flags (mutators, `-mods`, travel, and so on) |
 
-Set tokens in `docker-compose.yml`, a `.env` file, or `-e` on `docker run`.
+Set tokens in `docker-compose.yml`, a `.env` file, or `-e` on `docker run`. The entrypoint writes `581320` to `steam_appid.txt` on every start regardless of `INS_SANDSTORM_APP_ID`, that is the base game's Steamworks app id and is what GSLT tokens are issued against, not the `581330` dedicated server depot.
 
 ## GSLT and GameStats token
 
@@ -131,3 +139,8 @@ environment:
 ```
 
 Restart the container after changing config files or env vars.
+
+## See also
+
+- [All servers](/reference/servers/) for the compose path and image name
+- [Ops](/guides/ops/) for `./tools/gs backup`, `restore`, and `update`

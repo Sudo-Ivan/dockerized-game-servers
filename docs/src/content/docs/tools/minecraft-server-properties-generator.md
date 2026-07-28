@@ -164,14 +164,20 @@ Nothing here is uploaded. The file is generated with JavaScript in your browser.
 
   @media (min-width: 62rem) {
     .mcprops-tool {
-      grid-template-columns: 1.1fr 1fr;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
       align-items: start;
+    }
+
+    .mcprops-output {
+      position: sticky;
+      top: 5rem;
     }
   }
 
   .mcprops-form {
     display: grid;
     gap: 1rem;
+    min-width: 0;
   }
 
   .mcprops-fieldset {
@@ -235,8 +241,6 @@ Nothing here is uploaded. The file is generated with JavaScript in your browser.
   }
 
   .mcprops-output {
-    position: sticky;
-    top: 5rem;
     display: grid;
     gap: 0.5rem;
     border: 1px solid #262626;
@@ -244,6 +248,7 @@ Nothing here is uploaded. The file is generated with JavaScript in your browser.
     background: #0c0c0c;
     overflow: hidden;
     align-self: start;
+    min-width: 0;
   }
 
   .mcprops-output-head {

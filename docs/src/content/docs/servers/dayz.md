@@ -15,20 +15,25 @@ Official reference: [DayZ: Hosting a Linux Server](https://community.bohemia.net
 - Config: `serverDZ.cfg` in the data volume (default Chernarus offline mission)
 - Profiles: `profiles/` (logs, persistence, admin tools)
 - BattlEye: `battleye/` (copy and edit `beserver_x64.cfg` for RCon)
-- Updates: `DAYZ_FORCE_UPDATE=true`
+- Updates: `DAYZ_FORCE_UPDATE=true` or `./tools/gs update dayz`, see [Ops](/guides/ops/) for `backup` and `restore` too
 - Launch extras: `DAYZ_EXTRA_ARGS` (mods, custom flags)
 
-Set `STEAM_USERNAME`, `STEAM_PASSWORD`, and optional `STEAM_GUARD_CODE` in compose or `.env`. Use a dedicated Steam account for the server, not your main gaming account.
+Set `STEAM_USERNAME`, `STEAM_PASSWORD`, and optional `STEAM_GUARD_CODE` in compose or `.env`. Use a dedicated Steam account for the server, not your main gaming account. Unlike most other SteamCMD images in this repository, DayZ has no anonymous fallback: the entrypoint exits immediately if either `STEAM_USERNAME` or `STEAM_PASSWORD` is empty.
 
 ## Environment
 
-| Variable | Purpose |
-| --- | --- |
-| `DAYZ_PORT` | Main game UDP port |
-| `DAYZ_HOSTNAME` | Seeds `hostname` in new `serverDZ.cfg` only |
-| `DAYZ_MAX_PLAYERS` | Seeds `maxPlayers` in new `serverDZ.cfg` only |
-| `DAYZ_FORCE_UPDATE` | Re-run SteamCMD for App 223350 |
-| `DAYZ_EXTRA_ARGS` | Appended to the server command line (mods go here) |
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `STEAM_USERNAME` | (empty, required) | Steam account that owns DayZ, install fails without it |
+| `STEAM_PASSWORD` | (empty, required) | Password for `STEAM_USERNAME` |
+| `STEAM_GUARD_CODE` | (empty) | Steam Guard code for the login step |
+| `STEAMCMD_WINDOWS_WORKAROUND` | `off` | SteamCMD depot fetch mode (`full`, `prime`, or `off`), DayZ defaults to `off` |
+| `DAYZ_APP_ID` | `223350` | SteamCMD app id for the dedicated server depot |
+| `DAYZ_FORCE_UPDATE` | `false` | Re-run SteamCMD for App 223350 |
+| `DAYZ_PORT` | `2302` | Main game UDP port |
+| `DAYZ_HOSTNAME` | `DayZ Server` | Seeds `hostname` in new `serverDZ.cfg` only |
+| `DAYZ_MAX_PLAYERS` | `60` | Seeds `maxPlayers` in new `serverDZ.cfg` only |
+| `DAYZ_EXTRA_ARGS` | (empty) | Appended to the server command line (mods go here) |
 
 Edit `dayz/data/serverDZ.cfg` on the host for live settings (`passwordAdmin`, time acceleration, `verifySignatures`, and so on).
 
@@ -71,7 +76,7 @@ ln -s steamapps/workshop/content/221100/1559212036 1559212036
 ln -s steamapps/workshop/content/221100/1564026768 1564026768
 ```
 
-Some hosts use `@ModName` folders instead; names are case-sensitive and must match what you pass in `-mod`. Pick one convention and stay consistent.
+Some hosts use `@ModName` folders instead. Names are case-sensitive and must match what you pass in `-mod`, pick one convention and stay consistent.
 
 ### 3. Copy signature keys
 
@@ -110,8 +115,8 @@ Stop the server, re-run `workshop_download_item` for each ID (or add them to you
 | --- | --- |
 | Server starts, mods ignored | `-mod=` missing from `DAYZ_EXTRA_ARGS` |
 | Everyone kicked on join | `.bikey` not in `keys/` or `verifySignatures` too strict |
-| Wrong version | Server workshop files out of date; clients must subscribe to same mods |
-| BattlEye script errors | Mod not allowed by BE; check mod docs and server BE logs |
+| Wrong version | Server workshop files out of date, clients must subscribe to same mods |
+| BattlEye script errors | Mod not allowed by BE, check mod docs and server BE logs |
 | Broken symlinks | Re-download mod and recreate `ln -s` into `dayz/data` |
 
 Economy mods may ship extra `types.xml` or CE files you must merge into `mpmissions/` manually.
@@ -138,4 +143,9 @@ docker run -d --name dayz --restart unless-stopped --init \
   {{IMAGE_PREFIX}}/dayz:latest
 ```
 
-Allocate at least 6 GB RAM for vanilla; modded servers often need 8 GB or more.
+Allocate at least 6 GB RAM for vanilla, modded servers often need 8 GB or more.
+
+## See also
+
+- [All servers](/reference/servers/) for the compose path and image name
+- [Ops](/guides/ops/) for `./tools/gs backup`, `restore`, and `update`

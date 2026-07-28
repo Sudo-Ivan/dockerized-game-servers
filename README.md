@@ -32,6 +32,7 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | The Forest | `the-forest` | `the-forest` |
 | Sons Of The Forest | `sons-of-the-forest` | `sons-of-the-forest` |
 | Sniper Elite 4 | `sniper-elite-4` | `sniper-elite-4` |
+| SuperTuxKart | `supertuxkart` | `supertuxkart` |
 | Battlefield 1942 | `bf1942` | `bf1942` |
 | Battlefield Vietnam | `bfv` | `bfv` |
 | Call of Duty | `cod` | `cod` |
@@ -288,6 +289,15 @@ docker run -d --name sniper-elite-4 --restart unless-stopped --init \
   ghcr.io/sudo-ivan/dockerized-game-servers/sniper-elite-4:latest
 ```
 
+SuperTuxKart:
+
+```bash
+docker run -d --name supertuxkart --restart unless-stopped --init \
+  -p 2759:2759/udp \
+  -v "$PWD/supertuxkart/data:/opt/supertuxkart/data" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/supertuxkart:latest
+```
+
 Palworld:
 
 ```bash
@@ -444,6 +454,10 @@ Steam App 2465200 (dedicated server tool, Windows via Wine). UDP 8766 (game), 27
 
 Steam App 568880 (dedicated server tool, Windows via Wine). UDP 27000 (auth), UDP 27005 (game), TCP 27010 (lobby), UDP 27015 (update). `server.cfg` is generated in `sniper-elite-4/data/` with map rotation from `SE4_MAP_ROTATION`. Some accounts may need `STEAM_USERNAME` / `STEAM_PASSWORD` instead of anonymous login.
 
+### SuperTuxKart
+
+Not Steam-based. Compiled from the official `stk-code` source tarball with `-DSERVER_ONLY=ON`, no OpenGL/GPU dependency. Default LAN mode needs no account, set `STK_MODE=wan` plus `STK_ONLINE_USERNAME` / `STK_ONLINE_PASSWORD` (a free [STK Online](https://online.supertuxkart.net/register.php) account) to list publicly. UDP 2759. `server_config.xml` generated in `supertuxkart/data/`. The lightest server in this repo, `mem_limit` is 512M.
+
 ### Battlefield 1942 / Vietnam
 
 Linux dedicated files from [LinuxGSM](http://linuxgsm.download/) (same archives as LinuxGSM `install_server_files.sh`). You must own the game. Images bake the server payload; first start copies into `bf1942/data` or `bfv/data`. BF1942: UDP 14567 and TCP 23000. BFV: see `bfv/docker-compose.yml` for ports.
@@ -521,6 +535,7 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `the-forest` | The Forest dedicated (native Linux) |
 | `sons-of-the-forest` | Sons Of The Forest dedicated (Wine) |
 | `sniper-elite-4` | Sniper Elite 4 dedicated (Wine) |
+| `supertuxkart` | SuperTuxKart dedicated (compiled from source) |
 | `bf1942` | Battlefield 1942 dedicated (LinuxGSM files) |
 | `bfv` | Battlefield Vietnam dedicated (LinuxGSM files) |
 | `cod` | Call of Duty dedicated (LinuxGSM files) |
@@ -608,6 +623,7 @@ icarus/           Icarus
 the-forest/      The Forest
 sons-of-the-forest/ Sons Of The Forest
 sniper-elite-4/  Sniper Elite 4
+supertuxkart/    SuperTuxKart
 palworld/         Palworld
 starbound/        Starbound
 openmohaa/       OpenMoHAA

@@ -29,6 +29,7 @@ Runnable servers are defined in `ci/server-catalog.sh`. First-party images publi
 | The Forest | the-forest | the-forest | [Guide](../servers/the-forest/) |
 | Sons Of The Forest | sons-of-the-forest | sons-of-the-forest | [Guide](../servers/sons-of-the-forest/) |
 | Sniper Elite 4 | sniper-elite-4 | sniper-elite-4 | [Guide](../servers/sniper-elite-4/) |
+| SuperTuxKart | supertuxkart | supertuxkart | [Guide](../servers/supertuxkart/) |
 | Battlefield 1942 | bf1942 | bf1942 | [Guide](../servers/bf1942/) |
 | Battlefield Vietnam | bfv | bfv | [Guide](../servers/bfv/) |
 | Call of Duty | cod | cod | [Guide](../servers/cod/) |

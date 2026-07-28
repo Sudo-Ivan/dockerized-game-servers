@@ -5,7 +5,7 @@ description: Sons Of The Forest dedicated server (Windows binary via Wine).
 
 Compose path: `sons-of-the-forest`. Image: `sons-of-the-forest`.
 
-Downloads the dedicated server tool (Steam App **2465200**) with SteamCMD and runs `SonsOfTheForestDS.exe` under Wine. Sons Of The Forest itself is Steam App **1326470**, written to `steam_appid.txt`. Anonymous SteamCMD (the default) downloads App 2465200. If the install fails, set `STEAM_USERNAME` and `STEAM_PASSWORD` for an account entitled to Sons Of The Forest.
+Downloads the dedicated server tool (Steam App **2465200**) with SteamCMD and runs `SonsOfTheForestDS.exe` under Wine. Sons Of The Forest itself is Steam App **1326470**, written to `steam_appid.txt`. Anonymous SteamCMD is the default, but on current testing it fails with a fatal `SteamCMD needs to be online to update` error while fetching the depot, the tool is not entitled to anonymous accounts. Set `STEAM_USERNAME` and `STEAM_PASSWORD` for an account that owns Sons Of The Forest.
 
 :::note[Requirements]
 - Persist `sons-of-the-forest/data` at `/opt/sotf`

@@ -179,14 +179,20 @@ Have fun and follow the rules.</textarea>
 
   @media (min-width: 62rem) {
     .a3cfg-tool {
-      grid-template-columns: 1.1fr 1fr;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
       align-items: start;
+    }
+
+    .a3cfg-output {
+      position: sticky;
+      top: 5rem;
     }
   }
 
   .a3cfg-form {
     display: grid;
     gap: 1rem;
+    min-width: 0;
   }
 
   .a3cfg-fieldset {
@@ -261,8 +267,6 @@ Have fun and follow the rules.</textarea>
   }
 
   .a3cfg-output {
-    position: sticky;
-    top: 5rem;
     display: grid;
     gap: 0.5rem;
     border: 1px solid #262626;
@@ -270,6 +274,7 @@ Have fun and follow the rules.</textarea>
     background: #0c0c0c;
     overflow: hidden;
     align-self: start;
+    min-width: 0;
   }
 
   .a3cfg-output-head {

@@ -5,7 +5,7 @@ description: The Forest dedicated server, a native Linux binary via SteamCMD wit
 
 Compose path: `the-forest`. Image: `the-forest`.
 
-Downloads and runs the native Linux dedicated server binary `TheForestDedicatedServer` for Steam App **556450** with SteamCMD. Unlike the other five games on this page, there is no Wine, no Windows binary, and no `steam_appid.txt` shim, the server and the game share this one Linux app id. Anonymous SteamCMD (the default) downloads App 556450. If the install fails, set `STEAM_USERNAME` and `STEAM_PASSWORD` for an account entitled to The Forest.
+Downloads and runs the native Linux dedicated server binary `TheForestDedicatedServer` for Steam App **556450** with SteamCMD. Unlike the other five games on this page, there is no Wine, no Windows binary, and no `steam_appid.txt` shim, the server and the game share this one Linux app id. Anonymous SteamCMD is the default, but on current testing it only mounts Valve's shared Steamworks depot and never the actual game depot, so `TheForestDedicatedServer` is never installed. Set `STEAM_USERNAME` and `STEAM_PASSWORD` for an account that owns The Forest.
 
 :::note[Requirements]
 - Persist `the-forest/data` at `/opt/theforest`

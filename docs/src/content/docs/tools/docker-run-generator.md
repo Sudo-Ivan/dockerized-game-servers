@@ -116,14 +116,20 @@ Nothing here is uploaded. The output is generated with JavaScript in your browse
 
   @media (min-width: 62rem) {
     .drun-tool {
-      grid-template-columns: 1.1fr 1fr;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
       align-items: start;
+    }
+
+    .drun-output {
+      position: sticky;
+      top: 5rem;
     }
   }
 
   .drun-form {
     display: grid;
     gap: 1rem;
+    min-width: 0;
   }
 
   .drun-fieldset {
@@ -187,17 +193,31 @@ Nothing here is uploaded. The output is generated with JavaScript in your browse
 
   .drun-row {
     display: grid;
-    grid-template-columns: 1fr auto 1fr auto auto;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto auto;
     align-items: center;
     gap: 0.4rem;
+    min-width: 0;
   }
 
-  .drun-row:has(.drun-env-key) {
-    grid-template-columns: 1fr auto 1fr auto;
-  }
-
+  .drun-row:has(.drun-env-key),
   .drun-row:has(.drun-host-path) {
-    grid-template-columns: 1fr auto 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  }
+
+  @media (max-width: 34rem) {
+    .drun-row,
+    .drun-row:has(.drun-env-key),
+    .drun-row:has(.drun-host-path) {
+      grid-template-columns: 1fr;
+    }
+
+    .drun-sep {
+      display: none;
+    }
+
+    .drun-remove {
+      justify-self: start;
+    }
   }
 
   .drun-row input,
@@ -210,6 +230,7 @@ Nothing here is uploaded. The output is generated with JavaScript in your browse
     border-radius: 0.4rem;
     padding: 0.4rem 0.5rem;
     min-width: 0;
+    width: 100%;
   }
 
   .drun-sep {
@@ -250,8 +271,6 @@ Nothing here is uploaded. The output is generated with JavaScript in your browse
   }
 
   .drun-output {
-    position: sticky;
-    top: 5rem;
     display: grid;
     gap: 0.5rem;
     border: 1px solid #262626;
@@ -259,6 +278,7 @@ Nothing here is uploaded. The output is generated with JavaScript in your browse
     background: #0c0c0c;
     overflow: hidden;
     align-self: start;
+    min-width: 0;
   }
 
   .drun-output-head {

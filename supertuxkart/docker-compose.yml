@@ -1,0 +1,51 @@
+services:
+  supertuxkart:
+    image: ghcr.io/${IMAGE_OWNER}/supertuxkart:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/runtime-base:latest
+    pull_policy: missing
+    container_name: supertuxkart
+    restart: unless-stopped
+    stop_grace_period: 30s
+    init: true
+    ports:
+      - "2759:2759/udp"
+    volumes:
+      - ./data:/opt/supertuxkart/data
+    environment:
+      STK_ONLINE_USERNAME: "${STK_ONLINE_USERNAME:-}"
+      STK_ONLINE_PASSWORD: "${STK_ONLINE_PASSWORD:-}"
+      STK_MODE: "lan"
+      STK_SERVER_NAME: "SuperTuxKart Server"
+      STK_PORT: "2759"
+      STK_MAX_PLAYERS: "8"
+      STK_GAME_MODE: "3"
+      STK_DIFFICULTY: "0"
+      STK_PASSWORD: ""
+      STK_RANKED: "false"
+      STK_OWNER_LESS: "false"
+      STK_TRACK_VOTING: "true"
+      STK_FIREWALLED: "true"
+      STK_MIN_START_PLAYERS: "2"
+      STK_MOTD: ""
+      STK_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETUID
+      - SETGID
+    mem_limit: 512M

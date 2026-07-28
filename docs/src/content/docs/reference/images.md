@@ -32,6 +32,7 @@ Prefix: {{IMAGE_PREFIX}}
 | the-forest | The Forest dedicated (native Linux) |
 | sons-of-the-forest | Sons Of The Forest dedicated (Wine) |
 | sniper-elite-4 | Sniper Elite 4 dedicated (Wine) |
+| supertuxkart | SuperTuxKart dedicated (compiled from source) |
 | bf1942 | Battlefield 1942 dedicated (LinuxGSM files) |
 | bfv | Battlefield Vietnam dedicated (LinuxGSM files) |
 | cod | Call of Duty dedicated (LinuxGSM files) |

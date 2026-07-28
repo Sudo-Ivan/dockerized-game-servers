@@ -135,3 +135,9 @@ a.sl-link-button.minimal {
 	color: var(--sl-color-gray-3);
 	font-weight: 600;
 }
+
+/* Interactive tool widgets (docs/tools/*) need a wider reading column than
+   prose pages so the form and output panel do not squish. */
+body:has([data-tool]) {
+	--sl-content-width: min(78rem, 96vw);
+}
