@@ -11,9 +11,10 @@ services:
     restart: unless-stopped
     stop_grace_period: 2m
     init: true
-    # Uncomment for direct connect mode and set SERVER_PORT below.
+    # Uncomment for direct connect mode and set SERVER_PORT below (UDP 27015 and 27016).
     # ports:
     #   - "27015:27015/udp"
+    #   - "27016:27016/udp"
     volumes:
       - ./data:/opt/corekeeper
     environment:

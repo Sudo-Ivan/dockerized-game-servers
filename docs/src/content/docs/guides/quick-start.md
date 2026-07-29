@@ -57,7 +57,7 @@ For example, Minecraft Fabric with no mods needs only the EULA flag:
 
 ```bash
 docker run -d --name fabric --restart unless-stopped --init \
-  -p 25565:25565/tcp -p 25565:25565/udp \
+  -p 25565:25565/tcp \
   -v "$PWD/minecraft/fabric/data:/data" \
   -e EULA=true \
   {{IMAGE_PREFIX}}/minecraft-fabric:latest

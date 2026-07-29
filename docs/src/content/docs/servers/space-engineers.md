@@ -10,7 +10,7 @@ Downloads the dedicated server tool (Steam App **298740**) with SteamCMD and run
 
 :::note[Requirements]
 - Persist three separate paths, `dedicated`, `instances`, and `plugins` (see Volumes below)
-- Publish UDP **27016**
+- Publish UDP **27016** (game) and UDP **8766** (Steam)
 - First start runs SteamCMD plus Wine and .NET Framework 4.8 setup and can take several minutes, `start_period` in the healthcheck is 900 seconds for this reason
 - `mem_limit` is set to 8192M in compose
 :::
@@ -19,7 +19,9 @@ Downloads the dedicated server tool (Steam App **298740**) with SteamCMD and run
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 27016 (`SE_PORT`) | UDP | Game and Steam port, written as `SteamPort` and `ServerPort` in the instance config |
+| 27016 (`SE_PORT`) | UDP | Game port (`ServerPort` in the instance config) |
+| 8766 (`SE_STEAM_PORT`) | UDP | Steam networking (`SteamPort` in the instance config) |
+| 8080 | TCP | VRage Remote API, only if enabled in the instance config |
 
 ## Volumes
 
@@ -45,7 +47,8 @@ The Wine prefix (`WINEPREFIX=/home/spaceengineers/.wine`) is baked into the imag
 | `SE_SERVER_NAME` | `Space Engineers` | Name shown in the server list |
 | `SE_WORLD_NAME` | `DedicatedWorld` | Save folder name under the instance |
 | `SE_PUBLIC_IP` | empty | `<IP>` written into the instance config, auto-detected from the container's address when empty |
-| `SE_PORT` | `27016` | Game and Steam UDP port |
+| `SE_PORT` | `27016` | Game UDP port (`ServerPort`) |
+| `SE_STEAM_PORT` | `8766` | Steam UDP port (`SteamPort`) |
 | `SE_EXTRA_ARGS` | empty | Extra flags appended to the launch command |
 | `SE_PREMADE_CHECKPOINT` | `<dedicated>/Content/CustomWorlds/Earth Planet/PC` | Starting scenario checkpoint, used only when no save exists yet |
 
@@ -61,6 +64,8 @@ On every start, not only the first, the entrypoint also rewrites three elements 
 | --- | --- |
 | `<IP>` | `SE_PUBLIC_IP`, or the container's detected address when empty |
 | `<LoadWorld>` | The instance's save path if one already exists under `Saves/<SE_WORLD_NAME>/`, cleared otherwise |
+| `<SteamPort>` | `SE_STEAM_PORT` |
+| `<ServerPort>` | `SE_PORT` |
 | `<Plugins>` | Every `.dll` currently in the `plugins/` volume |
 
 Everything else in the file (`GameMode`, `InventorySize`, `TotalPCU`, `ViewDistance`, and so on) persists across restarts once written. The whole file is regenerated from scratch if it looks like an old `MyObjectBuilder_ConfigDedicated`-style file or is missing `PremadeCheckpointPath`.

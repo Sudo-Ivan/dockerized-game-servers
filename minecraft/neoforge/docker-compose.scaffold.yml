@@ -16,7 +16,6 @@ services:
       - /tmp:exec,size=1G,mode=1777
     ports:
       - "25565:25565/tcp"
-      - "25565:25565/udp"
     volumes:
       - ./data:/data
     env_file:

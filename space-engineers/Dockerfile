@@ -47,7 +47,7 @@ RUN su -s /bin/bash spaceengineers -c \
 
 WORKDIR ${SE_ROOT}
 
-EXPOSE 27016/udp
+EXPOSE 27016/udp 8766/udp
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=900s --retries=3 \
   CMD ["/healthcheck.sh"]

@@ -91,7 +91,7 @@ Minecraft Fabric:
 
 ```bash
 docker run -d --name fabric --restart unless-stopped --init \
-  -p 25565:25565/tcp -p 25565:25565/udp \
+  -p 25565:25565/tcp \
   -v "$PWD/minecraft/fabric/data:/data" \
   -e EULA=true \
   ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
@@ -101,7 +101,7 @@ Minecraft Vanilla:
 
 ```bash
 docker run -d --name vanilla --restart unless-stopped --init \
-  -p 25565:25565/tcp -p 25565:25565/udp \
+  -p 25565:25565/tcp \
   -v "$PWD/minecraft/vanilla/data:/data" \
   -e EULA=true \
   ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-vanilla:latest
@@ -111,7 +111,7 @@ Minecraft Forge:
 
 ```bash
 docker run -d --name forge --restart unless-stopped --init \
-  -p 25565:25565/tcp -p 25565:25565/udp \
+  -p 25565:25565/tcp \
   -v "$PWD/minecraft/forge/data:/data" \
   -e EULA=true \
   ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-forge:latest

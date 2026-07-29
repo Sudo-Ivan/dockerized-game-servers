@@ -16,7 +16,7 @@ Four flavors share minecraft-base (Temurin JRE on Alpine). Each image downloads 
 :::note[Requirements]
 - Set `EULA=true`
 - Persist `./data` for world and config
-- Publish TCP and UDP **25565** by default
+- Publish TCP **25565** (Java Edition). Bedrock uses UDP **19132**, not published by these images
 :::
 
 ## Default versions (regular compose)
@@ -119,7 +119,7 @@ Fabric:
 
 ```bash
 docker run -d --name fabric --restart unless-stopped --init \
-  -p 25565:25565/tcp -p 25565:25565/udp \
+  -p 25565:25565/tcp \
   -v "$PWD/minecraft/fabric/data:/data" \
   -e EULA=true \
   -e FABRIC_MINECRAFT_VERSION=26.2 \
@@ -132,7 +132,7 @@ Vanilla:
 
 ```bash
 docker run -d --name vanilla --restart unless-stopped --init \
-  -p 25565:25565/tcp -p 25565:25565/udp \
+  -p 25565:25565/tcp \
   -v "$PWD/minecraft/vanilla/data:/data" \
   -e EULA=true \
   -e VANILLA_VERSION=26.2 \
@@ -143,7 +143,7 @@ Forge:
 
 ```bash
 docker run -d --name forge --restart unless-stopped --init \
-  -p 25565:25565/tcp -p 25565:25565/udp \
+  -p 25565:25565/tcp \
   -v "$PWD/minecraft/forge/data:/data" \
   -e EULA=true \
   -e FORGE_MINECRAFT_VERSION=26.2 \
@@ -155,7 +155,7 @@ NeoForge:
 
 ```bash
 docker run -d --name neoforge --restart unless-stopped --init \
-  -p 25565:25565/tcp -p 25565:25565/udp \
+  -p 25565:25565/tcp \
   -v "$PWD/minecraft/neoforge/data:/data" \
   -e EULA=true \
   -e NEOFORGE_VERSION=26.2.0.35-beta \

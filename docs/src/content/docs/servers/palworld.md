@@ -9,7 +9,7 @@ Palworld installs the Linux dedicated server, Steam App **2394010**, into the da
 
 :::note[Requirements]
 - Persist `./data` for the installed server and `Pal/Saved/` world data
-- Publish UDP **8211**
+- Publish UDP **8211** (game). UDP **27015** helps Steam server browser listing
 - Allocate at least 8 GB RAM
 - No Steam account is required, SteamCMD installs App 2394010 anonymously
 :::
@@ -22,7 +22,10 @@ Palworld installs the Linux dedicated server, Steam App **2394010**, into the da
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 8211 | UDP | Game port (`PALWORLD_PORT`) |
+| 8211 | UDP | Game port (`PALWORLD_PORT`), required for players to join |
+| 27015 | UDP | Steam query, recommended for community browser visibility |
+| 25575 | TCP | RCON, only if enabled in `PalWorldSettings.ini` |
+| 8212 | TCP | REST API, only if enabled in settings |
 
 ## Environment
 

@@ -31,7 +31,7 @@ If the container restarted before you copied the ID, read the file directly:
 docker exec -it core-keeper cat /opt/corekeeper/server/GameID.txt
 ```
 
-For direct connect instead of SDR, set `SERVER_PORT` (and optionally `SERVER_IP`) and publish that UDP port. The shipped compose file ships its `ports:` block commented out for this reason.
+For direct connect instead of SDR, set `SERVER_PORT` (and optionally `SERVER_IP`) and publish UDP **27015** and **27016** on the host. The shipped compose file keeps its `ports:` block commented out for this reason.
 
 ## Environment
 

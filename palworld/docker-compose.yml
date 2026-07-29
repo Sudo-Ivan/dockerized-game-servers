@@ -13,6 +13,7 @@ services:
     init: true
     ports:
       - "8211:8211/udp"
+      - "27015:27015/udp"
     volumes:
       - ./data:/opt/palworld
     environment:

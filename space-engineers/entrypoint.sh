@@ -15,6 +15,7 @@ SE_SERVER_NAME="${SE_SERVER_NAME:-Space Engineers}"
 SE_WORLD_NAME="${SE_WORLD_NAME:-DedicatedWorld}"
 SE_PUBLIC_IP="${SE_PUBLIC_IP:-}"
 SE_PORT="${SE_PORT:-27016}"
+SE_STEAM_PORT="${SE_STEAM_PORT:-8766}"
 SE_PREMADE_CHECKPOINT="${SE_PREMADE_CHECKPOINT:-${SE_DEDICATED_DIR}/Content/CustomWorlds/Earth Planet/PC}"
 
 SERVER_EXE="${SE_DEDICATED_DIR}/DedicatedServer64/SpaceEngineersDedicated.exe"
@@ -92,7 +93,7 @@ write_default_config() {
   <LoadWorld />
   <PremadeCheckpointPath>$(wine_path "${SE_PREMADE_CHECKPOINT}")</PremadeCheckpointPath>
   <IP>0.0.0.0</IP>
-  <SteamPort>${SE_PORT}</SteamPort>
+  <SteamPort>${SE_STEAM_PORT}</SteamPort>
   <ServerPort>${SE_PORT}</ServerPort>
   <ServerName>${SE_SERVER_NAME}</ServerName>
   <WorldName>${SE_WORLD_NAME}</WorldName>
@@ -128,6 +129,9 @@ sync_instance_config() {
         sed_replace_xml '<LoadWorld>[^<]*</LoadWorld>' '<LoadWorld />' "${CONFIG_PATH}"
     fi
 
+    sed_replace_xml '<SteamPort>[0-9]+</SteamPort>' "<SteamPort>${SE_STEAM_PORT}</SteamPort>" "${CONFIG_PATH}"
+    sed_replace_xml '<ServerPort>[0-9]+</ServerPort>' "<ServerPort>${SE_PORT}</ServerPort>" "${CONFIG_PATH}"
+
     if [ -d "${SE_PLUGINS_DIR}" ]; then
         local plugin_count=0
         plugin_count="$(find "${SE_PLUGINS_DIR}" -maxdepth 1 -name '*.dll' 2>/dev/null | wc -l | tr -d ' ')"
@@ -158,7 +162,7 @@ sync_instance_config
 instance_wine_path="$(wine_path "${INSTANCE_DIR}")"
 
 cd "${SE_DEDICATED_DIR}/DedicatedServer64"
-echo "--- Starting Space Engineers instance ${SE_INSTANCE_NAME} on UDP ${SE_PORT} ---"
+echo "--- Starting Space Engineers instance ${SE_INSTANCE_NAME} on UDP ${SE_PORT} (Steam UDP ${SE_STEAM_PORT}) ---"
 # shellcheck disable=SC2086
 exec wine "${SERVER_EXE}" \
     -noconsole \

@@ -13,6 +13,7 @@ services:
     init: true
     ports:
       - "27016:27016/udp"
+      - "8766:8766/udp"
     volumes:
       - ./data/dedicated:/opt/spaceengineers/dedicated
       - ./data/instances:/opt/spaceengineers/instances
@@ -29,6 +30,7 @@ services:
       SE_WORLD_NAME: "DedicatedWorld"
       SE_PUBLIC_IP: ""
       SE_PORT: "27016"
+      SE_STEAM_PORT: "8766"
       SE_EXTRA_ARGS: ""
       WINEPREFIX: "/home/spaceengineers/.wine"
       WINEARCH: "win64"
