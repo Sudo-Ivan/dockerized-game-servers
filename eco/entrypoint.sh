@@ -43,6 +43,35 @@ relocate_install_if_needed() {
     done < <(find /home/eco/Steam/steamapps/common -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
 }
 
+ensure_steamcmd_runtime() {
+    if [ -f "${STEAM_DIR}/linux64/steamclient.so" ]; then
+        return 0
+    fi
+    echo "--- SteamCMD: ensuring steamclient.so is present ---"
+    export LD_LIBRARY_PATH="${STEAM_DIR}/linux32:${LD_LIBRARY_PATH:-}"
+    local steamcmd_bin
+    steamcmd_bin="$(steamcmd_resolve_bin)"
+    "${steamcmd_bin}" +quit || true
+}
+
+setup_steam_runtime_libs() {
+    ensure_steamcmd_runtime
+    mkdir -p /home/eco/.steam/sdk32 /home/eco/.steam/sdk64
+    mkdir -p "${ECO_DIR}/.steam/sdk32" "${ECO_DIR}/.steam/sdk64"
+    if [ -f "${STEAM_DIR}/linux32/steamclient.so" ]; then
+        cp -f "${STEAM_DIR}/linux32/steamclient.so" /home/eco/.steam/sdk32/
+        cp -f "${STEAM_DIR}/linux32/steamclient.so" "${ECO_DIR}/.steam/sdk32/"
+    fi
+    if [ -f "${STEAM_DIR}/linux64/steamclient.so" ]; then
+        cp -f "${STEAM_DIR}/linux64/steamclient.so" /home/eco/.steam/sdk64/
+        cp -f "${STEAM_DIR}/linux64/steamclient.so" "${ECO_DIR}/.steam/sdk64/"
+    fi
+    if [ ! -f /home/eco/.steam/sdk64/steamclient.so ]; then
+        echo "steamclient.so not found under ${STEAM_DIR} after SteamCMD setup." >&2
+        exit 1
+    fi
+}
+
 install_server() {
     echo "--- Installing Eco dedicated server (App ${ECO_APP_ID}) ---"
     mkdir -p "${ECO_DIR}"
@@ -59,6 +88,7 @@ install_server() {
     fi
 
     relocate_install_if_needed
+    setup_steam_runtime_libs
 
     if ! server_present; then
         echo "Eco server install failed: ${SERVER_BIN} not found." >&2
@@ -70,6 +100,8 @@ install_server() {
 
 if ! server_present || [ "${ECO_FORCE_UPDATE}" = "true" ]; then
     install_server
+else
+    setup_steam_runtime_libs
 fi
 
 cd "${ECO_DIR}"
@@ -90,4 +122,5 @@ if [ -n "${ECO_EXTRA_ARGS}" ]; then
     extra=( ${ECO_EXTRA_ARGS} )
     args+=("${extra[@]}")
 fi
+export LD_LIBRARY_PATH="${STEAM_DIR}/linux64:${ECO_DIR}/.steam/sdk64:/home/eco/.steam/sdk64:${LD_LIBRARY_PATH:-}"
 exec "${SERVER_BIN}" "${args[@]}"

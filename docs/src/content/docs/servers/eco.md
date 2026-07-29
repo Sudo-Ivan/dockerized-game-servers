@@ -47,6 +47,8 @@ See [Quick start](/guides/quick-start/) for the shared `STEAM_USERNAME`/`STEAM_P
 
 `./data` mounts to `/opt/eco`. It holds the installed `EcoServer` binary and everything Eco writes at runtime, including whatever configuration and save folders the Eco server itself creates. The entrypoint does not template or manage any Eco config file.
 
+On every start the entrypoint copies `steamclient.so` from the bundled SteamCMD tree into `/home/eco/.steam/sdk64` and `${ECO_DIR}/.steam/sdk64`. Eco loads Steamworks even in offline mode, so this step is required for the server to boot.
+
 ## Compose
 
 ```bash
