@@ -21,7 +21,7 @@ COPY --chmod=755 healthcheck.sh /healthcheck.sh
 
 WORKDIR ${ECO_DIR}
 
-EXPOSE 3000/udp 3001/udp
+EXPOSE 3000/udp 3000/tcp 3001/tcp
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=900s --retries=3 \
   CMD ["/healthcheck.sh"]

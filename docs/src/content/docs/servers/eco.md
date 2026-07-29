@@ -24,8 +24,8 @@ Eco installs Steam App **739590** into the data volume on first start. Since Eco
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 3000 | UDP | Main game/sync port |
-| 3001 | UDP | Secondary Eco server port |
+| 3000 | UDP (and sometimes TCP) | Game traffic, use this port in Direct Connect |
+| 3001 | TCP | Web admin / server browser helpers, not the game join port |
 
 ## Environment
 
@@ -48,6 +48,8 @@ See [Quick start](/guides/quick-start/) for the shared `STEAM_USERNAME`/`STEAM_P
 `./data` mounts to `/opt/eco`. It holds the installed `EcoServer` binary and everything Eco writes at runtime, including whatever configuration and save folders the Eco server itself creates. The entrypoint does not template or manage any Eco config file.
 
 On every start the entrypoint copies `steamclient.so` from the bundled SteamCMD tree into `/home/eco/.steam/sdk64` and `${ECO_DIR}/.steam/sdk64`. Eco loads Steamworks even in offline mode, so this step is required for the server to boot.
+
+When mapping non-default host ports (for example `3060:3000`), use the **host** port in Direct Connect (`192.168.x.x:3060`). Publish **UDP** for the game port and **TCP** for the web port (`3001` inside the container). Mapping `3001` as UDP only is a common cause of connection timeouts.
 
 ## Compose
 

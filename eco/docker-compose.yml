@@ -13,7 +13,8 @@ services:
     init: true
     ports:
       - "3000:3000/udp"
-      - "3001:3001/udp"
+      - "3000:3000/tcp"
+      - "3001:3001/tcp"
     volumes:
       - ./data:/opt/eco
     environment:
