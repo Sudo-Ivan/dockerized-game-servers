@@ -3,15 +3,13 @@ title: Barotrauma
 description: Barotrauma dedicated server via SteamCMD, App 1026340.
 ---
 
-Compose path: barotrauma. Image: barotrauma.
+On first start the container downloads the Barotrauma dedicated server (Steam app 1026340) into your data folder, then launches the native Linux DedicatedServer binary.
 
-Barotrauma dedicated server built on the shared [steam-base](/reference/images/) image. SteamCMD installs App **1026340** into the data volume on first start, then launches the native Linux `DedicatedServer` binary.
-
-:::note[Requirements]
-- Publish UDP **27015** and UDP **27016**
-- Persist `./data` at `/opt/barotrauma`
-- Allocate at least 4 GB RAM
-- No Steam account is required, SteamCMD installs App 1026340 anonymously
+:::note[Before you start]
+- Open UDP ports 27015 and 27016
+- Keep a data folder for the installed server, saves, and config
+- Give the container at least 4 GB of RAM
+- No Steam account is needed. The server installs anonymously through SteamCMD
 :::
 
 ## Ports
@@ -23,28 +21,28 @@ Barotrauma dedicated server built on the shared [steam-base](/reference/images/)
 
 Barotrauma uses UDP only for gameplay. Do not publish TCP on these ports.
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `STEAM_USERNAME` | `anonymous` | Steam login for the SteamCMD install step |
-| `STEAM_PASSWORD` | (empty) | Steam password |
-| `STEAM_GUARD_CODE` | (empty) | Steam Guard code |
-| `BAROTRAUMA_APP_ID` | `1026340` | Steam app id to install |
-| `BAROTRAUMA_FORCE_UPDATE` | `false` | Re-run SteamCMD for App 1026340 on next start |
-| `BAROTRAUMA_EXTRA_ARGS` | (empty) | Extra CLI flags appended when launching `DedicatedServer` |
+| STEAM_USERNAME | anonymous | Steam login used during the install step |
+| STEAM_PASSWORD | (empty) | Steam password |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code |
+| BAROTRAUMA_APP_ID | 1026340 | Steam app ID to install |
+| BAROTRAUMA_FORCE_UPDATE | false | Re-download the server from Steam on next start |
+| BAROTRAUMA_EXTRA_ARGS | (empty) | Extra command-line flags added to the server launch |
 
-See [Quick start](/guides/quick-start/) for the shared Steam login pattern.
+See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
 
-## Data volume
+## Data folder
 
-`./data` mounts to `/opt/barotrauma`. It holds the installed `DedicatedServer` binary and server config created on first run.
+Your data folder mounts to /opt/barotrauma inside the container. It holds the installed DedicatedServer binary and server config created on first run.
 
 | Path | Purpose |
 | --- | --- |
-| `DedicatedServer` | Server binary, installed by SteamCMD |
-| `serversettings.xml` | Main server settings, edit on the host after first start |
-| `Data/` | Saves, logs, and mod content |
+| DedicatedServer | Server binary, installed by SteamCMD |
+| serversettings.xml | Main server settings. Edit on the host after first start |
+| Data/ | Saves, logs, and mod content |
 
 ## Compose
 
@@ -61,6 +59,10 @@ docker run -d --name barotrauma --restart unless-stopped --init \
   {{IMAGE_PREFIX}}/barotrauma:latest
 ```
 
-## Updating
+## Updates
 
-Set `BAROTRAUMA_FORCE_UPDATE=true` and recreate the container, or run `./tools/gs update barotrauma` from [Ops](/guides/ops/). The healthcheck is a `process` probe for `DedicatedServer` with a 600 second start period.
+Set BAROTRAUMA_FORCE_UPDATE to true and recreate the container, or use the update command described in [Ops](/guides/ops/).
+
+## Health check
+
+The container reports healthy while the Barotrauma server is running. Startup gets a 600 second grace period.

@@ -4,65 +4,61 @@ description: SuperTuxKart dedicated server, compiled from source with SERVER_ONL
 iconFit: contain
 ---
 
-Compose path: `supertuxkart`. Image: `supertuxkart`.
+Unlike most servers in this repository, SuperTuxKart is compiled from source at image build time. There is no official server-only Linux release, so the image builds a headless binary with no graphics, sound, or GPU dependency. Game assets are bundled in the source tarball.
 
-Unlike every other server in this repository, SuperTuxKart is not downloaded as a prebuilt binary. There is no official server-only Linux release, so the image compiles [`stk-code`](https://github.com/supertuxkart/stk-code) from the official source tarball with `-DSERVER_ONLY=ON`, which produces a GUI-less, sound-less binary with no OpenGL, X11, or GPU dependency at all, safe for a plain headless container. Assets are bundled in the source tarball, no separate SVN checkout is needed.
-
-:::note[Requirements]
-- Persist `supertuxkart/data` at `/opt/supertuxkart/data`
-- Publish UDP **2759**
-- LAN mode (the default) needs no account at all. WAN mode (public server list) needs a free [STK Online](https://online.supertuxkart.net/register.php) account, set `STK_ONLINE_USERNAME` and `STK_ONLINE_PASSWORD`
-- Lightest server in this repository by far, official guidance is roughly 60 MB RAM and well under one CPU core for an 8-player race, `mem_limit` is set to 512M
+:::note[Before you start]
+- Keep a data folder for server config and player data
+- Open UDP port 2759
+- LAN mode (the default) needs no account. WAN mode (public server list) needs a free [STK Online](https://online.supertuxkart.net/register.php) account
+- Very light on resources. Official guidance is roughly 60 MB RAM for an 8-player race. The compose file sets a 512 MB memory limit
 :::
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 2759 (`STK_PORT`) | UDP | Game traffic |
+| 2759 | UDP | Game traffic (STK_PORT) |
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `STK_ONLINE_USERNAME` | (empty) | STK Online account login, required for `STK_MODE=wan` |
-| `STK_ONLINE_PASSWORD` | (empty) | STK Online account password, only used once to create the saved session |
-| `STK_MODE` | `lan` | `lan` or `wan`. `wan` lists the server publicly and needs a saved STK Online session |
-| `STK_SERVER_NAME` | `SuperTuxKart Server` | Passed as the name to `--lan-server` / `--wan-server`, overrides `server-name` in `server_config.xml` on every start |
-| `STK_PORT` | `2759` | `server-port` |
-| `STK_MAX_PLAYERS` | `8` | `server-max-players`, values above 8 can degrade performance per upstream guidance |
-| `STK_GAME_MODE` | `3` | `server-mode`: `0` GP race, `1` GP time trial, `3` normal race, `4` time trial, `6` soccer, `7` free-for-all, `8` capture the flag |
-| `STK_DIFFICULTY` | `0` | `server-difficulty`: `0` beginner, `1` intermediate, `2` expert, `3` supertux |
-| `STK_PASSWORD` | (empty) | `private-server-password`, join password, empty is a public server |
-| `STK_RANKED` | `false` | `ranked`, submitting rankings needs prior permission from the stk-addons server |
-| `STK_OWNER_LESS` | `false` | `owner-less`, races autostart with no server owner controlling the lobby |
-| `STK_TRACK_VOTING` | `true` | `track-voting`, disable to have the server pick tracks randomly |
-| `STK_FIREWALLED` | `true` | `firewalled-server`, enables STUN. Set `false` to save resources if the published port is already directly reachable |
-| `STK_MIN_START_PLAYERS` | `2` | `min-start-game-players` |
-| `STK_MOTD` | (empty) | `motd`, message of the day shown in the lobby |
-| `STK_EXTRA_ARGS` | (empty) | Extra flags appended to the launch command |
+| STK_ONLINE_USERNAME | (empty) | STK Online account login, required for STK_MODE=wan |
+| STK_ONLINE_PASSWORD | (empty) | STK Online account password, used once to create the saved session |
+| STK_MODE | lan | lan or wan. wan lists the server publicly and needs a saved STK Online session |
+| STK_SERVER_NAME | SuperTuxKart Server | Server name, overrides server-name in server_config.xml on every start |
+| STK_PORT | 2759 | Game UDP port |
+| STK_MAX_PLAYERS | 8 | Player cap. Values above 8 can hurt performance |
+| STK_GAME_MODE | 3 | 0 GP race, 1 GP time trial, 3 normal race, 4 time trial, 6 soccer, 7 free-for-all, 8 capture the flag |
+| STK_DIFFICULTY | 0 | 0 beginner, 1 intermediate, 2 expert, 3 supertux |
+| STK_PASSWORD | (empty) | Join password, empty for a public server |
+| STK_RANKED | false | Submitting rankings needs prior permission from the stk-addons server |
+| STK_OWNER_LESS | false | Races autostart with no server owner controlling the lobby |
+| STK_TRACK_VOTING | true | Disable to have the server pick tracks randomly |
+| STK_FIREWALLED | true | Enables STUN. Set false if the published port is already directly reachable |
+| STK_MIN_START_PLAYERS | 2 | Minimum players needed to start a race |
+| STK_MOTD | (empty) | Message of the day shown in the lobby |
+| STK_EXTRA_ARGS | (empty) | Extra flags appended to the launch command |
 
-## Data volume
+## Data folder
 
-`supertuxkart/data` mounts at `/opt/supertuxkart/data`, separate from the compiled program under `/opt/supertuxkart/bin` and `/opt/supertuxkart/share` baked into the image.
+Your data folder mounts at /opt/supertuxkart/data, separate from the compiled program baked into the image.
 
 | Path | Purpose |
 | --- | --- |
-| `server_config.xml` | Written once from the environment variables above then left alone, STK itself rewrites it with the full schema (comments included) after the first start. Edit it directly for settings not exposed as env vars |
-| `home/.config/supertuxkart/config-0.10/players.xml` | STK Online session token, created by `--init-user` when `STK_ONLINE_USERNAME` and `STK_ONLINE_PASSWORD` are both set |
-| `home/.config/supertuxkart/config-0.10/server_config.log` | Server log |
+| server_config.xml | Written once from the settings above then left alone. STK rewrites it with the full schema after first start. Edit directly for settings not exposed above |
+| home/.config/supertuxkart/config-0.10/players.xml | STK Online session token, created when STK_ONLINE_USERNAME and STK_ONLINE_PASSWORD are both set |
+| home/.config/supertuxkart/config-0.10/server_config.log | Server log |
 
-The entrypoint exports `HOME=/opt/supertuxkart/data/home` so all of STK's own per-user state lands inside the data volume instead of the container's throwaway home directory.
+The container sets HOME so all player data lands inside the data folder. File ownership is fixed automatically.
 
-The container starts as root, chowns `/opt/supertuxkart/data` to the `supertuxkart` user, then drops privileges before launching the game, so no manual chown of the host directory is needed.
+## Updates
 
-## Updating the game version
+The game version is fixed at image build time. To upgrade, rebuild the image with a newer STK_VERSION and matching source checksum in the Dockerfile. There is no runtime updater.
 
-The compiled version is fixed at image build time by `STK_VERSION` (build arg, default `1.5`) and `STK_SRC_SHA256` in `supertuxkart/Dockerfile`. Bump both to a newer release tag and its published source tarball checksum, then rebuild the image, there is no runtime updater.
+## Health check
 
-## Healthcheck
-
-Process check (`pgrep -f /opt/supertuxkart/bin/supertuxkart`), 60 second start period.
+The container reports healthy while the SuperTuxKart server process is running. Startup gets a 60 second grace period.
 
 ## Compose
 

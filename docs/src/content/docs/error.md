@@ -7,7 +7,7 @@ lastUpdated: false
 pagefind: false
 hero:
   title: Something went wrong
-  tagline: The docs site hit an unexpected error while loading this view.
+  tagline: The docs site hit an unexpected error while loading this page.
   actions:
     - text: Home
       link: /
@@ -17,4 +17,4 @@ hero:
       variant: minimal
 ---
 
-If this keeps happening after a deploy, hard-refresh once so the service worker can pick up the new build.
+This is usually temporary. Go home or try the quick start guide. If the problem continues right after a site update, hard-refresh once so your browser picks up the new build and service worker.

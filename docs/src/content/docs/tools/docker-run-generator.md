@@ -3,10 +3,10 @@ title: Docker Run / Compose Generator
 description: Build a docker run command or docker-compose.yml snippet for any game server image.
 ---
 
-Build a `docker run` command or a `docker-compose.yml` service from an image name, ports, volumes, and environment variables. Works with any image, not only the ones in this repository.
+Fill in an image name, ports, volumes, and environment variables to get a docker run command or a docker-compose.yml service block. This works with any image, not only servers from this repository.
 
 :::note[Client-side only]
-Nothing here is uploaded. The output is generated with JavaScript in your browser.
+Everything runs in your browser. Nothing is sent to a server.
 :::
 
 <div id="drun-tool" class="drun-tool" data-tool>
@@ -583,6 +583,6 @@ Nothing here is uploaded. The output is generated with JavaScript in your browse
 
 ## Notes
 
-- The generated `docker run` command escapes values for a POSIX shell. Review it before running with untrusted input.
-- Ports set to `tcp+udp` expand into two `-p` flags or two `ports:` entries.
-- This tool has no knowledge of a specific image's required ports or volumes. Check the [server list](../reference/servers/) for a link to each server's own guide.
+- The docker run output escapes values for a POSIX shell. Review the command before running it if any field came from an untrusted source.
+- Ports set to tcp+udp become two -p flags in docker run, or two ports entries in compose.
+- This tool does not know which ports or volumes a given image needs. Check the [server list](../reference/servers/) and each game's guide for the right values.

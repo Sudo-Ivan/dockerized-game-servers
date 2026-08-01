@@ -3,10 +3,10 @@ title: Minecraft server.properties Generator
 description: Build a server.properties for the Minecraft dedicated server images in your browser.
 ---
 
-Fill in the fields below to build a `server.properties` for the [Minecraft images](../servers/minecraft/) (Fabric, Vanilla, Forge, NeoForge). The output updates as you type.
+Use the form below to build a server.properties file for the [Minecraft images](../servers/minecraft/) (Fabric, Vanilla, Forge, NeoForge). The preview updates as you type.
 
 :::note[Client-side only]
-Nothing here is uploaded. The file is generated with JavaScript in your browser.
+Everything runs in your browser. Nothing is sent to a server.
 :::
 
 <div id="mcprops-tool" class="mcprops-tool" data-tool>
@@ -378,8 +378,8 @@ Nothing here is uploaded. The file is generated with JavaScript in your browser.
 
 ## Using the generated file
 
-1. Copy or download the output above.
-2. Save it as `server.properties` under the flavor's data volume, for example `minecraft/vanilla/data/server.properties`.
-3. Restart the container. Most `server.properties` changes only apply on restart.
+1. Copy or download the file from the preview panel.
+2. Save it under your flavor's data folder, for example minecraft/vanilla/data/server.properties.
+3. Restart the container. Most server.properties changes only apply after a restart.
 
-Set `EULA=true` when starting the container. See the [Minecraft guide](../servers/minecraft/) for volumes, mods, and datapacks.
+Set EULA=true when starting the container. See the [Minecraft guide](../servers/minecraft/) for volumes, mods, and datapacks.

@@ -3,18 +3,22 @@ title: CI
 description: Checks, image builds, and Minecraft versioned builds.
 ---
 
+This page describes the automated checks and image builds that run on GitHub. You do not need any of this to run a server from published images. It is here if you fork the repo, contribute changes, or wonder when new images appear on GitHub Container Registry.
+
 ## Workflows
 
-- ci on push and pull request when CI-relevant paths change (see `.github/workflows/ci.yml`), plus manual runs. It runs repository checks (`ci/ci-check.sh`), Trivy Dockerfile config scans (MEDIUM, HIGH, and CRITICAL), and on pull requests with Docker-related diffs local Docker builds for shared base images (no registry push).
-- build runs weekly (Sunday 06:00 UTC), on Dockerfile, base, or ci path changes to master or main, and manually. The job matrix comes from `ci/image-matrix.sh` (`ci/github-matrix.py`). It builds and pushes GHCR images through the reusable `docker-image` workflow, then Trivy-scans them (CRITICAL fails the job).
-- build-minecraft is manual only. Pick Fabric, Vanilla, Forge, or NeoForge plus a Minecraft version. Java is resolved from Mojang's javaVersion. Temurin Alpine JRE is pinned from Adoptium. Fabric loader and installer, and Forge promos, auto-fill when left blank. NeoForge resolves from Maven when omitted. Publishes minecraft-base:javaN and minecraft-flavor:tag.
+**ci** runs on pushes and pull requests when CI-related files change (see `.github/workflows/ci.yml`). You can also start it manually. It runs repository checks (`ci/ci-check.sh`), scans Dockerfiles with Trivy for MEDIUM, HIGH, and CRITICAL issues, and on pull requests with Docker-related diffs it builds shared base images locally to verify they compile. Those verify builds are not pushed to the registry.
+
+**build** runs weekly (Sunday 06:00 UTC), when Dockerfiles, base images, or CI scripts change on master or main, and on manual trigger. The job list comes from `ci/image-matrix.sh` (`ci/github-matrix.py`). It builds and pushes images to GHCR through the reusable `docker-image` workflow, then scans them with Trivy. A CRITICAL finding fails the job.
+
+**build-minecraft** is manual only. Pick Fabric, Vanilla, Forge, or NeoForge and a Minecraft version. Java is resolved from Mojang's javaVersion. Temurin Alpine JRE is pinned from Adoptium. Fabric loader and installer, and Forge promos, auto-fill when left blank. NeoForge resolves from Maven when omitted. The workflow publishes minecraft-base:javaN and minecraft-flavor:tag.
 
 ## What ci-check covers
 
 - Image matrix path checks (`ci/image-matrix.sh`)
-- Compose validation from `ci/server-catalog.sh` (no hardcoded compose list)
+- Compose validation from the server catalog (`ci/server-catalog.sh`), so the list of servers stays in one place
 - Reject fixed GHCR owners in first-party compose files
-- Shell syntax over catalog-discovered roots
+- Shell syntax over catalog-discovered server roots
 - ShellCheck (`ci/shellcheck.sh`)
 - Healthcheck presence and offline probes (`ci/test-healthchecks.sh`)
 - Host tools catalog and tar round-trip (`ci/test-tools.sh`)
@@ -33,6 +37,8 @@ __IMAGE_PREFIX__/minecraft-fabric:26.2
 
 ## Local resolve preview
 
+Preview what a Minecraft build would resolve to before triggering the workflow:
+
 ```bash
 ./ci/resolve-minecraft-build.sh --flavor fabric --minecraft-version 26.2
 ./ci/resolve-minecraft-build.sh --flavor vanilla --minecraft-version 1.20.4
@@ -41,7 +47,7 @@ __IMAGE_PREFIX__/minecraft-fabric:26.2
 
 ## Security scanning
 
-Trivy is installed from a pinned GitHub release tarball with SHA-256 verification (ci/install-trivy.sh). This repo does not use aquasecurity/trivy-action after the March 2026 supply-chain compromise. Shared scan settings live in trivy.yaml.
+Trivy is installed from a pinned GitHub release tarball with SHA-256 verification (`ci/install-trivy.sh`). This repo does not use aquasecurity/trivy-action after the March 2026 supply-chain compromise. Shared scan settings live in `trivy.yaml`.
 
 ## Workflow security
 

@@ -3,63 +3,61 @@ title: Garry's Mod
 description: Garry's Mod dedicated server via SteamCMD, App 4020.
 ---
 
-Compose path: gmod. Image: gmod.
+On first start the container downloads the Garry's Mod dedicated server through Steam. After that it launches the game with VAC enabled and the usual Source dedicated server options.
 
-Garry's Mod dedicated server built on the shared [steam-base](/reference/images/) image. SteamCMD installs App **4020** and the entrypoint launches `srcds_run` with `-game garrysmod`, VAC (`-secure`) always enabled.
-
-:::note[Requirements]
-- Publish TCP **27015**, UDP **27015**, and UDP **27005**
-- Persist `./data` at `/opt/gmod`
-- Allocate at least 4 GB RAM
-- Anonymous SteamCMD login usually works for App 4020, set `STEAM_USERNAME` and `STEAM_PASSWORD` for an account that owns Garry's Mod if a plain anonymous install fails, optional `STEAM_GUARD_CODE`
-- Set `GMOD_GSLT` for a public server listing
+:::note[Before you start]
+- Open TCP port 27015, UDP port 27015, and UDP port 27005
+- Keep a data folder mounted at /opt/gmod inside the container
+- Give the container at least 4 GB of RAM
+- Anonymous Steam login usually works. If the install fails, set STEAM_USERNAME and STEAM_PASSWORD for an account that owns Garry's Mod. Add STEAM_GUARD_CODE if Steam asks for it
+- Set GMOD_GSLT if you want the server to show up in the public server browser
 :::
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 27015 | TCP | Same game port, doubles as the RCON channel once `rcon_password` is set in `server.cfg` or via `GMOD_EXTRA_ARGS` |
-| 27015 | UDP | Main game port (`GMOD_PORT`), also passed as `+hostport` |
-| 27005 | UDP | Client port (`GMOD_CLIENT_PORT`), passed as `+clientport` |
+| 27015 | TCP | Game port. Also used for remote console once you set rcon_password in server.cfg or through GMOD_EXTRA_ARGS |
+| 27015 | UDP | Main game port (GMOD_PORT) |
+| 27005 | UDP | Client port (GMOD_CLIENT_PORT) |
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `STEAM_USERNAME` | `anonymous` | Steam login for the SteamCMD install step |
-| `STEAM_PASSWORD` | (empty) | Password for `STEAM_USERNAME`, required for non-anonymous login |
-| `STEAM_GUARD_CODE` | (empty) | Steam Guard code, only needed if Steam challenges the login |
-| `GMOD_APP_ID` | `4020` | SteamCMD app id for the dedicated server depot |
-| `GMOD_FORCE_UPDATE` | `false` | Set `true` to force `app_update 4020 validate` on next start |
-| `STEAMCMD_WINDOWS_WORKAROUND` | `full` | SteamCMD depot fetch mode (`full`, `prime`, or `off`), `full` pulls a Windows depot pass before the Linux depot |
-| `GMOD_PORT` | `27015` | Game port, passed as `+port` and `+hostport` |
-| `GMOD_CLIENT_PORT` | `27005` | Client port, passed as `+clientport` |
-| `GMOD_MAXPLAYERS` | `16` | Player cap, passed as `+maxplayers` |
-| `GMOD_STARTMAP` | `gm_flatgrass` | Map loaded on startup, passed as `+map` |
-| `GMOD_TICKRATE` | `66` | Server tickrate, passed as `-tickrate` |
-| `GMOD_GSLT` | (empty) | Game Server Login Token, passed as `+sv_setsteamaccount` when set |
-| `GMOD_EXTRA_ARGS` | (empty) | Extra `srcds_run` arguments, space separated, appended after the built-in flags |
+| STEAM_USERNAME | anonymous | Steam account used to download server files |
+| STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
+| GMOD_APP_ID | 4020 | Steam app id for the dedicated server download |
+| GMOD_FORCE_UPDATE | false | Re-download and validate server files on next start |
+| STEAMCMD_WINDOWS_WORKAROUND | full | How SteamCMD fetches depots. full downloads a Windows pass first, then Linux. prime and off are lighter options |
+| GMOD_PORT | 27015 | Game port |
+| GMOD_CLIENT_PORT | 27005 | Client port |
+| GMOD_MAXPLAYERS | 16 | Maximum players |
+| GMOD_STARTMAP | gm_flatgrass | Map loaded at startup |
+| GMOD_TICKRATE | 66 | Server tickrate |
+| GMOD_GSLT | (empty) | Game Server Login Token for public listing |
+| GMOD_EXTRA_ARGS | (empty) | Extra launch flags appended after the built-in ones |
 
-The entrypoint always passes `-game garrysmod`, `-console`, `-usercon`, `-secure`, and `-strictportbind`.
+The server always starts with the Garry's Mod game mode, console access, remote console support, VAC, and strict port binding.
 
 ## GSLT
 
-1. Sign in at [Steam game server account management](https://steamcommunity.com/dev/managegameservers) and create a token for game id **4000**.
-2. Set `GMOD_GSLT` to that token in compose, a `.env` file, or `-e` on `docker run`.
+1. Sign in at [Steam game server account management](https://steamcommunity.com/dev/managegameservers) and create a token for game id 4000.
+2. Set GMOD_GSLT to that token in compose, a .env file, or with -e on docker run.
 
-## Data volume
+## Data folder
 
-`./data` mounts to `/opt/gmod`.
+Your data folder mounts to /opt/gmod inside the container.
 
 | Path | Purpose |
 | --- | --- |
-| `srcds_run` | Server launcher, installed by SteamCMD |
-| `steam_appid.txt` | Rewritten on every start with `4000`, the Steamworks app id Garry's Mod needs at runtime |
-| `garrysmod/cfg/server.cfg` | Main server config, create it yourself |
-| `garrysmod/maps/` | Custom maps |
-| `garrysmod/addons/` | Workshop, Lua addons, SourceMod, and Metamod |
-| `bin/` | 32-bit engine libraries referenced by `LD_LIBRARY_PATH` at startup |
+| srcds_run | Server launcher installed by Steam |
+| steam_appid.txt | Written on every start with app id 4000 for Steamworks |
+| garrysmod/cfg/server.cfg | Main server config. Create this yourself |
+| garrysmod/maps/ | Custom maps |
+| garrysmod/addons/ | Workshop content, Lua addons, SourceMod, and Metamod |
+| bin/ | 32-bit engine libraries the server needs at startup |
 
 ## Compose
 
@@ -77,6 +75,10 @@ docker run -d --name gmod --restart unless-stopped --init \
   {{IMAGE_PREFIX}}/gmod:latest
 ```
 
-## Updating
+## Updates
 
-Set `GMOD_FORCE_UPDATE=true` and recreate the container, or run `./tools/gs update gmod` from [Ops](/guides/ops/). The healthcheck is a `process` probe (`pgrep -f srcds_linux`) with a 900 second start period. First install downloads twice because `STEAMCMD_WINDOWS_WORKAROUND` defaults to `full`.
+Set GMOD_FORCE_UPDATE to true and recreate the container, or use the update workflow in [Ops](/guides/ops/).
+
+## Health check
+
+The container reports healthy while the game server process is running. The first install can take a while, so startup gets a 900 second grace period. With STEAMCMD_WINDOWS_WORKAROUND at its default of full, the first download runs twice (Windows depot pass, then Linux).

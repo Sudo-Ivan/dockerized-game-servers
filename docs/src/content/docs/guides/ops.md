@@ -3,7 +3,7 @@ title: Ops
 description: Backup, restore, update, and healthchecks for game servers.
 ---
 
-Host tools live in tools/gs. They read the server list from ci/server-catalog.sh. Compose image names use IMAGE_OWNER from ci/repo-meta.sh.
+The gs command in tools/ helps with backups, restores, and game updates on the host. It knows which servers this repo supports and which compose file to use for each one. Compose image names use IMAGE_OWNER from ci/repo-meta.sh.
 
 ## List servers
 
@@ -30,7 +30,7 @@ Archives go to backups/<game>/<timestamp>.tar.gz by default. Pass a path as the 
 
 ## Update
 
-Recreates the container once with the catalog update flags set to true (compose defaults stay false):
+Recreates the container once with update flags set to true (compose defaults stay false):
 
 ```bash
 ./tools/gs update factorio
@@ -48,7 +48,7 @@ docker compose -f core-keeper/docker-compose.yml ps
 docker inspect --format '{{.State.Health.Status}}' core-keeper
 ```
 
-Check types from the catalog:
+Check types used by different games:
 
 - tcp: Minecraft listen port (default 25565)
 - process: dedicated server process is running

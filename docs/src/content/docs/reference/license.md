@@ -4,7 +4,9 @@ description: 0BSD license for Dockerized Game Servers.
 author: Sudo-Ivan
 ---
 
-This project is licensed under 0BSD.
+Dockerized Game Servers is released under the 0BSD license. You can use, copy, change, and share this software for any purpose, including commercial hosting, without asking permission. There is no warranty. The author is not liable for damages.
+
+Full license text:
 
 ```text
 Copyright (C) 2026 by Sudo-Ivan

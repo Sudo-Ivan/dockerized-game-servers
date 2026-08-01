@@ -3,76 +3,78 @@ title: Counter-Strike Source
 description: Counter-Strike Source dedicated server via SteamCMD, App 232330.
 ---
 
-Compose path: cs-source. Image: cs-source.
+On first start the container downloads the Counter-Strike: Source dedicated server through Steam, then launches it as a native Linux server with VAC always enabled.
 
-Counter-Strike: Source dedicated server built on the shared [steam-base](/reference/images/) image. SteamCMD installs App **232330** (the Linux dedicated server depot) and the entrypoint launches `srcds_run` directly with VAC (`-secure`) always enabled.
-
-:::note[Requirements]
-- Publish TCP **27015**, UDP **27015**, and UDP **27005**
-- Persist `./data` at `/opt/cs-source`
-- Anonymous SteamCMD login usually works for App 232330, set `STEAM_USERNAME` and `STEAM_PASSWORD` for an account that owns Counter-Strike: Source if a plain anonymous install fails, optional `STEAM_GUARD_CODE`
-- Set `CSS_GSLT` for a public server listing
+:::note[Before you start]
+- Open TCP port 27015, UDP port 27015, and UDP port 27005
+- Keep a data folder mounted at /opt/cs-source inside the container
+- Anonymous Steam login usually works. If the install fails, set STEAM_USERNAME and STEAM_PASSWORD for an account that owns Counter-Strike: Source. Add STEAM_GUARD_CODE if Steam asks for it
+- Set CSS_GSLT if you want the server to show up in the public server browser
 :::
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 27015 | TCP | Same game port, doubles as the RCON channel once `rcon_password` is set in `server.cfg` or via `CSS_EXTRA_ARGS` |
-| 27015 | UDP | Main game port (`CSS_PORT`), also passed as `+hostport` |
-| 27005 | UDP | Client port (`CSS_CLIENT_PORT`), passed as `+clientport` |
+| 27015 | TCP | Game port. Also used for remote console once you set rcon_password in server.cfg or through CSS_EXTRA_ARGS |
+| 27015 | UDP | Main game port (CSS_PORT) |
+| 27005 | UDP | Client port (CSS_CLIENT_PORT) |
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `STEAM_USERNAME` | `anonymous` | Steam login for the SteamCMD install step |
-| `STEAM_PASSWORD` | (empty) | Password for `STEAM_USERNAME`, required for non-anonymous login |
-| `STEAM_GUARD_CODE` | (empty) | Steam Guard code, only needed if Steam challenges the login |
-| `CSS_APP_ID` | `232330` | SteamCMD app id for the dedicated server depot |
-| `CSS_FORCE_UPDATE` | `false` | Set `true` to force `app_update 232330 validate` on next start |
-| `STEAMCMD_WINDOWS_WORKAROUND` | `full` | SteamCMD depot fetch mode (`full`, `prime`, or `off`), `full` pulls a Windows depot pass before the Linux depot |
-| `CSS_PORT` | `27015` | Game port, passed as `+port` and `+hostport` |
-| `CSS_CLIENT_PORT` | `27005` | Client port, passed as `+clientport` |
-| `CSS_MAXPLAYERS` | `16` | Player cap, passed as `+maxplayers` |
-| `CSS_STARTMAP` | `de_dust2` | Map loaded on startup, passed as `+map` |
-| `CSS_TICKRATE` | `66` | Server tickrate, passed as `-tickrate` |
-| `CSS_GSLT` | (empty) | Game Server Login Token, passed as `+sv_setsteamaccount` when set, needed for a public listing |
-| `CSS_EXTRA_ARGS` | (empty) | Extra `srcds_run` arguments, space separated, appended after the built-in flags |
+| STEAM_USERNAME | anonymous | Steam account used to download server files |
+| STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
+| CSS_APP_ID | 232330 | Steam app id for the dedicated server download |
+| CSS_FORCE_UPDATE | false | Re-download and validate server files on next start |
+| STEAMCMD_WINDOWS_WORKAROUND | full | How SteamCMD fetches depots. full downloads a Windows pass first, then Linux. prime and off are lighter options |
+| CSS_PORT | 27015 | Game port |
+| CSS_CLIENT_PORT | 27005 | Client port |
+| CSS_MAXPLAYERS | 16 | Maximum players |
+| CSS_STARTMAP | de_dust2 | Map loaded at startup |
+| CSS_TICKRATE | 66 | Server tickrate |
+| CSS_GSLT | (empty) | Game Server Login Token for public listing |
+| CSS_EXTRA_ARGS | (empty) | Extra launch flags appended after the built-in ones |
 
-The entrypoint always passes `-game cstrike`, `-console`, `-usercon`, `-secure`, and `-strictportbind`.
+The server always starts with the Counter-Strike game mode, console access, remote console support, VAC, and strict port binding.
 
 ## GSLT
 
-1. Sign in at [Steam game server account management](https://steamcommunity.com/dev/managegameservers) and create a token for game id **240**.
-2. Set `CSS_GSLT` to that token in compose, a `.env` file, or `-e` on `docker run`. The entrypoint only adds `+sv_setsteamaccount <token>` when `CSS_GSLT` is non-empty.
+1. Sign in at [Steam game server account management](https://steamcommunity.com/dev/managegameservers) and create a token for game id 240.
+2. Set CSS_GSLT to that token in compose, a .env file, or with -e on docker run.
 
-## Data volume
+## Data folder
 
-`./data` mounts to `/opt/cs-source`.
+Your data folder mounts to /opt/cs-source inside the container.
 
 | Path | Purpose |
 | --- | --- |
-| `srcds_run` | Server launcher, installed by SteamCMD |
-| `steam_appid.txt` | Rewritten on every start with `240`, the Steamworks app id CS:S needs at runtime |
-| `cstrike/cfg/server.cfg` | Main server config, create it yourself, the entrypoint does not generate one |
-| `cstrike/maps/` | Custom or workshop maps you copy in manually |
-| `cstrike/addons/` | SourceMod or Metamod install location if you add server plugins |
-| `bin/` | 32-bit engine libraries, referenced by `LD_LIBRARY_PATH` at startup |
+| srcds_run | Server launcher installed by Steam |
+| steam_appid.txt | Written on every start with app id 240 for Steamworks |
+| cstrike/cfg/server.cfg | Main server config. Create this yourself |
+| cstrike/maps/ | Custom or workshop maps |
+| cstrike/addons/ | SourceMod or Metamod if you add plugins |
+| bin/ | 32-bit engine libraries the server needs at startup |
 
-## Updates and healthchecks
+## Updates
 
-Set `CSS_FORCE_UPDATE=true` or run `./tools/gs update cs-source` from the [Ops](../guides/ops/) guide. The healthcheck is a `process` probe (`pgrep -f srcds_linux`) with a 600 second start period.
+Set CSS_FORCE_UPDATE to true and recreate the container, or use the update workflow in [Ops](/guides/ops/).
+
+## Health check
+
+The container reports healthy while the game server process is running. Startup gets a 600 second grace period.
 
 ## Notes
 
-- The container starts as root, `docker-entrypoint.sh` creates `/opt/cs-source`, chowns it to `cssource` (uid 1000), then drops privileges via `runuser` before running `entrypoint.sh`, so a fresh or root-owned host `./data` directory is fixed up automatically on every start.
-- `entrypoint.sh` strips Windows line endings from `srcds_run` (`sed -i 's/\r$//'`) on every start, not only on install.
-- Unlike L4D2 and Insurgency Source, this entrypoint exports `LD_LIBRARY_PATH="${CSS_DIR}/bin:${CSS_DIR}:/usr/lib32:/usr/lib"` before launch, CS:S's older engine binaries need the bundled 32-bit libraries in `bin/`.
-- `-secure` (VAC) is always passed and cannot be disabled through any environment variable.
-- There is no dedicated RCON environment variable beyond `CSS_GSLT`. TCP 27015 is the RCON channel once you set `rcon_password` yourself, and `-usercon` is always passed to open the engine's console socket.
-- First install downloads twice (a Windows depot pass, then the Linux depot) because `STEAMCMD_WINDOWS_WORKAROUND` defaults to `full`.
-- Compose sets `mem_limit: 2048M` and `stop_grace_period: 90s`, the image sends `SIGINT` on stop so `srcds` can shut down cleanly.
+- The container starts as root, fixes ownership of the data folder, then runs the server as the cssource user (uid 1000).
+- The launcher script is cleaned of Windows line endings on every start.
+- This server needs the bundled 32-bit libraries in bin/, which are added to the library path before launch.
+- VAC is always on and cannot be turned off through settings.
+- There is no dedicated remote console setting. TCP port 27015 handles remote console once you set rcon_password in server.cfg.
+- With STEAMCMD_WINDOWS_WORKAROUND at its default of full, the first download runs twice (Windows depot pass, then Linux).
+- Compose sets a 2 GB memory limit and a 90 second stop grace period. The image sends SIGINT on stop so the server can shut down cleanly.
 
 ## Compose
 

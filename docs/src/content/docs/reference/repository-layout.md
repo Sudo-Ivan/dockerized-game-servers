@@ -3,6 +3,8 @@ title: Repository layout
 description: Top-level directories in this repository.
 ---
 
+When you clone this repo, each top-level folder maps to a game or shared piece of infrastructure. For day-to-day hosting you mostly touch one game folder (compose file and data volumes) and optionally the tools/ scripts for backup and updates.
+
 ```text
 bases/           shared Docker bases (minecraft, steam, runtime)
 ci/              POSIX CI scripts (repo-meta, server-catalog, image-matrix, checks)
@@ -56,6 +58,6 @@ azerothcore/     AzerothCore WotLK (external acore/* images)
 backups/         local gs backup archives (gitignored)
 ```
 
-Identity and GHCR paths resolve from git remote or `GITHUB_REPOSITORY` via `ci/repo-meta.sh`. Runnable servers and their volumes or update envs live in `ci/server-catalog.sh`.
+Image names and GHCR paths resolve from your git remote or from GITHUB_REPOSITORY (see ci/repo-meta.sh). The list of runnable servers, their compose files, volumes, and update settings lives in one shared catalog that the gs tool and CI both read.
 
-License: 0BSD
+This project is licensed under 0BSD. See [License](/reference/license/) for the full text.

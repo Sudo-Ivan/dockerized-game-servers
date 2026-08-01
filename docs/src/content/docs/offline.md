@@ -7,7 +7,7 @@ lastUpdated: false
 pagefind: false
 hero:
   title: Offline
-  tagline: Reconnect to load the latest docs. Cached pages still work when available.
+  tagline: You are not connected right now. Reconnect to load the latest docs. Pages you opened before may still work from cache.
   actions:
     - text: Home
       link: /
@@ -17,4 +17,4 @@ hero:
       variant: minimal
 ---
 
-This offline page is used by the progressive web app when the network is unavailable and the requested document is not in cache.
+This page appears when the docs site is installed as a progressive web app and you request a page that is not stored locally yet. Try again once you have network access, or open a page you visited recently while online.

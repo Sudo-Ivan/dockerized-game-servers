@@ -3,68 +3,62 @@ title: Icarus
 description: Icarus dedicated server (Windows binary via Wine).
 ---
 
-Compose path: `icarus`. Image: `icarus`.
+This image downloads the Icarus dedicated server through Steam and runs the Windows build under Wine. First start also sets up a Wine environment and can take up to 20 minutes.
 
-Downloads the dedicated server tool (Steam App **2089300**) with SteamCMD and runs `IcarusServer-Win64-Shipping.exe` under Wine. Icarus itself is Steam App **1149460**, written to `steam_appid.txt`. Anonymous SteamCMD (the default) downloads App 2089300. If the install fails, set `STEAM_USERNAME` and `STEAM_PASSWORD` for an account entitled to Icarus.
-
-:::note[Requirements]
-- Persist `icarus/data` at `/opt/icarus`
-- Publish UDP **17777** (game) and UDP **27015** (query)
-- First start downloads through SteamCMD and initializes a Wine prefix, `start_period` in the healthcheck is 1200 seconds (20 minutes) for this reason
-- `mem_limit` is set to 8192M in compose, allocate at least that much RAM
-- Starts as root and self-heals `icarus/data` ownership on every start, see Permissions below
+:::note[Before you start]
+- Keep a data folder for the server install
+- Open UDP port 17777 for game traffic and UDP 27015 for server browser queries
+- Anonymous Steam login works for most installs. If the download fails, use a Steam account that owns Icarus
+- The compose file sets an 8 GB memory limit. Give the host at least that much RAM
+- Only one service on the host should use UDP 27015 unless you change ICARUS_QUERY_PORT and the published port mapping
 :::
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 17777 (`ICARUS_PORT`) | UDP | Game traffic |
-| 27015 (`ICARUS_QUERY_PORT`) | UDP | Server browser query |
+| 17777 | UDP | Game traffic (ICARUS_PORT) |
+| 27015 | UDP | Server browser query (ICARUS_QUERY_PORT) |
 
-Only one service on the host should bind UDP 27015 unless you change `ICARUS_QUERY_PORT` and the published port mapping.
+## Settings
 
-## Environment
-
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `STEAM_USERNAME` | `anonymous` | SteamCMD login |
-| `STEAM_PASSWORD` | empty | SteamCMD password |
-| `STEAM_GUARD_CODE` | empty | Steam Guard code if prompted |
-| `ICARUS_APP_ID` | `2089300` | Dedicated server tool SteamCMD app id |
-| `ICARUS_STEAM_APP_ID` | `1149460` | Icarus's own Steam app id, written to `steam_appid.txt`. Not set in compose, override with `-e` if you need to change it |
-| `ICARUS_FORCE_UPDATE` | `false` | Set `true` to reinstall on next start |
-| `ICARUS_PORT` | `17777` | Game UDP port |
-| `ICARUS_QUERY_PORT` | `27015` | Query UDP port |
-| `ICARUS_GAME_MODE` | `Prospect` | Passed through as `-GameMode=`, not validated by the entrypoint |
-| `ICARUS_SESSION_NAME` | `Icarus Server` | Session name shown to players, also used as `-SteamServerName=` |
-| `ICARUS_MAX_PLAYERS` | `8` | Player cap |
-| `ICARUS_ADMIN_PASSWORD` | empty | Adds `-AdminPassword=` when set |
-| `ICARUS_EXTRA_ARGS` | empty | Extra flags appended to the launch command |
+| STEAM_USERNAME | anonymous | Steam login used to download the server |
+| STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| ICARUS_APP_ID | 2089300 | Steam app id for the dedicated server tool |
+| ICARUS_STEAM_APP_ID | 1149460 | Icarus game app id, written to steam_appid.txt |
+| ICARUS_FORCE_UPDATE | false | Reinstall the server on next start |
+| ICARUS_PORT | 17777 | Game UDP port |
+| ICARUS_QUERY_PORT | 27015 | Query UDP port |
+| ICARUS_GAME_MODE | Prospect | Game mode, passed as -GameMode= |
+| ICARUS_SESSION_NAME | Icarus Server | Session name shown to players |
+| ICARUS_MAX_PLAYERS | 8 | Player cap |
+| ICARUS_ADMIN_PASSWORD | (empty) | Adds -AdminPassword= when set |
+| ICARUS_EXTRA_ARGS | (empty) | Extra flags appended to the launch command |
 
-## Data volume
+## Data folder
 
-`icarus/data` mounts at `/opt/icarus`.
+Your data folder mounts at /opt/icarus inside the container.
 
 | Path | Purpose |
 | --- | --- |
-| `.wine/` | Wine prefix (`WINEPREFIX`), created on first start |
-| `steam_appid.txt` | Rewritten every start with `ICARUS_STEAM_APP_ID` |
-| game install tree | Wherever SteamCMD placed `IcarusServer-Win64-Shipping.exe`, located by search rather than a fixed path |
+| .wine/ | Wine prefix, created on first start |
+| steam_appid.txt | Rewritten every start with ICARUS_STEAM_APP_ID |
+| game install tree | Wherever SteamCMD placed the server binary |
 
-The entrypoint does not write a session or server config file, every setting above is a launch argument. If SteamCMD lays the depot out under a nested `steamapps/common/<name>` folder instead of the volume root, the entrypoint detects it and moves the files up into `/opt/icarus` on first start.
+The container does not write a config file. All settings above are launch arguments. If SteamCMD installs files under a nested steamapps/common folder, the container moves them up into /opt/icarus on first start.
 
-## Permissions
-
-The container starts as root, `docker-entrypoint.sh` creates `/opt/icarus`, chowns it to `icarus` (UID 1000), then drops privileges via `runuser` before running `entrypoint.sh`, so a fresh or root-owned host `icarus/data` directory is fixed up automatically on every start.
+The container fixes file ownership on the data folder automatically on every start.
 
 ## Updates
 
-Set `ICARUS_FORCE_UPDATE=true` to reinstall on the next start, or run `./tools/gs update icarus` from the [Ops](../guides/ops/) guide.
+Set ICARUS_FORCE_UPDATE to true to reinstall on the next start. You can also run ./tools/gs update icarus. See [Ops](/guides/ops/).
 
-## Healthcheck
+## Health check
 
-Process check (`pgrep -f IcarusServer-Win64-Shipping.exe`), 1200 second start period.
+The container reports healthy while the Icarus server process is running. Startup gets a 1200 second grace period because first install can take a long time.
 
 ## Compose
 

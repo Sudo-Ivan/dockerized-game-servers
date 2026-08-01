@@ -164,7 +164,7 @@ docker run -d --name neoforge --restart unless-stopped --init \
 
 Optional URL overrides (hosts are restricted for safety): VANILLA_JAR_URL (Mojang only), FORGE_INSTALLER_URL (Maven Forge only), NEOFORGE_INSTALLER_URL (maven.neoforged.net only).
 
-## Healthcheck
+## Health check
 
 The health script checks that something is listening on SERVER_PORT (default 25565). If you change server-port in server.properties and remap ports in compose, set SERVER_PORT to match.
 

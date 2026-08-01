@@ -3,68 +3,62 @@ title: 7 Days to Die
 description: 7 Days to Die dedicated server via SteamCMD
 ---
 
-Compose path: 7-days-to-die. Image: 7-days-to-die. Built from the shared [steam-base](/reference/images/) image (Arch Linux with SteamCMD, plus `libpulse` and `alsa-lib` that the game binary links against even though it runs headless).
+On first start the container downloads the 7 Days to Die Linux dedicated server (Steam app 294420) into your data folder. It writes a default serverconfig.xml the first time that file is missing.
 
-7 Days to Die installs the Linux dedicated server, Steam App **294420**, into the data volume on first start, then writes a default config the first time it is missing.
+Before every start the container also writes steam_appid.txt with the game's client Steam app ID (251570). The server binary needs this file on disk even though the container installed the dedicated server app (294420).
 
-:::note[Requirements]
-- Persist `./data` for the installed server, world, and config
-- Publish TCP/UDP **26900** and UDP **26901** through **26903**
-- Allocate at least 6 GB RAM
-- No Steam account is required, SteamCMD installs App 294420 anonymously
+:::note[Before you start]
+- Keep a data folder for the installed server, world, and config
+- Open TCP and UDP port 26900, plus UDP ports 26901 through 26903
+- Give the container at least 6 GB of RAM
+- No Steam account is needed. The server installs anonymously through SteamCMD
 :::
-
-## How the server is installed
-
-`entrypoint.sh` uses the shared [`bases/steam/steamcmd-app-update.sh`]({{GITHUB_URL}}/blob/master/bases/steam/steamcmd-app-update.sh) helper to run `+app_update 294420 validate` against the data volume, logging in anonymously unless you set `STEAM_USERNAME`/`STEAM_PASSWORD`. If the binary is missing or `SEVENDTD_FORCE_UPDATE=true`, it reinstalls before starting. A fallback walks `/home/sevendtd/Steam/steamapps/common` and relocates any directory containing `7DaysToDieServer.x86_64` into the data volume.
-
-Before every start, the entrypoint also writes `steam_appid.txt` with `251570`, the game's **client** Steam app id, which the server binary needs present on disk to satisfy its Steamworks linkage even though the container installed dedicated server App 294420.
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 26900 | TCP | Main game port (`ServerPort` in `serverconfig.xml`) |
-| 26900 | UDP | Main game port (`ServerPort` in `serverconfig.xml`) |
+| 26900 | TCP | Main game port (ServerPort in serverconfig.xml) |
+| 26900 | UDP | Main game port (ServerPort in serverconfig.xml) |
 | 26901-26903 | UDP | Additional game data channels used by the engine |
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `CONFIG_FILE` | `serverconfig.xml` | Config file name or path. Relative names resolve under `/opt/7dtd`, absolute paths are used as-is |
-| `SEVENDTD_EXTRA_ARGS` | *(empty)* | Extra CLI flags appended after `-configfile=...` |
-| `SEVENDTD_FORCE_UPDATE` | `false` | Re-run SteamCMD for App 294420 on next start |
-| `SEVENDTD_APP_ID` | `294420` | Steam app id to install |
-| `STEAM_USERNAME` | `anonymous` | Steam login for the install step |
-| `STEAM_PASSWORD` | *(empty)* | Steam password |
-| `STEAM_GUARD_CODE` | *(empty)* | Steam Guard code |
+| CONFIG_FILE | serverconfig.xml | Config file name or path. Relative names resolve under /opt/7dtd |
+| SEVENDTD_EXTRA_ARGS | (empty) | Extra command-line flags added after -configfile= |
+| SEVENDTD_FORCE_UPDATE | false | Re-download the server from Steam on next start |
+| SEVENDTD_APP_ID | 294420 | Steam app ID to install |
+| STEAM_USERNAME | anonymous | Steam login used during the install step |
+| STEAM_PASSWORD | (empty) | Steam password |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code |
 
-See [Quick start](/guides/quick-start/) for the shared Steam login pattern.
+See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
 
 ## First-start config
 
-`entrypoint.sh` only writes the file at `CONFIG_FILE` when it does not already exist, with this default XML:
+The container only writes the file at CONFIG_FILE when it does not already exist, with these defaults:
 
 | Setting | Default value |
 | --- | --- |
-| `ServerName` | `7 Days to Die Server` |
-| `ServerPort` | `26900` |
-| `ServerVisibility` | `2` |
-| `ServerPassword` | empty |
-| `ServerMaxPlayerCount` | `8` |
-| `GameWorld` | `Navezgane` |
-| `GameName` | `Dedicated` |
-| `GameDifficulty` | `2` |
-| `ServerDisabledNetworkProtocols` | `SteamNetworking` |
+| ServerName | 7 Days to Die Server |
+| ServerPort | 26900 |
+| ServerVisibility | 2 |
+| ServerPassword | empty |
+| ServerMaxPlayerCount | 8 |
+| GameWorld | Navezgane |
+| GameName | Dedicated |
+| GameDifficulty | 2 |
+| ServerDisabledNetworkProtocols | SteamNetworking |
 
-None of these settings are exposed as separate environment variables. Edit `7-days-to-die/data/serverconfig.xml` (or whatever `CONFIG_FILE` points to) directly on the host, then restart the container. `CONFIG_FILE` is mainly useful for keeping more than one hand-edited config in the same data volume under different names.
+None of these settings have their own environment variable. Edit 7-days-to-die/data/serverconfig.xml (or whatever CONFIG_FILE points to) on the host, then restart the container. CONFIG_FILE is mainly useful for keeping more than one hand-edited config in the same data folder.
 
-If `startserver.sh` exists in the install (some server builds ship one), the entrypoint execs that instead of `7DaysToDieServer.x86_64` directly, passing the same `-configfile=` and `SEVENDTD_EXTRA_ARGS`.
+If startserver.sh exists in the install, the container uses that instead of launching the server binary directly. It passes the same -configfile= and SEVENDTD_EXTRA_ARGS either way.
 
-## Data volume
+## Data folder
 
-`./data` mounts to `/opt/7dtd`. It holds the installed `7DaysToDieServer.x86_64` binary, `serverconfig.xml`, `steam_appid.txt`, and the world saves and logs 7 Days to Die creates under its own directory layout.
+Your data folder mounts to /opt/7dtd inside the container. It holds the installed server binary, serverconfig.xml, steam_appid.txt, and the world saves and logs the game creates.
 
 ## Compose
 
@@ -82,6 +76,10 @@ docker run -d --name 7-days-to-die --restart unless-stopped --init \
   {{IMAGE_PREFIX}}/7-days-to-die:latest
 ```
 
-## Updating
+## Updates
 
-Set `SEVENDTD_FORCE_UPDATE=true` and recreate the container, or run `./tools/gs update 7-days-to-die` from [Ops](/guides/ops/). The healthcheck is a `process` probe for `7DaysToDieServer`.
+Set SEVENDTD_FORCE_UPDATE to true and recreate the container, or use the update command described in [Ops](/guides/ops/).
+
+## Health check
+
+The container reports healthy while the 7 Days to Die server is running.

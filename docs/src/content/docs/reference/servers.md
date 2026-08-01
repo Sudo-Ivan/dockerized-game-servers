@@ -58,6 +58,6 @@ Every runnable server is listed below with its compose folder and image name. Fi
 | Stardew Valley | stardew-valley | external (JunimoServer sdvd/server) | [Guide](../servers/stardew-valley/) |
 | AzerothCore | azerothcore | external (acore/ac-wotlk-*) | [Guide](../servers/azerothcore/) |
 
-Servers without a guide page still ship compose files in the repository. Open the compose path for ports, volumes, and environment variables.
+Servers without a guide page still ship compose files in the repository. Open that game's folder for ports, volumes, and settings.
 
-All first-party catalog servers have a guide under **Servers** in the sidebar.
+Every first-party server in the table has a guide under **Servers** in the sidebar.

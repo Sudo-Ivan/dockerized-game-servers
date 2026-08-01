@@ -3,16 +3,14 @@ title: Unturned
 description: Unturned dedicated server via SteamCMD, App 1110390.
 ---
 
-Compose path: unturned. Image: unturned.
+On first start the container downloads the Unturned dedicated server (Steam app 1110390, not the client app 304930) into your data folder, then launches ServerHelper.sh with +InternetServer/name.
 
-Unturned dedicated server built on the shared [steam-base](/reference/images/) image. SteamCMD installs App **1110390** (not the client app **304930**) into the data volume on first start, then launches `ServerHelper.sh` with `+InternetServer/<name>`.
-
-:::note[Requirements]
-- Publish UDP **27015** and UDP **27016**
-- Persist `./data` at `/opt/unturned`
-- Allocate at least 4 GB RAM
-- No Steam account is required, SteamCMD installs App 1110390 anonymously
-- For public listing, create a GSLT for game id **304930** and configure it under `Servers/` or via `UNTURNED_EXTRA_ARGS`
+:::note[Before you start]
+- Open UDP ports 27015 and 27016
+- Keep a data folder for the installed server and config
+- Give the container at least 4 GB of RAM
+- No Steam account is needed. The server installs anonymously through SteamCMD
+- For public listing, create a GSLT for game ID 304930 and configure it under Servers/ or through UNTURNED_EXTRA_ARGS
 :::
 
 ## Ports
@@ -24,33 +22,33 @@ Unturned dedicated server built on the shared [steam-base](/reference/images/) i
 
 Unturned uses UDP only for gameplay. Do not publish TCP on these ports.
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `STEAM_USERNAME` | `anonymous` | Steam login for the SteamCMD install step |
-| `STEAM_PASSWORD` | (empty) | Steam password |
-| `STEAM_GUARD_CODE` | (empty) | Steam Guard code |
-| `UNTURNED_APP_ID` | `1110390` | SteamCMD app id for the dedicated server depot |
-| `UNTURNED_FORCE_UPDATE` | `false` | Re-run SteamCMD for App 1110390 on next start |
-| `UNTURNED_SERVER_NAME` | `UnturnedServer` | Internet server slot name, passed as `+InternetServer/<name>` |
-| `UNTURNED_EXTRA_ARGS` | (empty) | Extra CLI flags appended after the InternetServer argument |
+| STEAM_USERNAME | anonymous | Steam login used during the install step |
+| STEAM_PASSWORD | (empty) | Steam password |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code |
+| UNTURNED_APP_ID | 1110390 | SteamCMD app ID for the dedicated server depot |
+| UNTURNED_FORCE_UPDATE | false | Re-download the server from Steam on next start |
+| UNTURNED_SERVER_NAME | UnturnedServer | Internet server slot name, passed as +InternetServer/name |
+| UNTURNED_EXTRA_ARGS | (empty) | Extra command-line flags added after the InternetServer argument |
 
-See [Quick start](/guides/quick-start/) for the shared Steam login pattern.
+See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
 
 ## GSLT
 
-SteamCMD installs App **1110390**, but public server tokens are created for game id **304930** at [Steam game server account management](https://steamcommunity.com/dev/managegameservers). Add the token in your server config under `Servers/<UNTURNED_SERVER_NAME>/` or pass it through `UNTURNED_EXTRA_ARGS`.
+SteamCMD installs app 1110390, but public server tokens are created for game ID 304930 at [Steam game server account management](https://steamcommunity.com/dev/managegameservers). Add the token in your server config under Servers/UNTURNED_SERVER_NAME/ or pass it through UNTURNED_EXTRA_ARGS.
 
-## Data volume
+## Data folder
 
-`./data` mounts to `/opt/unturned`.
+Your data folder mounts to /opt/unturned inside the container.
 
 | Path | Purpose |
 | --- | --- |
-| `ServerHelper.sh` | Server launcher, installed by SteamCMD |
-| `Servers/` | Per-server config folders keyed by `UNTURNED_SERVER_NAME` |
-| `Maps/` | Custom maps |
+| ServerHelper.sh | Server launcher, installed by SteamCMD |
+| Servers/ | Per-server config folders keyed by UNTURNED_SERVER_NAME |
+| Maps/ | Custom maps |
 
 ## Compose
 
@@ -68,6 +66,10 @@ docker run -d --name unturned --restart unless-stopped --init \
   {{IMAGE_PREFIX}}/unturned:latest
 ```
 
-## Updating
+## Updates
 
-Set `UNTURNED_FORCE_UPDATE=true` and recreate the container, or run `./tools/gs update unturned` from [Ops](/guides/ops/). The healthcheck is a `process` probe for `Unturned_Headless` or `Unturned` with a 600 second start period.
+Set UNTURNED_FORCE_UPDATE to true and recreate the container, or use the update command described in [Ops](/guides/ops/).
+
+## Health check
+
+The container reports healthy while the Unturned server is running. Startup gets a 600 second grace period.

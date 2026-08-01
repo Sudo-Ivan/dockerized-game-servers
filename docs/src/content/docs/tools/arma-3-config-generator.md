@@ -3,10 +3,10 @@ title: Arma 3 Config Generator
 description: Build a server.cfg for the Arma 3 dedicated server image in your browser.
 ---
 
-Fill in the fields below to build a `server.cfg` for the [Arma 3 image](../servers/arma-3/). The output updates as you type. Copy it or download it, then place it at `arma/arma-3/configs/server.cfg`.
+Use the form below to create a server.cfg for the [Arma 3 server](../servers/arma-3/). The preview updates as you type. Copy or download the file when you are ready.
 
 :::note[Client-side only]
-Nothing here is uploaded. The config is generated with JavaScript in your browser.
+Everything runs in your browser. Nothing is sent to a server.
 :::
 
 <div id="a3cfg-tool" class="a3cfg-tool" data-tool>
@@ -440,8 +440,12 @@ Have fun and follow the rules.</textarea>
 
 ## Using the generated file
 
-1. Copy or download the output above.
-2. Save it as `arma/arma-3/configs/server.cfg`.
-3. Start the container with `docker compose -f arma/arma-3/docker-compose.yml up -d`.
+1. Copy or download the config from the preview panel.
+2. Save it as arma/arma-3/configs/server.cfg in your clone of this repo.
+3. Start the server:
 
-`CDLC` and `EXTRA_MODS` environment variables and workshop presets are handled outside `server.cfg`. See the [Arma 3 guide](../servers/arma-3/) for those and for `-config` behavior.
+```bash
+docker compose -f arma/arma-3/docker-compose.yml up -d
+```
+
+CDLC, EXTRA_MODS, and workshop presets are set outside server.cfg. See the [Arma 3 guide](../servers/arma-3/) for mods and config path details.

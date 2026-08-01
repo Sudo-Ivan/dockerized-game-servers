@@ -7,7 +7,7 @@ lastUpdated: false
 pagefind: false
 hero:
   title: Gone
-  tagline: This page used to exist and has been removed or renamed.
+  tagline: This page used to exist but has been removed or renamed.
   actions:
     - text: Home
       link: /
@@ -17,4 +17,4 @@ hero:
       variant: minimal
 ---
 
-Check the sidebar for the current documentation structure.
+Use the sidebar to browse the current docs, or open [Repository layout](/reference/repository-layout/) to see how the repo is organized.

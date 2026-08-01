@@ -3,14 +3,12 @@ title: Delta Force Black Hawk Down
 description: Delta Force Black Hawk Down multiplayer host via Wine, BYO game files.
 ---
 
-Compose path: delta-force-bhd. Image: delta-force-bhd.
+There is no official Steam dedicated server for Delta Force: Black Hawk Down. This image runs the Windows game binary you supply under Wine with a virtual display for headless hosting.
 
-There is no official SteamCMD dedicated server for Delta Force: Black Hawk Down. This image runs the Windows `dfbhd.exe` you supply under Wine with Xvfb for headless hosting.
-
-:::note[Requirements]
-- Copy owned Windows game files into `./data` so `dfbhd.exe` exists at the volume root
-- Publish UDP **3568**
-- No SteamCMD install step, you must supply the game from a disc install or Steam library backup you own
+:::note[Before you start]
+- Copy your owned Windows game files into the data folder so dfbhd.exe exists at the root
+- Open UDP port 3568
+- You must supply the game from a disc install or Steam library backup you own
 - Community multiplayer may need external NovaHQ heartbeat tools (for example HawkSync) outside this container
 :::
 
@@ -18,25 +16,33 @@ There is no official SteamCMD dedicated server for Delta Force: Black Hawk Down.
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 3568 | UDP | Default multiplayer port for Delta Force: Black Hawk Down |
+| 3568 | UDP | Default multiplayer port |
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `BHD_EXTRA_ARGS` | (empty) | Extra arguments passed to `wine dfbhd.exe` after launch |
+| BHD_EXTRA_ARGS | (empty) | Extra arguments passed to the game after launch |
 
-Wine prefix and paths are fixed inside the image (`WINEPREFIX=/opt/dfbhd/.wine`, `BHD_DIR=/opt/dfbhd`).
+Wine prefix and paths are fixed inside the image.
 
-## Data volume
+## Data folder
 
-`./data` mounts to `/opt/dfbhd`.
+Your data folder mounts at /opt/dfbhd inside the container.
 
 | Path | Purpose |
 | --- | --- |
-| `dfbhd.exe` | Required Windows game binary, you must copy this in before first start |
+| dfbhd.exe | Required Windows game binary. Copy this in before first start |
 | Game data files | Maps, assets, and other files from your owned install |
-| `.wine/` | Wine prefix, created on first start |
+| .wine/ | Wine prefix, created on first start |
+
+## Updates
+
+There is no Steam download or auto-update path. Replace game files in the data folder when you upgrade your install.
+
+## Health check
+
+The container reports healthy while the game process is running. Startup gets a 300 second grace period.
 
 ## Compose
 
@@ -53,7 +59,3 @@ docker run -d --name delta-force-bhd --restart unless-stopped --init \
   -e BHD_EXTRA_ARGS="" \
   {{IMAGE_PREFIX}}/delta-force-bhd:latest
 ```
-
-## Updating
-
-There is no SteamCMD update path. Replace game files in `./data` when you upgrade your install. The healthcheck is a `process` probe for `dfbhd.exe` with a 300 second start period.

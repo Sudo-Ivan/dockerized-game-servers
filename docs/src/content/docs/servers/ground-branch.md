@@ -3,66 +3,64 @@ title: Ground Branch
 description: Ground Branch dedicated server (Windows binary via Wine).
 ---
 
-Compose path: `ground-branch`. Image: `ground-branch`.
+This image downloads the Ground Branch dedicated server through Steam and runs the Windows build under Wine. On first start it also sets up a Wine environment, so expect the initial launch to take longer than later restarts.
 
-Downloads the dedicated server tool (Steam App **476400**) with SteamCMD and runs `GroundBranchServer-Win64-Shipping.exe` under Wine. Ground Branch itself is Steam App **16900**, written to `steam_appid.txt` on every start so the Steamworks shim inside Wine reports the right game. Anonymous SteamCMD (the default) downloads App 476400. If the install fails, set `STEAM_USERNAME` and `STEAM_PASSWORD` for an account entitled to Ground Branch.
-
-:::note[Requirements]
-- Persist `ground-branch/data` at `/opt/groundbranch`
-- Publish UDP **7777** (game) and UDP **27015** (query)
-- First start downloads the server through SteamCMD and initializes a Wine prefix, which takes noticeably longer than later restarts
-- `mem_limit` is set to 4096M in compose, raise it if the server struggles under load
+:::note[Before you start]
+- Keep a data folder for the server install and config
+- Open UDP port 7777 for game traffic and UDP 27015 for server browser queries
+- Anonymous Steam login works for most installs. If the download fails, use a Steam account that owns Ground Branch
+- The compose file sets a 4 GB memory limit. Raise it if the server struggles under load
 :::
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 7777 (`GB_PORT`) | UDP | Game traffic |
-| 27015 (`GB_QUERY_PORT`) | UDP | Server browser query |
+| 7777 | UDP | Game traffic (GB_PORT) |
+| 27015 | UDP | Server browser query (GB_QUERY_PORT) |
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `STEAM_USERNAME` | `anonymous` | SteamCMD login |
-| `STEAM_PASSWORD` | empty | SteamCMD password, required with a real username |
-| `STEAM_GUARD_CODE` | empty | Steam Guard code if prompted |
-| `GB_APP_ID` | `476400` | Dedicated server tool SteamCMD app id |
-| `GB_STEAM_APP_ID` | `16900` | Ground Branch's own Steam app id, written to `steam_appid.txt` |
-| `GB_FORCE_UPDATE` | `false` | Set `true` to reinstall on next start |
-| `GB_PORT` | `7777` | Game UDP port |
-| `GB_QUERY_PORT` | `27015` | Query UDP port |
-| `GB_MULTIHOME` | `0.0.0.0` | Bind address, passed as `MultiHome=` |
-| `GB_MAX_PLAYERS` | `8` | Player cap, passed as `MaxPlayers=` |
-| `GB_MAX_AI` | `30` | AI bot cap, passed as `MaxAI=` |
-| `GB_MAP` | empty | Map to load on launch, for example `GB-Woodland` |
-| `GB_MISSION` | empty | Mission name, only applied when `GB_MAP` is also set |
-| `GB_EXTRA_ARGS` | empty | Extra flags appended to the launch command |
+| STEAM_USERNAME | anonymous | Steam login used to download the server |
+| STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| GB_APP_ID | 476400 | Steam app id for the dedicated server tool |
+| GB_STEAM_APP_ID | 16900 | Ground Branch game app id, written to steam_appid.txt on every start |
+| GB_FORCE_UPDATE | false | Reinstall the server on next start |
+| GB_PORT | 7777 | Game UDP port |
+| GB_QUERY_PORT | 27015 | Query UDP port |
+| GB_MULTIHOME | 0.0.0.0 | Bind address, passed as MultiHome= |
+| GB_MAX_PLAYERS | 8 | Player cap, passed as MaxPlayers= |
+| GB_MAX_AI | 30 | AI bot cap, passed as MaxAI= |
+| GB_MAP | (empty) | Map to load on launch, for example GB-Woodland |
+| GB_MISSION | (empty) | Mission name, only used when GB_MAP is also set |
+| GB_EXTRA_ARGS | (empty) | Extra flags appended to the launch command |
 
-`WINEPREFIX`, `WINEARCH`, `WINEDEBUG`, and `SteamAppId` are also set in compose for Wine runtime plumbing. Leave them alone unless you know you need to change them.
+Wine-related settings (WINEPREFIX, WINEARCH, WINEDEBUG, SteamAppId) are set in compose for the runtime. Leave them alone unless you know you need to change them.
 
-## Data volume
+## Data folder
 
-`ground-branch/data` mounts at `/opt/groundbranch`.
+Your data folder mounts at /opt/groundbranch inside the container.
 
 | Path | Purpose |
 | --- | --- |
-| `GroundBranch/ServerConfig/` | Created empty on first start, the game process populates and manages its own config and admin files here afterward |
-| `.wine/` | Wine prefix (`WINEPREFIX`), created on first start with `wineboot --init` |
-| `steam_appid.txt` | Rewritten every start with `GB_STEAM_APP_ID` |
+| GroundBranch/ServerConfig/ | Created empty on first start. The game writes and manages its own config and admin files here |
+| .wine/ | Wine prefix, created on first start |
+| steam_appid.txt | Rewritten every start with GB_STEAM_APP_ID |
 
-The entrypoint does not template any config file. `GB_MAP`, `GB_MISSION`, `GB_MAX_PLAYERS`, and `GB_MAX_AI` are all passed as launch arguments instead of being written to disk. For settings not covered by an env var, edit the files the game writes under `ServerConfig/` and restart.
+The container does not write a config file. Map, mission, player cap, and AI cap are passed as launch arguments. For other settings, edit the files the game creates under ServerConfig/ and restart.
 
-The container starts as root, chowns `/opt/groundbranch` to the `groundbranch` user, then drops privileges before launching the game, so no manual chown of the host directory is needed.
+The container fixes file ownership on the data folder automatically, so you do not need to chown the host directory yourself.
 
 ## Updates
 
-Set `GB_FORCE_UPDATE=true` to reinstall on the next start, or run `./tools/gs update ground-branch` from the [Ops](../guides/ops/) guide.
+Set GB_FORCE_UPDATE to true to reinstall on the next start. You can also run ./tools/gs update ground-branch. See [Ops](/guides/ops/).
 
-## Healthcheck
+## Health check
 
-Process check (`pgrep -f GroundBranchServer`), 300 second start period before the first probe counts against the retry limit.
+The container reports healthy while the Ground Branch server process is running. Startup gets a 300 second grace period before health checks count against the retry limit.
 
 ## Compose
 

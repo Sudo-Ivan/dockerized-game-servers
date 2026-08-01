@@ -3,7 +3,9 @@ title: Images
 description: Published GHCR images and how to pull them.
 ---
 
-Prefix: {{IMAGE_PREFIX}}
+Game server images are published to GitHub Container Registry (GHCR). Compose files in this repo pull them automatically when you set IMAGE_OWNER. You can also pull an image by hand if you run containers without compose.
+
+Image prefix: {{IMAGE_PREFIX}}
 
 | Name | Notes |
 | --- | --- |
@@ -58,8 +60,10 @@ Prefix: {{IMAGE_PREFIX}}
 | arma-reforger | Arma Reforger dedicated |
 | dayz | DayZ dedicated |
 
+Example pull:
+
 ```bash
 docker pull {{IMAGE_PREFIX}}/minecraft-fabric:latest
 ```
 
-After the first publish, set GHCR package visibility to public if the repo is public.
+If the repository is public, set each GHCR package to public visibility after the first publish so pulls work without logging in.

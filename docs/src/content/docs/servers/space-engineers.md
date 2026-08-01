@@ -4,79 +4,77 @@ description: Space Engineers dedicated server (Windows binary via Wine).
 steamAppId: "298740"
 ---
 
-Compose path: `space-engineers`. Image: `space-engineers`.
+This image downloads the Space Engineers dedicated server through Steam and runs the Windows build under Wine. First start also installs Wine and .NET Framework 4.8, which can take several minutes.
 
-Downloads the dedicated server tool (Steam App **298740**) with SteamCMD and runs `SpaceEngineersDedicated.exe` under Wine. The base game is Steam App **244850**, written to `steam_appid.txt`. Anonymous SteamCMD (the default) downloads App 298740. If the install fails, set `STEAM_USERNAME` and `STEAM_PASSWORD` for an account entitled to Space Engineers.
-
-:::note[Requirements]
-- Persist three separate paths, `dedicated`, `instances`, and `plugins` (see Volumes below)
-- Publish UDP **27016** (game) and UDP **8766** (Steam)
-- First start runs SteamCMD plus Wine and .NET Framework 4.8 setup and can take several minutes, `start_period` in the healthcheck is 900 seconds for this reason
-- `mem_limit` is set to 8192M in compose
+:::note[Before you start]
+- Keep three separate data folders: dedicated, instances, and plugins (see Data folders below)
+- Open UDP port 27016 for game traffic and UDP 8766 for Steam networking
+- Anonymous Steam login works for most installs. If the download fails, use a Steam account that owns Space Engineers
+- The compose file sets an 8 GB memory limit
 :::
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 27016 (`SE_PORT`) | UDP | Game port (`ServerPort` in the instance config) |
-| 8766 (`SE_STEAM_PORT`) | UDP | Steam networking (`SteamPort` in the instance config) |
+| 27016 | UDP | Game port (SE_PORT) |
+| 8766 | UDP | Steam networking (SE_STEAM_PORT) |
 | 8080 | TCP | VRage Remote API, only if enabled in the instance config |
 
-## Volumes
+## Data folders
 
 | Host path | Container path | Purpose |
 | --- | --- | --- |
-| `space-engineers/data/dedicated` | `/opt/spaceengineers/dedicated` | SteamCMD install of the dedicated server tool and game content |
-| `space-engineers/data/instances` | `/opt/spaceengineers/instances` | Per-instance config and saves, default instance name `Default` |
-| `space-engineers/data/plugins` | `/opt/spaceengineers/plugins` | Drop `.dll` plugins here, rebuilt into the instance config on every start |
+| space-engineers/data/dedicated | /opt/spaceengineers/dedicated | SteamCMD install of the server and game content |
+| space-engineers/data/instances | /opt/spaceengineers/instances | Per-instance config and saves. Default instance name is Default |
+| space-engineers/data/plugins | /opt/spaceengineers/plugins | Drop .dll plugins here. They are added to the instance config on every start |
 
-The Wine prefix (`WINEPREFIX=/home/spaceengineers/.wine`) is baked into the image at build time under the container's home directory, not under any of the mounted volumes. `winetricks` installs `vcrun2019` and `dotnet48` there using a virtual X server during the image build. Rebuilding the image resets the prefix, recreating the container does not.
+The Wine prefix is baked into the image at build time, not stored in any mounted folder. Rebuilding the image resets it. Recreating the container does not.
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `STEAM_USERNAME` | `anonymous` | SteamCMD login |
-| `STEAM_PASSWORD` | empty | SteamCMD password |
-| `STEAM_GUARD_CODE` | empty | Steam Guard code if prompted |
-| `SE_APP_ID` | `298740` | Dedicated server tool SteamCMD app id |
-| `SE_GAME_APP_ID` | `244850` | Space Engineers' own Steam app id, written to `steam_appid.txt` |
-| `SE_FORCE_UPDATE` | `false` | Set `true` to reinstall on next start |
-| `SE_INSTANCE_NAME` | `Default` | Instance folder name under `instances/` |
-| `SE_SERVER_NAME` | `Space Engineers` | Name shown in the server list |
-| `SE_WORLD_NAME` | `DedicatedWorld` | Save folder name under the instance |
-| `SE_PUBLIC_IP` | empty | `<IP>` written into the instance config, auto-detected from the container's address when empty |
-| `SE_PORT` | `27016` | Game UDP port (`ServerPort`) |
-| `SE_STEAM_PORT` | `8766` | Steam UDP port (`SteamPort`) |
-| `SE_EXTRA_ARGS` | empty | Extra flags appended to the launch command |
-| `SE_PREMADE_CHECKPOINT` | `<dedicated>/Content/CustomWorlds/Earth Planet/PC` | Starting scenario checkpoint, used only when no save exists yet |
+| STEAM_USERNAME | anonymous | Steam login used to download the server |
+| STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| SE_APP_ID | 298740 | Steam app id for the dedicated server tool |
+| SE_GAME_APP_ID | 244850 | Space Engineers game app id, written to steam_appid.txt |
+| SE_FORCE_UPDATE | false | Reinstall the server on next start |
+| SE_INSTANCE_NAME | Default | Instance folder name under instances/ |
+| SE_SERVER_NAME | Space Engineers | Name shown in the server list |
+| SE_WORLD_NAME | DedicatedWorld | Save folder name under the instance |
+| SE_PUBLIC_IP | (empty) | Public IP written into the instance config. Auto-detected when empty |
+| SE_PORT | 27016 | Game UDP port |
+| SE_STEAM_PORT | 8766 | Steam UDP port |
+| SE_EXTRA_ARGS | (empty) | Extra flags appended to the launch command |
+| SE_PREMADE_CHECKPOINT | (dedicated)/Content/CustomWorlds/Earth Planet/PC | Starting scenario, used only when no save exists yet |
 
-`SE_EXTRA_ARGS` has no shell default inside the entrypoint, unlike the other games on this page. Compose always defines it as an empty string, but a plain `docker run` must still pass `-e SE_EXTRA_ARGS=` (even empty), or the container exits immediately on an unset variable.
+When using docker run, you must pass SE_EXTRA_ARGS even if it is empty (-e SE_EXTRA_ARGS=). Without it the container exits immediately.
 
 ## Instance config
 
-`instances/<SE_INSTANCE_NAME>/SpaceEngineers-Dedicated.cfg` is written once with `GameMode Survival`, a fixed `MaxPlayers` of `4`, and the other session defaults visible in `space-engineers/entrypoint.sh`. There is no `SE_MAX_PLAYERS` variable, edit `MaxPlayers` in the generated cfg by hand for a different cap.
+instances/<SE_INSTANCE_NAME>/SpaceEngineers-Dedicated.cfg is written once with Survival mode, a fixed max of 4 players, and other defaults. There is no SE_MAX_PLAYERS setting. Edit MaxPlayers in the generated file by hand for a different cap.
 
-On every start, not only the first, the entrypoint also rewrites three elements in that file regardless of manual edits:
+On every start the container rewrites these values in that file:
 
-| Element | Rewritten from |
+| Element | Updated from |
 | --- | --- |
-| `<IP>` | `SE_PUBLIC_IP`, or the container's detected address when empty |
-| `<LoadWorld>` | The instance's save path if one already exists under `Saves/<SE_WORLD_NAME>/`, cleared otherwise |
-| `<SteamPort>` | `SE_STEAM_PORT` |
-| `<ServerPort>` | `SE_PORT` |
-| `<Plugins>` | Every `.dll` currently in the `plugins/` volume |
+| IP | SE_PUBLIC_IP, or the container's detected address when empty |
+| LoadWorld | The instance save path if one exists, cleared otherwise |
+| SteamPort | SE_STEAM_PORT |
+| ServerPort | SE_PORT |
+| Plugins | Every .dll currently in the plugins folder |
 
-Everything else in the file (`GameMode`, `InventorySize`, `TotalPCU`, `ViewDistance`, and so on) persists across restarts once written. The whole file is regenerated from scratch if it looks like an old `MyObjectBuilder_ConfigDedicated`-style file or is missing `PremadeCheckpointPath`.
+Everything else in the file (game mode, inventory size, PCU limits, view distance, and so on) persists across restarts. The whole file is regenerated if it looks like an old format or is missing PremadeCheckpointPath.
 
 ## Updates
 
-Set `SE_FORCE_UPDATE=true` to reinstall on the next start, or run `./tools/gs update space-engineers` from the [Ops](../guides/ops/) guide.
+Set SE_FORCE_UPDATE to true to reinstall on the next start. You can also run ./tools/gs update space-engineers. See [Ops](/guides/ops/).
 
-## Healthcheck
+## Health check
 
-Process check (`pgrep -f SpaceEngineersDedicated`), 900 second start period.
+The container reports healthy while the Space Engineers server process is running. Startup gets a 900 second grace period because first install and Wine setup can take a while.
 
 ## Compose
 

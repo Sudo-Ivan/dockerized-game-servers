@@ -4,67 +4,65 @@ description: Factorio headless dedicated server downloaded directly from factori
 iconFit: contain
 ---
 
-Compose path: `factorio`. Image: `factorio`.
+On first start the container downloads the official headless Linux package from factorio.com. No Steam account is required. It extracts the server into your data folder and creates a default server-settings.json and an initial save if neither already exists.
 
-The entrypoint downloads the official headless Linux package from `factorio.com` (no Steam or account needed), extracts it into the data volume, and writes a default `server-settings.json` and an initial save if neither already exists.
-
-:::note[Requirements]
-- Persist `./data` for the binary, saves, config, mods, and script output
-- Publish UDP **34197** for the game and TCP **27015** if you set `RCON_PASSWORD`
-- Changing `FACTORIO_VERSION` alone triggers a reinstall, `FACTORIO_FORCE_UPDATE` is only needed to force a reinstall of the same version
+:::note[Before you start]
+- Keep a data folder for the server binary, saves, config, mods, and script output
+- Open UDP port 34197 for the game. Open TCP 27015 if you set RCON_PASSWORD
+- Changing FACTORIO_VERSION alone triggers a reinstall. FACTORIO_FORCE_UPDATE is only needed to reinstall the same version again
 :::
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 34197 | UDP | Game port (`PORT`) |
-| 27015 | TCP | RCON, only opens when `RCON_PASSWORD` is set (`RCON_PORT`) |
+| 34197 | UDP | Game port (PORT) |
+| 27015 | TCP | RCON, only opens when RCON_PASSWORD is set (RCON_PORT) |
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `FACTORIO_VERSION` | `stable` | Release channel or exact version string used in the download URL |
-| `FACTORIO_DOWNLOAD_URL` | `https://www.factorio.com/get-download/${FACTORIO_VERSION}/headless/linux64` | Override the download URL directly, ignores `FACTORIO_VERSION` when set |
-| `FACTORIO_FORCE_UPDATE` | `false` | Force a reinstall even if the installed version already matches `FACTORIO_VERSION` |
-| `SERVER_NAME` | `Factorio Server` | Listing name |
-| `SERVER_DESCRIPTION` | `Factorio dedicated server` | Listing description |
-| `SERVER_PASSWORD` | (empty) | Join password, empty leaves the server open |
-| `MAX_PLAYERS` | `0` | Player cap, `0` is unlimited |
-| `SAVE_NAME` | `world` | Base name of the save file under `saves/`, becomes `<SAVE_NAME>.zip` |
-| `LOAD_LATEST` | `false` | Start with `--start-server-load-latest` instead of loading `SAVE_NAME` explicitly, skips creating a new save |
-| `PORT` | `34197` | Game UDP port |
-| `BIND` | `0.0.0.0` | Bind address |
-| `RCON_PORT` | `27015` | RCON TCP port |
-| `RCON_PASSWORD` | (empty) | Enables RCON when non-empty |
-| `PUBLIC_VISIBILITY` | `false` | List on the public server browser |
-| `LAN_VISIBILITY` | `true` | Advertise on LAN |
-| `AUTOSAVE_INTERVAL` | `10` | Minutes between autosaves |
-| `AUTO_PAUSE` | `true` | Pause the game while no clients are connected |
-| `FACTORIO_EXTRA_ARGS` | (empty) | Extra arguments appended verbatim to the launch command, space-separated |
+| FACTORIO_VERSION | stable | Release channel or exact version used in the download URL |
+| FACTORIO_DOWNLOAD_URL | https://www.factorio.com/get-download/${FACTORIO_VERSION}/headless/linux64 | Override the download URL directly. Ignores FACTORIO_VERSION when set |
+| FACTORIO_FORCE_UPDATE | false | Force a reinstall even if the installed version already matches FACTORIO_VERSION |
+| SERVER_NAME | Factorio Server | Name shown in the server browser |
+| SERVER_DESCRIPTION | Factorio dedicated server | Description shown in the server browser |
+| SERVER_PASSWORD | (empty) | Join password. Leave empty for an open server |
+| MAX_PLAYERS | 0 | Player cap. 0 means unlimited |
+| SAVE_NAME | world | Base name of the save file under saves/. Becomes world.zip |
+| LOAD_LATEST | false | Start with the latest save instead of SAVE_NAME. Skips creating a new save |
+| PORT | 34197 | Game UDP port |
+| BIND | 0.0.0.0 | Bind address |
+| RCON_PORT | 27015 | RCON TCP port |
+| RCON_PASSWORD | (empty) | Enables RCON when set |
+| PUBLIC_VISIBILITY | false | List on the public server browser |
+| LAN_VISIBILITY | true | Advertise on LAN |
+| AUTOSAVE_INTERVAL | 10 | Minutes between autosaves |
+| AUTO_PAUSE | true | Pause the game while no clients are connected |
+| FACTORIO_EXTRA_ARGS | (empty) | Extra launch arguments, space-separated |
 
-## Data volume and file layout
+## Data folder and file layout
 
-Mount `factorio/data` at `/opt/factorio`. These subdirectories survive reinstalls and version upgrades, everything else under `/opt/factorio` is replaced on install:
+Mount factorio/data at /opt/factorio. These folders survive reinstalls and version upgrades. Everything else under /opt/factorio is replaced on install:
 
 | Path | Purpose |
 | --- | --- |
-| `saves/<SAVE_NAME>.zip` | Active save |
-| `config/server-settings.json` | Generated on first start if missing, edit directly for settings not covered by the environment variables above |
-| `mods/` | Drop `.zip` mod files here and restart |
-| `script-output/` | Mod and scenario script output |
-| `.installed-version` | Tracks the installed `FACTORIO_VERSION`, compared on every start to decide whether to reinstall |
+| saves/world.zip | Active save (name follows SAVE_NAME) |
+| config/server-settings.json | Created on first start if missing. Edit directly for settings not covered above |
+| mods/ | Drop .zip mod files here and restart |
+| script-output/ | Mod and scenario script output |
+| .installed-version | Tracks the installed FACTORIO_VERSION |
 
-The generated `server-settings.json` ships a placeholder `"tags": ["game", "tags"]` array, edit it by hand if you want real tags.
+The generated server-settings.json ships with placeholder tags. Edit the file by hand if you want real tags.
 
-## Update
+## Updates
 
-`FACTORIO_FORCE_UPDATE=true` forces a reinstall on the next recreate, but changing `FACTORIO_VERSION` alone already triggers one. See [Ops](/guides/ops/) for `./tools/gs update factorio` and backups.
+Set FACTORIO_FORCE_UPDATE to true and recreate the container, or change FACTORIO_VERSION to trigger a reinstall. See [Ops](/guides/ops/) for the update command and backup tips.
 
-## Healthcheck
+## Health check
 
-Process check: the container is healthy while a `factorio` process is running under `bin/x64/factorio`, with a 300 second start period.
+The container reports healthy while the Factorio server is running. Startup gets a 300 second grace period.
 
 ## Compose
 
@@ -83,4 +81,4 @@ docker run -d --name factorio --restart unless-stopped --init \
   {{IMAGE_PREFIX}}/factorio:latest
 ```
 
-Match mod versions in `factorio/data/mods/` to your server's Factorio version. The shipped compose file caps the container at 4096 MB of memory.
+Match mod versions in factorio/data/mods/ to your server's Factorio version. The included compose file caps the container at 4096 MB of memory.
