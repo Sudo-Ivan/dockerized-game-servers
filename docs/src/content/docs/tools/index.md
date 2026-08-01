@@ -7,9 +7,9 @@ Interactive generators that build config files and Docker commands for the serve
 
 | Tool | Produces |
 | --- | --- |
-| [Arma 3 Config Generator](arma-3-config-generator/) | `server.cfg` for the [Arma 3](../servers/arma-3/) image |
-| [Minecraft server.properties Generator](minecraft-server-properties-generator/) | `server.properties` for the [Minecraft](../servers/minecraft/) images |
-| [Docker Run / Compose Generator](docker-run-generator/) | `docker run` commands and `docker-compose.yml` snippets for any server |
+| [Arma 3 Config Generator](arma-3-config-generator/) | server.cfg for the [Arma 3](../servers/arma-3/) image |
+| [Minecraft server.properties Generator](minecraft-server-properties-generator/) | server.properties for the [Minecraft](../servers/minecraft/) images |
+| [Docker Run / Compose Generator](docker-run-generator/) | docker run commands and docker-compose.yml snippets for any server |
 
 :::note[Client-side only]
 Forms on these pages render output in your browser with plain JavaScript. Reloading the page resets the form.

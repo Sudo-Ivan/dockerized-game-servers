@@ -1,0 +1,172 @@
+{
+  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2026-08-01T23:52:06+00:00",
+  "name": "Stardew Valley",
+  "author": "sudo-ivan@users.noreply.github.com",
+  "description": "Stardew Valley using the dockerized-game-servers image. Docker image: sdvd/server:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: -5800}:5800/tcp, -8080}:8080/tcp, -24642}:24642/udp, -27015}:27015/udp Requires a separate sdvd/steam-service container for Steam authentication. External image maintained outside this repository.",
+  "features": null,
+  "docker_images": {
+    "Latest": "sdvd/server:latest"
+  },
+  "file_denylist": [],
+  "startup": "/bin/bash -c 'mkdir -p /home/container/game /home/container/saves /home/container/settings /config/xdg/config/StardewValley; ln -sfn /home/container/saves /config/xdg/config/StardewValley; export SETTINGS_PATH=/home/container/settings/server-settings.json; exec /start.sh'",
+  "config": {
+    "files": "{}",
+    "startup": "{\"done\": \"Starting\"}",
+    "logs": "{}",
+    "stop": "^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\n# Server files: /mnt/server\nset -e\nmkdir -p /mnt/server\ncd /mnt/server\necho \"Install complete. Game files download on first container start.\"\n",
+      "container": "ghcr.io/pterodactyl/installers:alpine",
+      "entrypoint": "ash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Steam Auth Url",
+      "description": "Container environment STEAM_AUTH_URL.",
+      "env_variable": "STEAM_AUTH_URL",
+      "default_value": "http://steam-auth:3001",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Vnc Password",
+      "description": "Container environment VNC_PASSWORD.",
+      "env_variable": "VNC_PASSWORD",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Allow Insecure Setup",
+      "description": "Container environment ALLOW_INSECURE_SETUP.",
+      "env_variable": "ALLOW_INSECURE_SETUP",
+      "default_value": "false",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|boolean",
+      "field_type": "text"
+    },
+    {
+      "name": "Server Tps",
+      "description": "Container environment SERVER_TPS.",
+      "env_variable": "SERVER_TPS",
+      "default_value": "60",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Server Fps",
+      "description": "Container environment SERVER_FPS.",
+      "env_variable": "SERVER_FPS",
+      "default_value": "0",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Settings Path",
+      "description": "Container environment SETTINGS_PATH.",
+      "env_variable": "SETTINGS_PATH",
+      "default_value": "/data/settings/server-settings.json",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Api Enabled",
+      "description": "Container environment API_ENABLED.",
+      "env_variable": "API_ENABLED",
+      "default_value": "true",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|boolean",
+      "field_type": "text"
+    },
+    {
+      "name": "Api Port",
+      "description": "Container environment API_PORT.",
+      "env_variable": "API_PORT",
+      "default_value": "8080",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Api Key",
+      "description": "Container environment API_KEY.",
+      "env_variable": "API_KEY",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Server Password",
+      "description": "Container environment SERVER_PASSWORD.",
+      "env_variable": "SERVER_PASSWORD",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Max Login Attempts",
+      "description": "Container environment MAX_LOGIN_ATTEMPTS.",
+      "env_variable": "MAX_LOGIN_ATTEMPTS",
+      "default_value": "3",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Auth Timeout Seconds",
+      "description": "Container environment AUTH_TIMEOUT_SECONDS.",
+      "env_variable": "AUTH_TIMEOUT_SECONDS",
+      "default_value": "120",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Depends On",
+      "description": "Container environment depends_on.",
+      "env_variable": "depends_on",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Steam Auth URL",
+      "description": "URL of the sdvd/steam-service sidecar (required for JunimoServer).",
+      "env_variable": "STEAM_AUTH_URL",
+      "default_value": "http://steam-auth:3001",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:191",
+      "field_type": "text"
+    }
+  ]
+}

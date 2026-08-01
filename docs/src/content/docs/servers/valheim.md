@@ -3,47 +3,47 @@ title: Valheim
 description: Valheim and Valheim Plus dedicated servers.
 ---
 
-| Variant | Compose | Image |
+| Variant | Compose folder | Image name |
 | --- | --- | --- |
 | Vanilla | valheim/vanilla | valheim |
 | Plus | valheim/plus | valheim-plus |
 
-:::note[Requirements]
-- Set `SERVER_PASS` (via `-e` or a `.env` next to compose)
-- Persist data under `/opt/valheim` in the container
-- Publish UDP **2456-2458**
+:::note[Before you start]
+- Set a join password (SERVER_PASS via -e or a .env file next to compose)
+- Keep a data folder for your world (mounted at /opt/valheim in the container)
+- Open UDP ports 2456 through 2458
 :::
 
-## Configuration
+## Settings
 
-Common environment variables (vanilla and Plus unless noted):
+Common options for vanilla and Plus unless noted:
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `STEAM_USERNAME` | `anonymous` | SteamCMD login for the install/update step |
-| `STEAM_PASSWORD` | empty | Password for `STEAM_USERNAME`, unused when anonymous |
-| `STEAM_GUARD_CODE` | empty | Steam Guard code, unused when anonymous |
-| `SERVER_NAME` | `Valheim Server` (`Valheim Plus Server` for Plus) | Public server name |
-| `SERVER_PORT` | `2456` | Game port (publish UDP 2456-2458) |
-| `WORLD_NAME` | `Dedicated` | Save name under the data volume |
-| `SERVER_PASS` | `changeme` (compose default, image default is `secret`) | Join password, set a real value |
-| `SERVER_PUBLIC` | `1` | List on public server browser |
-| `SERVER_LOGINTOKEN` | empty | Optional [Steam Game Server Login Token](https://steamcommunity.com/dev/managegameservers), adds `-crossplay` when set |
-| `VALHEIM_FORCE_UPDATE` | `false` | Set `true` to force SteamCMD reinstall, same var `./tools/gs update valheim` sets |
+| STEAM_USERNAME | anonymous | Steam login for install and updates |
+| STEAM_PASSWORD | empty | Password for STEAM_USERNAME, unused when anonymous |
+| STEAM_GUARD_CODE | empty | Steam Guard code, unused when anonymous |
+| SERVER_NAME | Valheim Server (Valheim Plus Server for Plus) | Public server name |
+| SERVER_PORT | 2456 | Game port (publish UDP 2456-2458) |
+| WORLD_NAME | Dedicated | Save name under the data folder |
+| SERVER_PASS | changeme in compose (secret in the image alone) | Join password. Set a real value. |
+| SERVER_PUBLIC | 1 | List on the public server browser |
+| SERVER_LOGINTOKEN | empty | Optional [Steam Game Server Login Token](https://steamcommunity.com/dev/managegameservers). Adds crossplay when set. |
+| VALHEIM_FORCE_UPDATE | false | Set true to force a Steam reinstall. Same flag ./tools/gs update valheim sets. |
 
 Valheim Plus only:
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `VALHEIM_PLUS_VERSION` | `0.9.17.1` | ValheimPlus release tag to install |
-| `VALHEIM_PLUS_FORCE_INSTALL` | `false` | Reinstall Plus even if the version marker matches, same var `./tools/gs update valheim-plus` sets alongside `VALHEIM_FORCE_UPDATE` |
-| `VALHEIM_PLUS_URL` | `https://github.com/Grantapher/ValheimPlus/releases/download/<VALHEIM_PLUS_VERSION>/UnixServer.tar.gz` | Override the Plus archive download URL |
+| VALHEIM_PLUS_VERSION | 0.9.17.1 | ValheimPlus release to install |
+| VALHEIM_PLUS_FORCE_INSTALL | false | Reinstall Plus even if the version marker matches. Used by ./tools/gs update valheim-plus with VALHEIM_FORCE_UPDATE. |
+| VALHEIM_PLUS_URL | GitHub release URL for VALHEIM_PLUS_VERSION | Override the Plus archive download URL |
 
-World and config files live under `valheim/<variant>/data/` on the host after first start.
+World and config files live under valheim/<variant>/data/ on the host after first start.
 
-## Healthcheck
+## Health check
 
-Both images run a process healthcheck (`pgrep -f valheim_server`), there is no port probe. See [Ops](/guides/ops/) for `docker inspect --format '{{.State.Health.Status}}'` and for `./tools/gs backup` / `restore` / `update`.
+Both images check that the valheim_server process is running. There is no port probe. See [Ops](/guides/ops/) for checking status and for backup, restore, and update.
 
 ## Compose
 
@@ -51,7 +51,7 @@ Both images run a process healthcheck (`pgrep -f valheim_server`), there is no p
 docker compose -f valheim/vanilla/docker-compose.yml up -d
 ```
 
-Use `valheim/plus/docker-compose.yml` for Valheim Plus.
+Use valheim/plus/docker-compose.yml for Valheim Plus.
 
 ## Docker run
 
@@ -78,5 +78,5 @@ docker run -d --name valheim-plus --restart unless-stopped --init \
 ## See also
 
 - [All servers](/reference/servers/) for compose paths and image names
-- [Images](/reference/images/) for the shared `steam-base` image
-- [Ops](/guides/ops/) for `./tools/gs backup`, `restore`, and `update`
+- [Images](/reference/images/) for the shared steam-base image
+- [Ops](/guides/ops/) for backup, restore, and update with ./tools/gs

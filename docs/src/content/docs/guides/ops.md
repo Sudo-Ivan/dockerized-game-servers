@@ -3,7 +3,7 @@ title: Ops
 description: Backup, restore, update, and healthchecks for game servers.
 ---
 
-Host tooling lives under `tools/gs` and reads the shared server catalog at `ci/server-catalog.sh`. Compose image names use `IMAGE_OWNER` from `ci/repo-meta.sh`.
+Host tools live in tools/gs. They read the server list from ci/server-catalog.sh. Compose image names use IMAGE_OWNER from ci/repo-meta.sh.
 
 ## List servers
 
@@ -13,14 +13,14 @@ Host tooling lives under `tools/gs` and reads the shared server catalog at `ci/s
 
 ## Backup
 
-Stops the container, archives catalog volume directories, then starts again:
+Stops the container, archives the game's data folders, then starts it again:
 
 ```bash
 export IMAGE_OWNER="$(./ci/repo-meta.sh | sed -n 's/^IMAGE_OWNER=//p')"
 ./tools/gs backup core-keeper
 ```
 
-Archives default to `backups/<game>/<timestamp>.tar.gz`. Override with a path argument or `GS_BACKUP_DIR`.
+Archives go to backups/<game>/<timestamp>.tar.gz by default. Pass a path as the second argument or set GS_BACKUP_DIR to change that.
 
 ## Restore
 
@@ -30,26 +30,26 @@ Archives default to `backups/<game>/<timestamp>.tar.gz`. Override with a path ar
 
 ## Update
 
-One-shot recreate with the catalog `update_envs` set to `true` (compose defaults stay false via `${VAR:-false}`):
+Recreates the container once with the catalog update flags set to true (compose defaults stay false):
 
 ```bash
 ./tools/gs update factorio
 ./tools/gs update core-keeper --backup
 ```
 
-Games without update envs (for example Arma 3) cannot use `gs update`.
+Games without update flags (for example Arma 3) cannot use gs update.
 
-## Healthchecks
+## Health checks
 
-First-party images define `HEALTHCHECK` and a `/healthcheck.sh` probe. Compose mirrors the same check.
+First-party images run a health check script. Compose mirrors the same check.
 
 ```bash
 docker compose -f core-keeper/docker-compose.yml ps
 docker inspect --format '{{.State.Health.Status}}' core-keeper
 ```
 
-Probe kinds come from the catalog:
+Check types from the catalog:
 
-- `tcp`: Minecraft listen port (default 25565)
-- `process`: dedicated server process is running
-- `gameid`: Core Keeper process plus non-empty `GameID.txt`
+- tcp: Minecraft listen port (default 25565)
+- process: dedicated server process is running
+- gameid: Core Keeper process plus a non-empty GameID.txt file

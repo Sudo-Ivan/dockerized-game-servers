@@ -3,7 +3,7 @@ title: All servers
 description: Runnable servers from the repository catalog with compose paths and image names.
 ---
 
-Runnable servers are defined in `ci/server-catalog.sh`. First-party images publish to `{{IMAGE_PREFIX}}/`. External stacks use their own image references in compose.
+Every runnable server is listed below with its compose folder and image name. First-party images publish to {{IMAGE_PREFIX}}/. A few stacks use external images (noted in the table).
 
 | Server | Compose path | Image name | Docs |
 | --- | --- | --- | --- |

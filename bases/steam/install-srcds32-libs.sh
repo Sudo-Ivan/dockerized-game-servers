@@ -7,7 +7,7 @@ dest_dir="${2:-/usr/lib32}"
 
 mkdir -p "${dest_dir}"
 
-find "${src_dir}" -maxdepth 1 -type f -name 'lib*.so*' \
+find "${src_dir}" -maxdepth 1 \( -type f -o -type l \) -name 'lib*.so*' \
     ! -name 'libc.so*' \
     ! -name 'libpthread.so*' \
     ! -name 'libm.so*' \

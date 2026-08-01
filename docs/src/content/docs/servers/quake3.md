@@ -3,56 +3,54 @@ title: 'Quake 3: Arena'
 description: Quake 3 Arena dedicated server built from the LinuxGSM 1.32c archive.
 ---
 
-Compose path: quake3. Image: quake3.
+This image ships with the game server files built in. On first run they are copied into your data folder. You must own Quake 3 Arena.
 
-Built on the shared [runtime-base](/reference/images/) image. The Dockerfile bakes the LinuxGSM-hosted `quake3-1.32c-x86-full-linux` archive into the image as a seed, then copies that seed into the data volume the first time the container runs. You must own Quake 3 Arena.
-
-:::note[Requirements]
+:::note[Before you start]
 - You must own Quake 3 Arena
-- Persist `./data` for the server install and `server.cfg`
-- Publish UDP **27960** (or your chosen `Q3_PORT`, both host and container side)
+- Keep a data folder for the server install and server.cfg
+- Open UDP port 27960 (or the port you set with Q3_PORT, on both host and container)
 :::
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 27960 | UDP | Game traffic, `Q3_PORT` |
+| 27960 | UDP | Game traffic (Q3_PORT) |
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `Q3_IP` | `0.0.0.0` | Bind address (`net_ip`) |
-| `Q3_PORT` | `27960` | Game UDP port (`net_port`), applied on every start |
-| `Q3_STARTMAP` | `q3dm17` | Map loaded at boot (`+map`), applied on every start |
-| `Q3_HOSTNAME` | `Quake 3 Arena Server` | Server browser name, written into `server.cfg` **only when the file is first created** |
-| `Q3_EXTRA_ARGS` | (empty) | Extra `+set`/`+`-style flags appended to the launch command |
+| Q3_IP | 0.0.0.0 | Bind address |
+| Q3_PORT | 27960 | Game UDP port, applied on every start |
+| Q3_STARTMAP | q3dm17 | Map loaded at boot, applied on every start |
+| Q3_HOSTNAME | Quake 3 Arena Server | Server browser name, written into server.cfg only when that file is first created |
+| Q3_EXTRA_ARGS | (empty) | Extra launch flags appended to the start command |
 
-There is no `Q3_MAXPLAYERS` variable, id Tech 3's own `sv_maxclients` default (20) applies unless you set it yourself through `Q3_EXTRA_ARGS` or `server.cfg`. `Q3_IP`, `Q3_PORT`, and `Q3_STARTMAP` are passed on the command line every time the container starts. `Q3_HOSTNAME` only affects a freshly generated `server.cfg`, changing it later has no effect until you delete `server.cfg` (or edit the `sv_hostname` line yourself).
+There is no max-players setting. The game default (20) applies unless you set sv_maxclients through Q3_EXTRA_ARGS or server.cfg. Q3_IP, Q3_PORT, and Q3_STARTMAP take effect on the next restart. Q3_HOSTNAME only matters when server.cfg is generated for the first time.
 
-## Data volume
+## Data folder
 
-The data volume mounts to `/opt/quake3`. On first start (or whenever `.lgsm-seed-complete` or `q3ded` is missing from the volume), the entrypoint wipes anything already in the volume except `.gitkeep` and copies the baked-in seed over it.
+Your data folder mounts to /opt/quake3 inside the container. On first start (or if key files are missing), the container copies the built-in server files into that folder.
 
-`server.cfg` is generated once, only if it does not already exist, with:
+server.cfg is created once if it does not exist:
 
 ```text
 set sv_hostname "<Q3_HOSTNAME>"
 set g_allowvote 1
 ```
 
-There is no `rcon_password` line in the generated config, so remote console is disabled until you add one yourself. Edit `quake3/data/server.cfg` on the host (with the container stopped) to set an rcon password or add other server cvars, your edits persist across restarts since the entrypoint never rewrites an existing `server.cfg`.
+There is no rcon password in the generated config, so remote console is disabled until you add one. Edit quake3/data/server.cfg on the host with the container stopped to set an rcon password or other options. Your edits persist because an existing server.cfg is never overwritten.
 
-Punkbuster is force-disabled (`sv_punkbuster 0`) and `com_hunkMegs` is fixed at 32.
+Punkbuster is disabled (sv_punkbuster 0) and com_hunkMegs is fixed at 32.
 
 ## Updates
 
-`ci/server-catalog.sh` lists no update env var for `quake3`, so `./tools/gs update quake3` is not available. See [Ops](../guides/ops/) for backup and restore, which do work for this server since it has a normal `data` volume. To pick up a newer archive you have to change the `LGSM_URL`/`LGSM_MD5` build args in the Dockerfile and rebuild the image.
+There is no one-command update for this server. Use [backup and restore](../guides/ops/) to protect your data. To pick up a newer game archive, change the build settings in the Dockerfile and rebuild the image.
 
-## Healthcheck
+## Health check
 
-`process` kind: the container is healthy while a `q3ded` process is running (`pgrep -f q3ded`). `start_period` is 120 seconds.
+The container reports healthy while the game server process is running. Startup gets a 120 second grace period.
 
 ## Compose
 

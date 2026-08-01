@@ -32,6 +32,59 @@ IMAGE_SLUG: dict[str, str] = {
     "neoforge": "minecraft-neoforge",
 }
 
+EGG_FOLDERS: dict[str, str] = {
+    "fabric": "minecraft",
+    "vanilla": "minecraft",
+    "forge": "minecraft",
+    "neoforge": "minecraft",
+    "valheim": "valheim",
+    "valheim-plus": "valheim",
+    "tf2": "source",
+    "cs2": "source",
+    "cs-source": "source",
+    "l4d2": "source",
+    "gmod": "source",
+    "dod-source": "source",
+    "kf2": "source",
+    "cod": "call-of-duty",
+    "cod2": "call-of-duty",
+    "cod4": "call-of-duty",
+    "codwaw": "call-of-duty",
+    "bf1942": "battlefield",
+    "bfv": "battlefield",
+    "arma-3": "arma",
+    "arma-reforger": "arma",
+    "insurgency-source": "insurgency",
+    "insurgency-sandstorm": "insurgency",
+    "7-days-to-die": "survival",
+    "project-zomboid": "survival",
+    "the-forest": "survival",
+    "sons-of-the-forest": "survival",
+    "dayz": "survival",
+    "icarus": "survival",
+    "terraria": "sandbox",
+    "starbound": "sandbox",
+    "eco": "sandbox",
+    "factorio": "sandbox",
+    "palworld": "sandbox",
+    "barotrauma": "sandbox",
+    "core-keeper": "sandbox",
+    "space-engineers": "sandbox",
+    "ground-branch": "sandbox",
+    "longvinter": "sandbox",
+    "unturned": "sandbox",
+    "quake3": "classic",
+    "rtcw": "classic",
+    "etl": "classic",
+    "openmohaa": "classic",
+    "delta-force-bhd": "classic",
+    "supertuxkart": "classic",
+    "sniper-elite-4": "classic",
+    "hytale": "external",
+    "stardew-valley": "external",
+    "azerothcore": "external",
+}
+
 SIGINT_GAMES = {
     "cs2",
     "gmod",
@@ -656,18 +709,23 @@ def validate_egg(egg: dict) -> list[str]:
     return errors
 
 
-def egg_json_files() -> set[str]:
-    return {
-        p.name
-        for p in EGGS_DIR.glob("*.json")
-        if p.name != "nest.json"
-    }
+def egg_folder(game_id: str) -> str:
+    return EGG_FOLDERS.get(game_id, "other")
+
+
+def egg_json_paths() -> set[str]:
+    paths: set[str] = set()
+    for path in EGGS_DIR.rglob("*.json"):
+        if path.name == "nest.json":
+            continue
+        paths.add(path.relative_to(EGGS_DIR).as_posix())
+    return paths
 
 
 def main() -> int:
     image_prefix = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_IMAGE_PREFIX
     rows = parse_catalog()
-    existing = egg_json_files()
+    existing = egg_json_paths()
     generated: list[str] = []
 
     for row in rows:
@@ -676,13 +734,16 @@ def main() -> int:
         if errors:
             print(f"validation failed for {row['id']}: {errors}", file=sys.stderr)
             return 1
+        folder = egg_folder(row["id"])
         filename = f"{slugify(row['id'])}.json"
-        path = EGGS_DIR / filename
+        rel_path = f"{folder}/{filename}"
+        path = EGGS_DIR / folder / filename
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(egg, indent=2) + "\n", encoding="utf-8")
-        generated.append(filename)
+        generated.append(rel_path)
 
     nest = {
-        "_comment": "Import eggs from eggs/*.json into this nest via Admin > Nests > Import Egg",
+        "_comment": "Import eggs from eggs/<folder>/*.json via Admin > Nests > Import Egg",
         "name": "Dockerized Game Servers",
         "description": "Dedicated servers from the dockerized-game-servers project (GHCR images).",
         "author": AUTHOR,
@@ -691,22 +752,26 @@ def main() -> int:
     (EGGS_DIR / "nest.json").write_text(json.dumps(nest, indent=2) + "\n", encoding="utf-8")
 
     stale = sorted(existing - set(generated))
-    for name in stale:
-        (EGGS_DIR / name).unlink()
+    for rel_path in stale:
+        (EGGS_DIR / rel_path).unlink()
     if stale:
         print(f"removed stale egg files: {', '.join(stale)}", file=sys.stderr)
 
+    for path in sorted(EGGS_DIR.rglob("*"), key=lambda p: len(p.parts), reverse=True):
+        if path.is_dir() and path != EGGS_DIR and not any(path.iterdir()):
+            path.rmdir()
+
     verify_errors: list[str] = []
-    for filename in generated:
-        path = EGGS_DIR / filename
+    for rel_path in generated:
+        path = EGGS_DIR / rel_path
         try:
             egg = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
-            verify_errors.append(f"{filename}: invalid JSON: {exc}")
+            verify_errors.append(f"{rel_path}: invalid JSON: {exc}")
             continue
         file_errors = validate_egg(egg)
         if file_errors:
-            verify_errors.append(f"{filename}: {file_errors}")
+            verify_errors.append(f"{rel_path}: {file_errors}")
 
     if verify_errors:
         for msg in verify_errors:

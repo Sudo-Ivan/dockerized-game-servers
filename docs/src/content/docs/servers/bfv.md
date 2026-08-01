@@ -3,48 +3,46 @@ title: Battlefield Vietnam
 description: Battlefield Vietnam dedicated server built from the LinuxGSM v1.21 archive.
 ---
 
-Compose path: bfv. Image: bfv.
+This image ships with the game server files built in. On first run they are copied into your data folder. You must own Battlefield Vietnam.
 
-Built on the shared [runtime-base](/reference/images/) image. The Dockerfile bakes the LinuxGSM-hosted `bfv_linded-v1.21-20041207_patch` archive into the image as a seed, then copies that seed into the data volume the first time the container runs. You must own Battlefield Vietnam.
-
-:::note[Requirements]
+:::note[Before you start]
 - You must own Battlefield Vietnam
-- Persist `./data` for the server install and any config you edit
-- Publish UDP **4755** and UDP **27900**
+- Keep a data folder for the server install and any config you edit
+- Open UDP ports 4755 and 27900
 :::
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 4755 | UDP | Game traffic, fixed, not configurable by env var |
-| 27900 | UDP | LinuxGSM's default query/status port, fixed |
+| 4755 | UDP | Game traffic (fixed, no setting to change it) |
+| 27900 | UDP | Query and status port (fixed) |
 
-Neither port has an environment variable override.
+Neither port can be changed with an environment variable.
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `BFV_EXTRA_ARGS` | (empty) | Extra flags appended to `./start.sh +statusMonitor 1 ...` |
+| BFV_EXTRA_ARGS | (empty) | Extra flags appended to the start command |
 
-This is the only variable the entrypoint reads. Battlefield Vietnam has no hostname, map, or player-count env vars, everything else comes from the config files inside the seeded data volume or from flags you add through `BFV_EXTRA_ARGS`.
+This is the only setting the container reads. There are no hostname, map, or player-count options. Everything else comes from config files inside the data folder or from flags you add through BFV_EXTRA_ARGS.
 
-## Data volume
+## Data folder
 
-The data volume mounts to `/opt/bfv`. On first start (or whenever `.lgsm-seed-complete` or `start.sh` is missing from the volume), the entrypoint wipes anything already in the volume except `.gitkeep` and copies the baked-in seed over it, then creates `.lgsm-seed-complete`. After that it leaves the volume alone.
+Your data folder mounts to /opt/bfv inside the container. On first start (or if key files are missing), the container copies the built-in server files into that folder and marks the copy as complete. After that it leaves the folder alone.
 
-There is no generated `server.cfg`. All server settings (hostname, map rotation, player count, rcon) live in the mod's own config files inside the seeded tree. Edit them directly on the host with the container stopped.
+There is no generated server.cfg. Hostname, map rotation, player count, and rcon all live in config files inside the copied tree. Edit them on the host with the container stopped.
 
-Because a reseed deletes everything already in the volume, do not delete `.lgsm-seed-complete` or `start.sh` unless you actually want to discard any config changes and start from the baked-in seed again.
+Do not delete the completion marker or start script unless you want to wipe your config changes and start from the built-in copy again.
 
 ## Updates
 
-`ci/server-catalog.sh` lists no update env var for `bfv`, so `./tools/gs update bfv` is not available. See [Ops](../guides/ops/) for backup and restore, which do work for this server since it has a normal `data` volume. To pick up a newer archive you have to change the `LGSM_URL`/`LGSM_MD5` build args in the Dockerfile and rebuild the image.
+There is no one-command update for this server. Use [backup and restore](../guides/ops/) to protect your data. To pick up a newer game archive, change the build settings in the Dockerfile and rebuild the image.
 
-## Healthcheck
+## Health check
 
-`process` kind: the container is healthy while a process matching `bfv_linded`, `bfvietnam`, or `bfv_lnxded` is running. `start_period` is 180 seconds.
+The container reports healthy while the game server process is running. Startup gets a 180 second grace period.
 
 ## Compose
 

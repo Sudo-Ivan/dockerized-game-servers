@@ -1,0 +1,62 @@
+{
+  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2026-08-01T23:52:06+00:00",
+  "name": "AzerothCore WotLK",
+  "author": "sudo-ivan@users.noreply.github.com",
+  "description": "AzerothCore WotLK using the dockerized-game-servers image. Docker image: acore/ac-wotlk-worldserver:master. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: -3724}:3724/tcp This egg runs only the worldserver binary. MariaDB, db-import, and client-data init are still required. External image maintained outside this repository.",
+  "features": null,
+  "docker_images": {
+    "Latest": "acore/ac-wotlk-worldserver:master"
+  },
+  "file_denylist": [],
+  "startup": "/bin/bash -c 'mkdir -p /home/container/data /home/container/logs /home/container/etc; ln -sfn /home/container/data /azerothcore/env/dist/data; ln -sfn /home/container/logs /azerothcore/env/dist/logs; ln -sfn /home/container/etc /azerothcore/env/dist/etc; exec ./bin/worldserver'",
+  "config": {
+    "files": "{}",
+    "startup": "{\"done\": \"Starting\"}",
+    "logs": "{}",
+    "stop": "^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\n# Server files: /mnt/server\nset -e\nmkdir -p /mnt/server\ncd /mnt/server\necho \"Install complete. Game files download on first container start.\"\n",
+      "container": "ghcr.io/pterodactyl/installers:alpine",
+      "entrypoint": "ash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Mysql Root Password",
+      "description": "Container environment MYSQL_ROOT_PASSWORD.",
+      "env_variable": "MYSQL_ROOT_PASSWORD",
+      "default_value": "acore",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Volumes",
+      "description": "Container environment volumes.",
+      "env_variable": "volumes",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Database Root Password",
+      "description": "MariaDB root password used in AC_*_DATABASE_INFO strings.",
+      "env_variable": "ACORE_DB_ROOT_PASSWORD",
+      "default_value": "acore",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:64",
+      "field_type": "text"
+    }
+  ]
+}

@@ -3,42 +3,40 @@ title: 'ET: Legacy'
 description: ET Legacy dedicated server built from the GameServerManagers etlserver-build bundle.
 ---
 
-Compose path: etl. Image: etl.
+This image ships with an ET: Legacy server bundle built in. On first run the files are copied into your data folder. Wolfenstein: Enemy Territory was released as a free standalone game, so you do not need to own a copy. The bundle already includes the pak files the server needs.
 
-Built on the shared [runtime-base](/reference/images/) image. The Dockerfile bakes a bundle from [GameServerManagers etlserver-build](https://github.com/GameServerManagers/etlserver-build) (`etlegacy-latest-i386-et-260b`) into the image as a seed, then copies that seed into the data volume the first time the container runs. Wolfenstein: Enemy Territory was released as a free standalone multiplayer game, so unlike the rest of this game family there is no ownership requirement, the bundle already includes the pak files ET: Legacy needs.
-
-:::note[Requirements]
-- Persist `./data` for the server install and `etmain/server.cfg`
-- Publish UDP **27960**, and UDP **27961** if you rely on tooling that expects a second port (the server process itself only listens on `ETL_PORT`)
+:::note[Before you start]
+- Keep a data folder for the server install and etmain/server.cfg
+- Open UDP port 27960, and UDP 27961 if your tooling expects a second port (the server process only listens on ETL_PORT)
 :::
 
 ## Ports
 
 | Port | Protocol | Purpose |
 | --- | --- | --- |
-| 27960 | UDP | Game traffic, `ETL_PORT` |
-| 27961 | UDP | Exposed by the Dockerfile and compose file for compatibility, but the entrypoint never binds anything to it, `etlded` only listens on `ETL_PORT` |
+| 27960 | UDP | Game traffic (ETL_PORT) |
+| 27961 | UDP | Exposed for compatibility. The server process does not bind to this port. |
 
-## Environment
+## Settings
 
-| Variable | Default | Purpose |
+| Setting | Default | What it does |
 | --- | --- | --- |
-| `ETL_IP` | `0.0.0.0` | Bind address (`net_ip`), applied on every start |
-| `ETL_PORT` | `27960` | Game UDP port (`net_port`), applied on every start |
-| `ETL_MAXPLAYERS` | `32` | Max clients (`sv_maxclients`), written into `server.cfg` **only when the file is first created** |
-| `ETL_STARTMAP` | `oasis` | Map loaded at boot (`+map`), applied on every start |
-| `ETL_GAMETYPE` | `4` | Game type (`g_gametype`, `4` is Objective), written into `server.cfg` **only when the file is first created** |
-| `ETL_HOSTNAME` | `ET: Legacy Server` | Server browser name, written into `server.cfg` **only when the file is first created** |
-| `ETL_EXTRA_ARGS` | (empty) | Extra `+set`/`+`-style flags appended to the launch command |
-| `ETL_FORCE_UPDATE` | `false` | Re-downloads the etlserver-build bundle and overwrites the entire data volume with it on next start |
+| ETL_IP | 0.0.0.0 | Bind address, applied on every start |
+| ETL_PORT | 27960 | Game UDP port, applied on every start |
+| ETL_MAXPLAYERS | 32 | Max players, written into server.cfg only when that file is first created |
+| ETL_STARTMAP | oasis | Map loaded at boot, applied on every start |
+| ETL_GAMETYPE | 4 | Game type (4 is Objective), written into server.cfg only when that file is first created |
+| ETL_HOSTNAME | ET: Legacy Server | Server browser name, written into server.cfg only when that file is first created |
+| ETL_EXTRA_ARGS | (empty) | Extra launch flags appended to the start command |
+| ETL_FORCE_UPDATE | false | Re-downloads the server bundle and overwrites the entire data folder on next start |
 
-`ETL_IP`, `ETL_PORT`, and `ETL_STARTMAP` are passed on the command line every time the container starts. `ETL_MAXPLAYERS`, `ETL_GAMETYPE`, and `ETL_HOSTNAME` only affect a freshly generated `server.cfg`, changing them later has no effect until you delete `etmain/server.cfg` (or edit the relevant line yourself).
+ETL_IP, ETL_PORT, and ETL_STARTMAP take effect on every start. ETL_MAXPLAYERS, ETL_GAMETYPE, and ETL_HOSTNAME only matter when etmain/server.cfg is generated for the first time.
 
-## Data volume
+## Data folder
 
-The data volume mounts to `/opt/etl`. On first start (or whenever `.lgsm-seed-complete` or `etlded` is missing from the volume), the entrypoint wipes anything already in the volume except `.gitkeep` and copies the baked-in seed over it.
+Your data folder mounts to /opt/etl inside the container. On first start (or if key files are missing), the container copies the built-in server files into that folder.
 
-`etmain/server.cfg` is generated once, only if it does not already exist, with:
+etmain/server.cfg is created once if it does not exist:
 
 ```text
 set com_hunkMegs "56"
@@ -54,17 +52,17 @@ set g_allowvote 1
 set net_port <ETL_PORT>
 ```
 
-Both `rconpassword` and `refereePassword` are always `changeme` on a freshly generated config and there is no env var to set either. Edit `etl/data/etmain/server.cfg` on the host (with the container stopped) to change them or any other server cvar, your edits persist across restarts since the entrypoint never rewrites an existing `server.cfg`.
+Both rcon and referee passwords default to changeme. Edit etl/data/etmain/server.cfg on the host with the container stopped to change them or any other option. Your edits persist because an existing server.cfg is never overwritten.
 
-The seeded tree also ships `legacy/` (ET: Legacy mod assets, `legacy.cfg`, omni-bot files, Lua scripts for wolfadmin) and several rotation/cycle config files under `etmain/` (`mapvotecycle.cfg`, `campaigncycle.cfg`, `objectivecycle.cfg`, and so on) that you can edit directly.
+The copied tree also includes legacy mod assets, omni-bot files, and map rotation configs under etmain/ that you can edit directly.
 
 ## Updates
 
-`ci/server-catalog.sh` lists `ETL_FORCE_UPDATE` as the update env var, so `./tools/gs update etl` works, see [Ops](../guides/ops/). Setting `ETL_FORCE_UPDATE=true` re-downloads the bundle from `ETL_BUNDLE_URL` and copies it over the entire data directory (`cp -a`), which overwrites `etmain/server.cfg` and any other file the bundle ships with, back up custom configs first if you use this.
+./tools/gs update etl works for this server. See [Ops](../guides/ops/). Setting ETL_FORCE_UPDATE to true re-downloads the bundle and overwrites the entire data folder, including server.cfg. Back up custom configs first if you use this.
 
-## Healthcheck
+## Health check
 
-`process` kind: the container is healthy while an `etlded` process is running (`pgrep -f etlded`). `start_period` is 120 seconds.
+The container reports healthy while the game server process is running. Startup gets a 120 second grace period.
 
 ## Compose
 

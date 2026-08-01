@@ -1,0 +1,292 @@
+{
+  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2026-08-01T23:52:06+00:00",
+  "name": "The Forest",
+  "author": "sudo-ivan@users.noreply.github.com",
+  "description": "The Forest using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/the-forest:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 8766/tcp, 8766/udp, 27015/tcp, 27015/udp, 27016/tcp, 27016/udp",
+  "features": null,
+  "docker_images": {
+    "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/the-forest:latest"
+  },
+  "file_denylist": [],
+  "startup": "/bin/bash -c 'export FOREST_DIR=/home/container; exec /docker-entrypoint.sh'",
+  "config": {
+    "files": "{}",
+    "startup": "{\"done\": \"Starting\"}",
+    "logs": "{}",
+    "stop": "^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\n# Server files: /mnt/server\nset -e\nmkdir -p /mnt/server\ncd /mnt/server\necho \"Install complete. Game files download on first container start.\"\n",
+      "container": "ghcr.io/pterodactyl/installers:alpine",
+      "entrypoint": "ash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Steam Username",
+      "description": "Steam account for dedicated server installs. Use anonymous unless the game requires a login.",
+      "env_variable": "STEAM_USERNAME",
+      "default_value": "anonymous",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:64",
+      "field_type": "text"
+    },
+    {
+      "name": "Steam Password",
+      "description": "Steam password when not using anonymous login.",
+      "env_variable": "STEAM_PASSWORD",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:64",
+      "field_type": "text"
+    },
+    {
+      "name": "Steam Guard Code",
+      "description": "One-time Steam Guard code for SteamCMD login.",
+      "env_variable": "STEAM_GUARD_CODE",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:32",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Force Update",
+      "description": "Set true on reinstall to force a fresh download or update.",
+      "env_variable": "FOREST_FORCE_UPDATE",
+      "default_value": "false",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|boolean",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Ip",
+      "description": "Container environment FOREST_IP.",
+      "env_variable": "FOREST_IP",
+      "default_value": "0.0.0.0",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Steam Port",
+      "description": "Container environment FOREST_STEAM_PORT.",
+      "env_variable": "FOREST_STEAM_PORT",
+      "default_value": "8766",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Game Port",
+      "description": "Container environment FOREST_GAME_PORT.",
+      "env_variable": "FOREST_GAME_PORT",
+      "default_value": "27015",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Query Port",
+      "description": "Container environment FOREST_QUERY_PORT.",
+      "env_variable": "FOREST_QUERY_PORT",
+      "default_value": "27016",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Server Name",
+      "description": "Container environment FOREST_SERVER_NAME.",
+      "env_variable": "FOREST_SERVER_NAME",
+      "default_value": "The Forest Dedicated Server",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Max Players",
+      "description": "Container environment FOREST_MAX_PLAYERS.",
+      "env_variable": "FOREST_MAX_PLAYERS",
+      "default_value": "8",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Password",
+      "description": "Container environment FOREST_PASSWORD.",
+      "env_variable": "FOREST_PASSWORD",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Admin Password",
+      "description": "Container environment FOREST_ADMIN_PASSWORD.",
+      "env_variable": "FOREST_ADMIN_PASSWORD",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Steam Account",
+      "description": "Container environment FOREST_STEAM_ACCOUNT.",
+      "env_variable": "FOREST_STEAM_ACCOUNT",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Difficulty",
+      "description": "Container environment FOREST_DIFFICULTY.",
+      "env_variable": "FOREST_DIFFICULTY",
+      "default_value": "Normal",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Init Type",
+      "description": "Container environment FOREST_INIT_TYPE.",
+      "env_variable": "FOREST_INIT_TYPE",
+      "default_value": "Continue",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Slot",
+      "description": "Container environment FOREST_SLOT.",
+      "env_variable": "FOREST_SLOT",
+      "default_value": "1",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Autosave Interval",
+      "description": "Container environment FOREST_AUTOSAVE_INTERVAL.",
+      "env_variable": "FOREST_AUTOSAVE_INTERVAL",
+      "default_value": "15",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Enable Vac",
+      "description": "Container environment FOREST_ENABLE_VAC.",
+      "env_variable": "FOREST_ENABLE_VAC",
+      "default_value": "true",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|boolean",
+      "field_type": "text"
+    },
+    {
+      "name": "Forest Extra Args",
+      "description": "Container environment FOREST_EXTRA_ARGS.",
+      "env_variable": "FOREST_EXTRA_ARGS",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Healthcheck",
+      "description": "Container environment healthcheck.",
+      "env_variable": "healthcheck",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Test",
+      "description": "Container environment test.",
+      "env_variable": "test",
+      "default_value": "[\"CMD\", \"/healthcheck.sh\"]",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Interval",
+      "description": "Container environment interval.",
+      "env_variable": "interval",
+      "default_value": "30s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Timeout",
+      "description": "Container environment timeout.",
+      "env_variable": "timeout",
+      "default_value": "5s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Retries",
+      "description": "Container environment retries.",
+      "env_variable": "retries",
+      "default_value": "3",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Start Period",
+      "description": "Container environment start_period.",
+      "env_variable": "start_period",
+      "default_value": "300s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Security Opt",
+      "description": "Container environment security_opt.",
+      "env_variable": "security_opt",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    }
+  ]
+}
