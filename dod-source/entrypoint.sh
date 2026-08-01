@@ -76,6 +76,21 @@ fi
 
 printf '%s\n' "300" > "${DOD_DIR}/steam_appid.txt"
 
+link_steamclient() {
+    local sdk_dir="/home/dodsource/.steam/sdk32"
+    local client_src=""
+    if [ -f "${STEAM_DIR}/linux32/steamclient.so" ]; then
+        client_src="${STEAM_DIR}/linux32/steamclient.so"
+    fi
+    if [ -n "${client_src}" ]; then
+        mkdir -p "${sdk_dir}"
+        ln -sf "${client_src}" "${sdk_dir}/steamclient.so"
+    fi
+}
+
+
+link_steamclient
+
 cd "${DOD_DIR}"
 
 args=(
