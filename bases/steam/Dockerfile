@@ -69,7 +69,6 @@ COPY install-srcds32-libs.sh http-download.sh /tmp/
 RUN pacman -S --noconfirm --needed libarchive \
   && chmod 755 /tmp/install-srcds32-libs.sh /tmp/http-download.sh \
   && bash /tmp/install-srcds32-libs.sh \
-  && pacman -Rns --noconfirm libarchive \
   && rm -f /tmp/install-srcds32-libs.sh /tmp/http-download.sh \
   && pacman -Scc --noconfirm \
   && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/*

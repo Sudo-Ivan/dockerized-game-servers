@@ -20,7 +20,8 @@ if [ -n "${LIBCURL_DEB_SHA256:-}" ]; then
     echo "${LIBCURL_DEB_SHA256}  ${deb}" | sha256sum -c -
 fi
 
-mkdir -p "${tmpdir}/extract" /usr/lib32
-bsdtar -xf "${deb}" -C "${tmpdir}/extract"
+mkdir -p "${tmpdir}/deb" "${tmpdir}/extract" /usr/lib32
+bsdtar -xf "${deb}" -C "${tmpdir}/deb"
+bsdtar -xf "${tmpdir}/deb/data.tar.xz" -C "${tmpdir}/extract"
 cp -a "${tmpdir}/extract/usr/lib/i386-linux-gnu/libcurl-gnutls.so"* /usr/lib32/
 chmod a+rX /usr/lib32/libcurl-gnutls.so*
