@@ -4,10 +4,27 @@ ARG STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linu
 ARG STEAMCMD_SHA256="cebf0046bfd08cf45da6bc094ae47aa39ebf4155e5ede41373b579b8f1071e7c"
 
 RUN pacman -Syu --noconfirm \
-  && pacman -S --noconfirm --needed curl ca-certificates tar \
+  && pacman -S --noconfirm --needed curl ca-certificates tar bash \
   && mkdir -p /opt/steamcmd \
-  && curl -fsSL "${STEAMCMD_URL}" -o /tmp/steamcmd_linux.tar.gz \
-  && echo "${STEAMCMD_SHA256}  /tmp/steamcmd_linux.tar.gz" | sha256sum -c - \
+  && bash -eu -c '\
+    max=8; delay=5; attempt=1; \
+    while [ "${attempt}" -le "${max}" ]; do \
+      rm -f /tmp/steamcmd_linux.tar.gz; \
+      if curl -fsSL --connect-timeout 30 --retry 5 --retry-all-errors --retry-delay 3 -C - \
+        "${STEAMCMD_URL}" -o /tmp/steamcmd_linux.tar.gz \
+        && [ -s /tmp/steamcmd_linux.tar.gz ] \
+        && echo "${STEAMCMD_SHA256}  /tmp/steamcmd_linux.tar.gz" | sha256sum -c -; then \
+        break; \
+      fi; \
+      echo "SteamCMD download attempt ${attempt}/${max} failed" >&2; \
+      attempt=$((attempt + 1)); \
+      if [ "${attempt}" -le "${max}" ]; then \
+        sleep "${delay}"; \
+        delay=$((delay + delay)); \
+        if [ "${delay}" -gt 60 ]; then delay=60; fi; \
+      fi; \
+    done; \
+    [ "${attempt}" -le "${max}" ]' \
   && tar -xzf /tmp/steamcmd_linux.tar.gz -C /opt/steamcmd \
   && rm -f /tmp/steamcmd_linux.tar.gz \
   && /opt/steamcmd/steamcmd.sh +quit || true \

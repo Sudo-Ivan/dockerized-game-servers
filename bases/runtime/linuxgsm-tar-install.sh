@@ -2,16 +2,41 @@
 # Fetch and verify LinuxGSM-hosted server archives (same URLs as LinuxGSM install_server_files.sh).
 set -eu
 
+# shellcheck source=/usr/local/bin/http-download.sh
+. /usr/local/bin/http-download.sh
+
 lgsm_tar_install() {
     local url="${1:?url required}"
     local expected_md5="${2:?md5 required}"
     local dest="${3:?dest required}"
     local archive
     archive="$(mktemp)"
+    local max_attempts="${LGSM_TAR_VERIFY_RETRIES:-8}"
+    local sleep_sec="${LGSM_TAR_VERIFY_RETRY_DELAY:-5}"
+    local attempt=1
 
-    curl -fsSL --retry 3 --retry-delay 2 "${url}" -o "${archive}"
-    if ! echo "${expected_md5}  ${archive}" | md5sum -c -; then
-        echo "LGSM archive md5 mismatch for ${url}" >&2
+    while [ "${attempt}" -le "${max_attempts}" ]; do
+        if http_download_file "${url}" "${archive}"; then
+            if echo "${expected_md5}  ${archive}" | md5sum -c -; then
+                break
+            fi
+            echo "LGSM archive md5 mismatch (attempt ${attempt}/${max_attempts}) for ${url}" >&2
+        else
+            echo "LGSM download failed (attempt ${attempt}/${max_attempts}) for ${url}" >&2
+        fi
+        rm -f "${archive}"
+        if [ "${attempt}" -lt "${max_attempts}" ]; then
+            sleep "${sleep_sec}"
+            sleep_sec=$((sleep_sec + sleep_sec))
+            if [ "${sleep_sec}" -gt 60 ]; then
+                sleep_sec=60
+            fi
+        fi
+        attempt=$((attempt + 1))
+    done
+
+    if [ "${attempt}" -gt "${max_attempts}" ]; then
+        echo "LGSM archive install failed after ${max_attempts} attempts: ${url}" >&2
         rm -f "${archive}"
         return 1
     fi

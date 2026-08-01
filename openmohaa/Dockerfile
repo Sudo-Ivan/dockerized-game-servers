@@ -4,9 +4,9 @@ FROM ${BASE_IMAGE} AS fetch
 ARG OPENMOHAA_VERSION=v0.82.1
 
 RUN mkdir -p /opt/openmohaa/lib/openmohaa \
-  && curl -fsSL --retry 3 --retry-delay 2 \
-    -o /tmp/openmohaa.zip \
-    "https://github.com/openmoh/openmohaa/releases/download/${OPENMOHAA_VERSION}/openmohaa-${OPENMOHAA_VERSION}-linux-amd64.zip" \
+  && OPENMOHAA_VERSION="${OPENMOHAA_VERSION}" bash -eu -c '\
+    . /usr/local/bin/http-download.sh; \
+    http_download_file "https://github.com/openmoh/openmohaa/releases/download/${OPENMOHAA_VERSION}/openmohaa-${OPENMOHAA_VERSION}-linux-amd64.zip" /tmp/openmohaa.zip' \
   && unzip -q /tmp/openmohaa.zip -d /opt/openmohaa/lib/openmohaa \
   && chmod +x /opt/openmohaa/lib/openmohaa/omohaaded \
   && printf '%s\n' "${OPENMOHAA_VERSION}" > /opt/openmohaa/.installed-version \

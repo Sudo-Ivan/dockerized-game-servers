@@ -51,9 +51,9 @@ install_server() {
     rm -rf "${extract_dir}"
     mkdir -p "${extract_dir}"
 
-    curl -fsSL --retry 3 --retry-delay 2 \
-        -o "${archive}" \
-        "${FACTORIO_DOWNLOAD_URL}"
+    # shellcheck source=/usr/local/bin/http-download.sh
+    . /usr/local/bin/http-download.sh
+    http_download_file "${FACTORIO_DOWNLOAD_URL}" "${archive}"
 
     tar -xJf "${archive}" -C "${extract_dir}"
     rm -f "${archive}"
