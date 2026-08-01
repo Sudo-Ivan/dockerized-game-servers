@@ -1,3 +1,10 @@
+FROM debian:bookworm-slim@sha256:020c0d20b9880058cbe785a9db107156c3c75c2ac944a6aa7ab59f2add76a7bd AS srcds32libs
+
+RUN dpkg --add-architecture i386 \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends libcurl3-gnutls:i386 \
+  && rm -rf /var/lib/apt/lists/*
+
 FROM archlinux:latest@sha256:592e11bd99ab579f933a0cb77a8f66e2f3ae57f5eafacf13aea44a6e98ef21ae AS steamcmd
 
 ARG STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz"
@@ -49,6 +56,7 @@ RUN sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf \
     curl \
     tar \
     ca-certificates \
+    bash \
   && rm -f /usr/bin/captree \
   && pacman-key --init \
   && pacman-key --populate archlinux \
@@ -64,13 +72,12 @@ RUN sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf \
 
 COPY --from=steamcmd /opt/steamcmd /opt/steamcmd
 COPY steamcmd-app-update.sh /opt/steamcmd/steamcmd-app-update.sh
-COPY install-srcds32-libs.sh http-download.sh /tmp/
+COPY install-srcds32-libs.sh /tmp/install-srcds32-libs.sh
+COPY --from=srcds32libs /usr/lib/i386-linux-gnu /srcds32libs/usr/lib/i386-linux-gnu
 
-RUN pacman -S --noconfirm --needed libarchive \
-  && chmod 755 /tmp/install-srcds32-libs.sh /tmp/http-download.sh \
-  && bash /tmp/install-srcds32-libs.sh \
-  && rm -f /tmp/install-srcds32-libs.sh /tmp/http-download.sh \
-  && pacman -Scc --noconfirm \
-  && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/*
+RUN chmod 755 /tmp/install-srcds32-libs.sh \
+  && bash /tmp/install-srcds32-libs.sh /srcds32libs/usr/lib/i386-linux-gnu /usr/lib32 \
+  && rm -f /tmp/install-srcds32-libs.sh \
+  && rm -rf /srcds32libs
 
 ENV STEAMCMD_DIR="/opt/steamcmd"
