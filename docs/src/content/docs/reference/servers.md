@@ -42,12 +42,21 @@ Runnable servers are defined in `ci/server-catalog.sh`. First-party images publi
 | Eco | eco | eco | [Guide](../servers/eco/) |
 | Palworld | palworld | palworld | [Guide](../servers/palworld/) |
 | Starbound | starbound | starbound | [Guide](../servers/starbound/) |
+| Longvinter | longvinter | longvinter | [Guide](../servers/longvinter/) |
+| Barotrauma | barotrauma | barotrauma | [Guide](../servers/barotrauma/) |
+| Unturned | unturned | unturned | [Guide](../servers/unturned/) |
+| Team Fortress 2 | tf2 | tf2 | [Guide](../servers/tf2/) |
+| Counter-Strike 2 | cs2 | cs2 | [Guide](../servers/cs2/) |
+| Day of Defeat: Source | dod-source | dod-source | [Guide](../servers/dod-source/) |
+| Garry's Mod | gmod | gmod | [Guide](../servers/gmod/) |
+| Delta Force: Black Hawk Down | delta-force-bhd | delta-force-bhd | [Guide](../servers/delta-force-bhd/) |
 | OpenMoHAA | openmohaa | openmohaa | [Guide](../servers/openmohaa/) |
 | Arma 3 | arma/arma-3 | arma-3 | [Guide](../servers/arma-3/) |
 | Arma Reforger | arma/reforger | arma-reforger | [Guide](../servers/arma-reforger/) |
 | DayZ | dayz | dayz | [Guide](../servers/dayz/) |
 | Hytale | hytale | external (deinfreu/hytale-server) | [Guide](../servers/hytale/) |
 | Stardew Valley | stardew-valley | external (JunimoServer sdvd/server) | [Guide](../servers/stardew-valley/) |
+| AzerothCore | azerothcore | external (acore/ac-wotlk-*) | [Guide](../servers/azerothcore/) |
 
 Servers without a guide page still ship compose files in the repository. Open the compose path for ports, volumes, and environment variables.
 

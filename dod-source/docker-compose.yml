@@ -1,0 +1,50 @@
+services:
+  dod-source:
+    image: ghcr.io/${IMAGE_OWNER}/dod-source:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: dod-source
+    restart: unless-stopped
+    stop_grace_period: 90s
+    init: true
+    ports:
+      - "27015:27015/tcp"
+      - "27015:27015/udp"
+      - "27005:27005/udp"
+    volumes:
+      - ./data:/opt/dod-source
+    environment:
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+      DOD_APP_ID: "232290"
+      DOD_FORCE_UPDATE: "${DOD_FORCE_UPDATE:-false}"
+      STEAMCMD_WINDOWS_WORKAROUND: "full"
+      DOD_PORT: "27015"
+      DOD_CLIENT_PORT: "27005"
+      DOD_MAXPLAYERS: "16"
+      DOD_STARTMAP: "dod_anzio"
+      DOD_TICKRATE: "66"
+      DOD_GSLT: "${DOD_GSLT:-}"
+      DOD_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 900s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETUID
+      - SETGID
+    mem_limit: 2048M

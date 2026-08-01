@@ -1,0 +1,133 @@
+# AzerothCore WotLK via pre-built acore/* images.
+# Upstream compose: https://github.com/azerothcore/acore-docker
+# Install guide: https://www.azerothcore.org/wiki/installation
+
+x-ac-database-env: &ac-database-env
+  AC_LOGIN_DATABASE_INFO: "azerothcore-database;3306;root;${ACORE_DB_ROOT_PASSWORD:-acore};acore_auth"
+  AC_WORLD_DATABASE_INFO: "azerothcore-database;3306;root;${ACORE_DB_ROOT_PASSWORD:-acore};acore_world"
+  AC_CHARACTER_DATABASE_INFO: "azerothcore-database;3306;root;${ACORE_DB_ROOT_PASSWORD:-acore};acore_characters"
+
+x-ac-shared: &ac-shared
+  networks:
+    - azerothcore
+  working_dir: /azerothcore
+  depends_on:
+    azerothcore-database:
+      condition: service_healthy
+
+services:
+  azerothcore-database:
+    image: mysql:8.4
+    container_name: azerothcore-database
+    restart: unless-stopped
+    networks:
+      - azerothcore
+    cap_add:
+      - SYS_NICE
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ACORE_DB_ROOT_PASSWORD:-acore}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    healthcheck:
+      test: '/usr/bin/mysql --user=root --password=$$MYSQL_ROOT_PASSWORD --execute "SHOW DATABASES;"'
+      interval: 2s
+      timeout: 40s
+      retries: 20
+    mem_limit: 1024M
+
+  azerothcore-client-data:
+    image: acore/ac-wotlk-client-data:${ACORE_IMAGE_TAG:-master}
+    container_name: azerothcore-client-data
+    networks:
+      - azerothcore
+    volumes:
+      - ./data/client-data:/azerothcore/env/dist/data
+    restart: "no"
+
+  azerothcore-db-import:
+    <<: *ac-shared
+    image: acore/ac-wotlk-db-import:${ACORE_IMAGE_TAG:-master}
+    container_name: azerothcore-db-import
+    environment:
+      <<: *ac-database-env
+      AC_DISABLE_INTERACTIVE: "1"
+      AC_DATA_DIR: "/azerothcore/env/dist/data"
+      AC_LOGS_DIR: "/azerothcore/env/dist/logs"
+      AC_CLOSE_IDLE_CONNECTIONS: "0"
+    volumes:
+      - ./data/client-data:/azerothcore/env/dist/data:ro
+      - ./data/logs:/azerothcore/env/dist/logs
+    restart: "no"
+
+  azerothcore-authserver:
+    <<: *ac-shared
+    image: acore/ac-wotlk-authserver:${ACORE_IMAGE_TAG:-master}
+    container_name: azerothcore-authserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${ACORE_AUTH_EXTERNAL_PORT:-3724}:3724"
+    environment:
+      <<: *ac-database-env
+      AC_LOGS_DIR: "/azerothcore/env/dist/logs"
+      AC_TEMP_DIR: "/azerothcore/env/dist/temp"
+      AC_SQLDRIVER_LOG_FILE: "SQLDriver.log"
+      AC_SQLDRIVER_QUERY_LOGGING: "1"
+    volumes:
+      - ./data/logs:/azerothcore/env/dist/logs
+      - ./data/etc:/azerothcore/env/dist/etc
+    depends_on:
+      azerothcore-database:
+        condition: service_healthy
+      azerothcore-db-import:
+        condition: service_completed_successfully
+
+  azerothcore-worldserver:
+    <<: *ac-shared
+    image: acore/ac-wotlk-worldserver:${ACORE_IMAGE_TAG:-master}
+    container_name: azerothcore-worldserver
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    privileged: true
+    user: ${ACORE_DOCKER_USER:-acore}
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "${ACORE_WORLD_EXTERNAL_PORT:-8085}:8085"
+      - "${ACORE_SOAP_EXTERNAL_PORT:-7878}:7878"
+    environment:
+      <<: *ac-database-env
+      AC_DATA_DIR: "/azerothcore/env/dist/data"
+      AC_LOGS_DIR: "/azerothcore/env/dist/logs"
+      AC_CLOSE_IDLE_CONNECTIONS: "0"
+    volumes:
+      - ./data/client-data:/azerothcore/env/dist/data:ro
+      - ./data/logs:/azerothcore/env/dist/logs
+      - ./data/etc:/azerothcore/env/dist/etc
+      - ./data/scripts/lua:/azerothcore/env/dist/bin/lua_scripts/scripts
+    depends_on:
+      azerothcore-database:
+        condition: service_healthy
+      azerothcore-db-import:
+        condition: service_completed_successfully
+      azerothcore-client-data:
+        condition: service_completed_successfully
+    mem_limit: 4096M
+
+  phpmyadmin:
+    profiles: ["admin"]
+    image: phpmyadmin
+    container_name: azerothcore-phpmyadmin
+    restart: unless-stopped
+    networks:
+      - azerothcore
+    ports:
+      - "${ACORE_PHPMYADMIN_PORT:-8080}:80"
+    environment:
+      PMA_HOST: azerothcore-database
+      PMA_USER: root
+      PMA_PASSWORD: ${ACORE_DB_ROOT_PASSWORD:-acore}
+
+networks:
+  azerothcore:

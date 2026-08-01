@@ -5,7 +5,7 @@ description: Hytale dedicated server via the external deinfreu/hytale-server ima
 
 Compose path: `hytale`. Container: `hytale-server`. Image: `deinfreu/hytale-server:latest`.
 
-This is the only stack in the repository with no local build. There is no `Dockerfile`, `entrypoint.sh`, or `healthcheck.sh` under `hytale/`, only a `docker-compose.yml` that pulls a third-party image. The catalog marks this server `first_party=0`, so most of the tooling documented on [Ops](/guides/ops/) and [Quick start](/guides/quick-start/) behaves differently here, read the notes below before assuming parity with the first-party servers on this site.
+There is no `Dockerfile`, `entrypoint.sh`, or `healthcheck.sh` under `hytale/`, only a `docker-compose.yml` that pulls a third-party image. The catalog marks this server `first_party=0`, so most of the tooling documented on [Ops](/guides/ops/) and [Quick start](/guides/quick-start/) behaves differently here, read the notes below before assuming parity with the first-party servers on this site.
 
 :::note[Requirements]
 - Persist `./data` at `/home/container`

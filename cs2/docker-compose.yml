@@ -1,0 +1,49 @@
+services:
+  cs2:
+    image: ghcr.io/${IMAGE_OWNER}/cs2:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: cs2
+    restart: unless-stopped
+    stop_grace_period: 120s
+    init: true
+    ports:
+      - "27015:27015/tcp"
+      - "27015:27015/udp"
+      - "27020:27020/udp"
+    volumes:
+      - ./data:/opt/cs2
+    environment:
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+      CS2_APP_ID: "730"
+      CS2_FORCE_UPDATE: "${CS2_FORCE_UPDATE:-false}"
+      CS2_PORT: "27015"
+      CS2_MAXPLAYERS: "10"
+      CS2_STARTMAP: "de_dust2"
+      CS2_GAME_TYPE: "0"
+      CS2_GAME_MODE: "1"
+      CS2_GSLT: "${CS2_GSLT:-}"
+      CS2_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 1800s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETUID
+      - SETGID
+    mem_limit: 8192M

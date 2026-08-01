@@ -69,6 +69,7 @@ const WIKI_TITLE_ALIASES = {
 	'core-keeper': 'Core Keeper',
 	'project-zomboid': 'Project Zomboid',
 	'stardew-valley': 'Stardew Valley',
+	azerothcore: 'World of Warcraft: Wrath of the Lich King',
 	'space-engineers': 'Space Engineers',
 }
 

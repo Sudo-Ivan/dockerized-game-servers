@@ -45,6 +45,14 @@ Prefix: {{IMAGE_PREFIX}}
 | eco | Eco dedicated (Steam) |
 | palworld | Palworld dedicated |
 | starbound | Starbound dedicated |
+| longvinter | Longvinter dedicated |
+| barotrauma | Barotrauma dedicated |
+| unturned | Unturned dedicated |
+| tf2 | Team Fortress 2 dedicated |
+| cs2 | Counter-Strike 2 dedicated |
+| dod-source | Day of Defeat: Source dedicated |
+| gmod | Garry's Mod dedicated |
+| delta-force-bhd | Delta Force: Black Hawk Down (Wine, bring your own game files) |
 | openmohaa | OpenMoHAA (bring your own MOHAA assets) |
 | arma-3 | Arma 3 dedicated |
 | arma-reforger | Arma Reforger dedicated |

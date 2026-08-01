@@ -45,12 +45,21 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Eco | `eco` | `eco` |
 | Palworld | `palworld` | `palworld` |
 | Starbound | `starbound` | `starbound` |
+| Longvinter | `longvinter` | `longvinter` |
+| Barotrauma | `barotrauma` | `barotrauma` |
+| Unturned | `unturned` | `unturned` |
+| Team Fortress 2 | `tf2` | `tf2` |
+| Counter-Strike 2 | `cs2` | `cs2` |
+| Day of Defeat: Source | `dod-source` | `dod-source` |
+| Garry's Mod | `gmod` | `gmod` |
+| Delta Force: Black Hawk Down | `delta-force-bhd` | `delta-force-bhd` |
 | OpenMoHAA | `openmohaa` | `openmohaa` |
 | Arma 3 | `arma/arma-3` | `arma-3` |
 | Arma Reforger | `arma/reforger` | `arma-reforger` |
 | DayZ | `dayz` | `dayz` |
 | Hytale | `hytale` | external (`deinfreu/hytale-server`) |
 | Stardew Valley | `stardew-valley` | external ([JunimoServer](https://github.com/stardew-valley-dedicated-server/server) `sdvd/server`) |
+| AzerothCore | `azerothcore` | external ([acore-docker](https://github.com/azerothcore/acore-docker) `acore/ac-wotlk-*`) |
 
 Shared bases:
 
@@ -316,6 +325,15 @@ docker run -d --name starbound --restart unless-stopped --init \
   ghcr.io/sudo-ivan/dockerized-game-servers/starbound:latest
 ```
 
+Longvinter:
+
+```bash
+docker run -d --name longvinter --restart unless-stopped --init \
+  -p 7777:7777/udp \
+  -v "$PWD/longvinter/data:/opt/longvinter" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/longvinter:latest
+```
+
 OpenMoHAA (copy your owned MOHAA `main` / `mainta` / `maintt` PK3s into `openmohaa/data` first):
 
 ```bash
@@ -361,6 +379,17 @@ docker compose up -d
 ```
 
 UDP **24642** (game), UDP **27015** (query), TCP **5800** (VNC), TCP **8080** (API). Saves and game files under `stardew-valley/data/`. See [Stardew Valley docs](https://sudo-ivan.github.io/dockerized-game-servers/servers/stardew-valley/) and [JunimoServer](https://github.com/stardew-valley-dedicated-server/server).
+
+AzerothCore (WoW 3.3.5a, external `acore/*` images). Copy `azerothcore/.env.example` to `.env`, then start the stack. First boot imports SQL and client data and can take several minutes:
+
+```bash
+cd azerothcore
+cp .env.example .env
+docker compose up -d
+docker attach azerothcore-worldserver
+```
+
+TCP **3724** (auth), TCP **8085** (world), TCP **7878** (SOAP). Data under `azerothcore/data/`. Create accounts in the worldserver console (`account create ...`). See [AzerothCore docs](https://sudo-ivan.github.io/dockerized-game-servers/servers/azerothcore/) and the [installation guide](https://www.azerothcore.org/wiki/installation).
 
 ### Minecraft
 
@@ -490,9 +519,45 @@ Steam App 2394010. Saves and `PalWorldSettings.ini` under `palworld/data/Pal/Sav
 
 Steam App 211820. Writes `starbound_server.config` on first start if missing. Default TCP 21025.
 
+### Longvinter
+
+Steam App 1639880. Writes `Game.ini` on first start if missing. Default UDP 7777. Allocate at least 4 GB RAM. Saves under `longvinter/data/Longvinter/Saved/`.
+
+### Barotrauma
+
+Steam App 1026340. Native Linux `DedicatedServer` binary. UDP 27015 and 27016. Config under `barotrauma/data/` after first run. Allocate at least 4 GB RAM. Updates: `BAROTRAUMA_FORCE_UPDATE=true`.
+
+### Unturned
+
+Steam App 1110390. Linux dedicated via `ServerHelper.sh`. UDP 27015 and 27016. Set `UNTURNED_SERVER_NAME` for the InternetServer slot. Data under `unturned/data/`. Allocate at least 4 GB RAM. Updates: `UNTURNED_FORCE_UPDATE=true`.
+
+### Team Fortress 2
+
+Steam App 232250. Source `srcds_run` with `-game tf`. Default map `cp_dustbowl`, port 27015 TCP/UDP. Set `TF2_GSLT` for public listing. Config under `tf2/data/tf/cfg/`. Uses `STEAMCMD_WINDOWS_WORKAROUND=full`. SteamCMD may need an account that owns Team Fortress 2.
+
+### Counter-Strike 2
+
+Steam App 730 (dedicated server). CS2 binary under `cs2/data/game/bin/linuxsteamrt64/`. TCP/UDP 27015 and UDP 27020. Set `CS2_GSLT` for public listing. Default map `de_dust2`. Allocate at least 8 GB RAM. Updates: `CS2_FORCE_UPDATE=true`.
+
+### Day of Defeat: Source
+
+Steam App 232290. Source `srcds_run` with `-game dod`. Default map `dod_anzio`, port 27015 TCP/UDP. Set `DOD_GSLT` for public listing. Config under `dod-source/data/dod/cfg/`. Uses `STEAMCMD_WINDOWS_WORKAROUND=full`.
+
+### Garry's Mod
+
+Steam App 4020. Source `srcds_run` with `-game garrysmod`. Default map `gm_flatgrass`, port 27015 TCP/UDP. Set `GMOD_GSLT` for public listing. Workshop and Lua addons under `gmod/data/garrysmod/`. Uses `STEAMCMD_WINDOWS_WORKAROUND=full`. Allocate at least 4 GB RAM.
+
+### Delta Force: Black Hawk Down
+
+No SteamCMD dedicated server. **You must copy owned Windows game files** (`dfbhd.exe` and data) into `delta-force-bhd/data/` before the server can run. Runs via Wine. Default UDP 3568. Community multiplayer may need external NovaHQ heartbeat tools.
+
 ### Stardew Valley
 
 Uses [JunimoServer](https://github.com/stardew-valley-dedicated-server/server) (`sdvd/server` on Docker Hub), not a first-party image from this repo. Requires Steam credentials that own Stardew Valley. Two-service compose: `server` plus `steam-auth`. First-time `docker compose run --rm -it steam-auth setup` for Steam Guard and game download. Farm saves under `stardew-valley/data/saves`, settings in `data/settings/server-settings.json`. Optional Discord bot: `docker compose --profile discord up -d`.
+
+### AzerothCore
+
+Uses pre-built [AzerothCore](https://www.azerothcore.org/) images (`acore/ac-wotlk-*` on Docker Hub), not a first-party image from this repo. Multi-service compose: MySQL, one-shot DB import and client-data init, `authserver`, and `worldserver`. First `docker compose up` downloads images and imports databases. Persist `azerothcore/data/` (MySQL, maps, logs, config). Attach to `azerothcore-worldserver` to run `account create`. Players need a **3.3.5a** client pointed at your host. Optional phpMyAdmin: `docker compose --profile admin up -d`. See [AzerothCore installation](https://www.azerothcore.org/wiki/installation).
 
 ### OpenMoHAA
 
@@ -548,6 +613,14 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `eco` | Eco dedicated (Steam) |
 | `palworld` | Palworld dedicated |
 | `starbound` | Starbound dedicated |
+| `longvinter` | Longvinter dedicated |
+| `barotrauma` | Barotrauma dedicated |
+| `unturned` | Unturned dedicated |
+| `tf2` | Team Fortress 2 dedicated |
+| `cs2` | Counter-Strike 2 dedicated |
+| `dod-source` | Day of Defeat: Source dedicated |
+| `gmod` | Garry's Mod dedicated |
+| `delta-force-bhd` | Delta Force: Black Hawk Down (Wine, BYO game files) |
 | `openmohaa` | OpenMoHAA (BYO MOHAA assets) |
 | `arma-3` | Arma 3 dedicated |
 | `arma-reforger` | Arma Reforger dedicated |
@@ -626,12 +699,21 @@ sniper-elite-4/  Sniper Elite 4
 supertuxkart/    SuperTuxKart
 palworld/         Palworld
 starbound/        Starbound
+longvinter/       Longvinter
+barotrauma/      Barotrauma
+unturned/        Unturned
+tf2/             Team Fortress 2
+cs2/             Counter-Strike 2
+dod-source/      Day of Defeat: Source
+gmod/            Garry's Mod
+delta-force-bhd/ Delta Force: Black Hawk Down (Wine, BYO game files)
 openmohaa/       OpenMoHAA
 arma/arma-3/     Arma 3
 arma/reforger/   Arma Reforger
 dayz/            DayZ
 hytale/          external image compose
 stardew-valley/  JunimoServer (external images)
+azerothcore/     AzerothCore WotLK (external acore/* images)
 ```
 
 ## License

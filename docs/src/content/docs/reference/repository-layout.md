@@ -38,12 +38,21 @@ etl/              ET: Legacy (etlserver-build)
 eco/              Eco (Steam)
 palworld/         Palworld
 starbound/        Starbound
+longvinter/       Longvinter
+barotrauma/      Barotrauma
+unturned/        Unturned
+tf2/             Team Fortress 2
+cs2/             Counter-Strike 2
+dod-source/      Day of Defeat: Source
+gmod/            Garry's Mod
+delta-force-bhd/ Delta Force: Black Hawk Down (Wine, BYO game files)
 openmohaa/       OpenMoHAA (BYO game assets)
 arma/arma-3/     Arma 3
 arma/reforger/   Arma Reforger
 dayz/            DayZ
 hytale/          external image compose
 stardew-valley/  JunimoServer (external sdvd/* images)
+azerothcore/     AzerothCore WotLK (external acore/* images)
 backups/         local gs backup archives (gitignored)
 ```
 
