@@ -1,0 +1,222 @@
+{
+  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2026-08-01T23:48:39+00:00",
+  "name": "Garry's Mod",
+  "author": "sudo-ivan@users.noreply.github.com",
+  "description": "Garry's Mod using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/gmod:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 27015/tcp, 27015/udp, 27005/udp",
+  "features": null,
+  "docker_images": {
+    "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/gmod:latest"
+  },
+  "file_denylist": [],
+  "startup": "/bin/bash -c 'export GMOD_DIR=/home/container; exec /docker-entrypoint.sh'",
+  "config": {
+    "files": "{}",
+    "startup": "{\"done\": \"Starting\"}",
+    "logs": "{}",
+    "stop": "^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\n# Server files: /mnt/server\nset -e\nmkdir -p /mnt/server\ncd /mnt/server\necho \"Install complete. Game files download on first container start.\"\n",
+      "container": "ghcr.io/pterodactyl/installers:alpine",
+      "entrypoint": "ash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Steam Username",
+      "description": "Steam account for dedicated server installs. Use anonymous unless the game requires a login.",
+      "env_variable": "STEAM_USERNAME",
+      "default_value": "anonymous",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:64",
+      "field_type": "text"
+    },
+    {
+      "name": "Steam Password",
+      "description": "Steam password when not using anonymous login.",
+      "env_variable": "STEAM_PASSWORD",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:64",
+      "field_type": "text"
+    },
+    {
+      "name": "Steam Guard Code",
+      "description": "One-time Steam Guard code for SteamCMD login.",
+      "env_variable": "STEAM_GUARD_CODE",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:32",
+      "field_type": "text"
+    },
+    {
+      "name": "Gmod Force Update",
+      "description": "Set true on reinstall to force a fresh download or update.",
+      "env_variable": "GMOD_FORCE_UPDATE",
+      "default_value": "false",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|boolean",
+      "field_type": "text"
+    },
+    {
+      "name": "Steamcmd Windows Workaround",
+      "description": "Container environment STEAMCMD_WINDOWS_WORKAROUND.",
+      "env_variable": "STEAMCMD_WINDOWS_WORKAROUND",
+      "default_value": "full",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Gmod Port",
+      "description": "Container environment GMOD_PORT.",
+      "env_variable": "GMOD_PORT",
+      "default_value": "27015",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Gmod Client Port",
+      "description": "Container environment GMOD_CLIENT_PORT.",
+      "env_variable": "GMOD_CLIENT_PORT",
+      "default_value": "27005",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Gmod Maxplayers",
+      "description": "Container environment GMOD_MAXPLAYERS.",
+      "env_variable": "GMOD_MAXPLAYERS",
+      "default_value": "16",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Gmod Startmap",
+      "description": "Container environment GMOD_STARTMAP.",
+      "env_variable": "GMOD_STARTMAP",
+      "default_value": "gm_flatgrass",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Gmod Tickrate",
+      "description": "Container environment GMOD_TICKRATE.",
+      "env_variable": "GMOD_TICKRATE",
+      "default_value": "66",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Gmod Gslt",
+      "description": "Container environment GMOD_GSLT.",
+      "env_variable": "GMOD_GSLT",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Gmod Extra Args",
+      "description": "Container environment GMOD_EXTRA_ARGS.",
+      "env_variable": "GMOD_EXTRA_ARGS",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Healthcheck",
+      "description": "Container environment healthcheck.",
+      "env_variable": "healthcheck",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Test",
+      "description": "Container environment test.",
+      "env_variable": "test",
+      "default_value": "[\"CMD\", \"/healthcheck.sh\"]",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Interval",
+      "description": "Container environment interval.",
+      "env_variable": "interval",
+      "default_value": "30s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Timeout",
+      "description": "Container environment timeout.",
+      "env_variable": "timeout",
+      "default_value": "5s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Retries",
+      "description": "Container environment retries.",
+      "env_variable": "retries",
+      "default_value": "3",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Start Period",
+      "description": "Container environment start_period.",
+      "env_variable": "start_period",
+      "default_value": "900s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Security Opt",
+      "description": "Container environment security_opt.",
+      "env_variable": "security_opt",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    }
+  ]
+}

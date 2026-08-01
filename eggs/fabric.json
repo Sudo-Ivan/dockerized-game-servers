@@ -1,0 +1,145 @@
+{
+  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2026-08-01T23:48:39+00:00",
+  "name": "Minecraft Fabric",
+  "author": "sudo-ivan@users.noreply.github.com",
+  "description": "Minecraft Fabric using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 25565/tcp",
+  "features": [
+    "eula",
+    "java_version"
+  ],
+  "docker_images": {
+    "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest"
+  },
+  "file_denylist": [],
+  "startup": "/bin/sh -c 'rm -rf /data 2>/dev/null; ln -sfn /home/container /data; exec /entrypoint.sh'",
+  "config": {
+    "files": "{}",
+    "startup": "{\"done\": \")! For help, type \"}",
+    "logs": "{}",
+    "stop": "stop"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\n# Server files: /mnt/server\nset -e\nmkdir -p /mnt/server\ncd /mnt/server\necho \"Install complete. Game files download on first container start.\"\n",
+      "container": "ghcr.io/pterodactyl/installers:alpine",
+      "entrypoint": "ash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Accept EULA",
+      "description": "Must be true to run the Minecraft server.",
+      "env_variable": "EULA",
+      "default_value": "true",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|boolean",
+      "field_type": "text"
+    },
+    {
+      "name": "Fabric Force Download",
+      "description": "Set true on reinstall to force a fresh download or update.",
+      "env_variable": "FABRIC_FORCE_DOWNLOAD",
+      "default_value": "false",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|boolean",
+      "field_type": "text"
+    },
+    {
+      "name": "Server Jar",
+      "description": "Container environment SERVER_JAR.",
+      "env_variable": "SERVER_JAR",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Jvm Flags",
+      "description": "Container environment JVM_FLAGS.",
+      "env_variable": "JVM_FLAGS",
+      "default_value": "-Xms2G -Xmx2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=40 -XX:G1MaxNewSizePercent=50 -XX:G1HeapRegionSize=16M -XX:G1ReservePercent=15 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=20 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Healthcheck",
+      "description": "Container environment healthcheck.",
+      "env_variable": "healthcheck",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Test",
+      "description": "Container environment test.",
+      "env_variable": "test",
+      "default_value": "[\"CMD\", \"/healthcheck.sh\"]",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Interval",
+      "description": "Container environment interval.",
+      "env_variable": "interval",
+      "default_value": "30s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Timeout",
+      "description": "Container environment timeout.",
+      "env_variable": "timeout",
+      "default_value": "5s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Retries",
+      "description": "Container environment retries.",
+      "env_variable": "retries",
+      "default_value": "3",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Start Period",
+      "description": "Container environment start_period.",
+      "env_variable": "start_period",
+      "default_value": "120s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Security Opt",
+      "description": "Container environment security_opt.",
+      "env_variable": "security_opt",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    }
+  ]
+}

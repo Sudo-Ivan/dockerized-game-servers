@@ -51,7 +51,7 @@ install_server() {
     rm -rf "${extract_dir}"
     mkdir -p "${extract_dir}"
 
-    # shellcheck source=/usr/local/bin/http-download.sh
+    # shellcheck source=bases/runtime/http-download.sh
     . /usr/local/bin/http-download.sh
     http_download_file "${FACTORIO_DOWNLOAD_URL}" "${archive}"
 

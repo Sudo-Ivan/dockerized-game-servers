@@ -1,0 +1,92 @@
+{
+  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2026-08-01T23:48:39+00:00",
+  "name": "Hytale",
+  "author": "sudo-ivan@users.noreply.github.com",
+  "description": "Hytale using the dockerized-game-servers image. Docker image: deinfreu/hytale-server:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 5520/udp External image maintained outside this repository.",
+  "features": null,
+  "docker_images": {
+    "Latest": "deinfreu/hytale-server:latest"
+  },
+  "file_denylist": [],
+  "startup": "/bin/bash -c 'cd /home/container && exec /start.sh'",
+  "config": {
+    "files": "{}",
+    "startup": "{\"done\": \"Starting\"}",
+    "logs": "{}",
+    "stop": "^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\n# Server files: /mnt/server\nset -e\nmkdir -p /mnt/server\ncd /mnt/server\necho \"Install complete. Game files download on first container start.\"\n",
+      "container": "ghcr.io/pterodactyl/installers:alpine",
+      "entrypoint": "ash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Server Ip",
+      "description": "Container environment SERVER_IP.",
+      "env_variable": "SERVER_IP",
+      "default_value": "0.0.0.0",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Server Port",
+      "description": "Container environment SERVER_PORT.",
+      "env_variable": "SERVER_PORT",
+      "default_value": "5520",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Prod",
+      "description": "Container environment PROD.",
+      "env_variable": "PROD",
+      "default_value": "FALSE",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|boolean",
+      "field_type": "text"
+    },
+    {
+      "name": "Debug",
+      "description": "Container environment DEBUG.",
+      "env_variable": "DEBUG",
+      "default_value": "FALSE",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|boolean",
+      "field_type": "text"
+    },
+    {
+      "name": "Restart",
+      "description": "Container environment restart.",
+      "env_variable": "restart",
+      "default_value": "unless-stopped",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Ports",
+      "description": "Container environment ports.",
+      "env_variable": "ports",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    }
+  ]
+}

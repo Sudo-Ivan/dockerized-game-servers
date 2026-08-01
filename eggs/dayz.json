@@ -1,0 +1,182 @@
+{
+  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2026-08-01T23:48:39+00:00",
+  "name": "DayZ",
+  "author": "sudo-ivan@users.noreply.github.com",
+  "description": "DayZ using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/dayz:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 2302/udp, 2303/udp, 2304/udp, 2305/udp, 2306/udp",
+  "features": null,
+  "docker_images": {
+    "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/dayz:latest"
+  },
+  "file_denylist": [],
+  "startup": "/bin/bash -c 'export DAYZ_DIR=/home/container; exec /docker-entrypoint.sh'",
+  "config": {
+    "files": "{}",
+    "startup": "{\"done\": \"Starting\"}",
+    "logs": "{}",
+    "stop": "^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\n# Server files: /mnt/server\nset -e\nmkdir -p /mnt/server\ncd /mnt/server\necho \"Install complete. Game files download on first container start.\"\n",
+      "container": "ghcr.io/pterodactyl/installers:alpine",
+      "entrypoint": "ash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Steam Username",
+      "description": "Steam account for dedicated server installs. Use anonymous unless the game requires a login.",
+      "env_variable": "STEAM_USERNAME",
+      "default_value": "anonymous",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:64",
+      "field_type": "text"
+    },
+    {
+      "name": "Steam Password",
+      "description": "Steam password when not using anonymous login.",
+      "env_variable": "STEAM_PASSWORD",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:64",
+      "field_type": "text"
+    },
+    {
+      "name": "Steam Guard Code",
+      "description": "One-time Steam Guard code for SteamCMD login.",
+      "env_variable": "STEAM_GUARD_CODE",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:32",
+      "field_type": "text"
+    },
+    {
+      "name": "Dayz Force Update",
+      "description": "Set true on reinstall to force a fresh download or update.",
+      "env_variable": "DAYZ_FORCE_UPDATE",
+      "default_value": "false",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|boolean",
+      "field_type": "text"
+    },
+    {
+      "name": "Dayz Port",
+      "description": "Container environment DAYZ_PORT.",
+      "env_variable": "DAYZ_PORT",
+      "default_value": "2302",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Dayz Hostname",
+      "description": "Container environment DAYZ_HOSTNAME.",
+      "env_variable": "DAYZ_HOSTNAME",
+      "default_value": "DayZ Server",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Dayz Max Players",
+      "description": "Container environment DAYZ_MAX_PLAYERS.",
+      "env_variable": "DAYZ_MAX_PLAYERS",
+      "default_value": "60",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Dayz Extra Args",
+      "description": "Container environment DAYZ_EXTRA_ARGS.",
+      "env_variable": "DAYZ_EXTRA_ARGS",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Healthcheck",
+      "description": "Container environment healthcheck.",
+      "env_variable": "healthcheck",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Test",
+      "description": "Container environment test.",
+      "env_variable": "test",
+      "default_value": "[\"CMD\", \"/healthcheck.sh\"]",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Interval",
+      "description": "Container environment interval.",
+      "env_variable": "interval",
+      "default_value": "30s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Timeout",
+      "description": "Container environment timeout.",
+      "env_variable": "timeout",
+      "default_value": "5s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Retries",
+      "description": "Container environment retries.",
+      "env_variable": "retries",
+      "default_value": "3",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|integer|between:0,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Start Period",
+      "description": "Container environment start_period.",
+      "env_variable": "start_period",
+      "default_value": "1200s",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:512",
+      "field_type": "text"
+    },
+    {
+      "name": "Security Opt",
+      "description": "Container environment security_opt.",
+      "env_variable": "security_opt",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:512",
+      "field_type": "text"
+    }
+  ]
+}
