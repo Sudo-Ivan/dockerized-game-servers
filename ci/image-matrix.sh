@@ -54,7 +54,7 @@ emit "enshrouded" "dockerized/enshrouded" "dockerized/enshrouded/Dockerfile" "st
 emit "satisfactory" "dockerized/satisfactory" "dockerized/satisfactory/Dockerfile" "steam-base"
 emit "windrose" "dockerized/windrose" "dockerized/windrose/Dockerfile" "steam-base"
 emit "vein" "dockerized/vein" "dockerized/vein/Dockerfile" "steam-base"
-emit "arma-3" "dockerized/arma/arma-3" "dockerized/arma/arma-3/Dockerfile" "steam-base"
+emit "arma-3" "dockerized" "dockerized/arma/arma-3/Dockerfile" "steam-base"
 emit "arma-reforger" "dockerized/arma/reforger" "dockerized/arma/reforger/Dockerfile" "steam-base"
 emit "dayz" "dockerized/dayz" "dockerized/dayz/Dockerfile" "steam-base"
 

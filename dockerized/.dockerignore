@@ -18,3 +18,7 @@
 **/*~
 **/*.swp
 **/.DS_Store
+arma/arma-3/server
+arma/arma-3/configs
+arma/arma-3/profiles
+arma/arma-3/cache
