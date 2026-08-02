@@ -196,12 +196,9 @@ a.sl-link-button.minimal {
 		overflow-wrap: anywhere;
 	}
 
-	[data-has-sidebar][data-has-toc] .main-pane {
-		width: calc(100% - var(--sl-sidebar-width) - var(--sl-toc-width));
-	}
-
-	[data-has-toc]:not([data-has-sidebar]) .main-pane {
-		width: calc(100% - var(--sl-toc-width));
+	.right-sidebar .sl-container {
+		width: 100%;
+		max-width: none;
 	}
 }
 
