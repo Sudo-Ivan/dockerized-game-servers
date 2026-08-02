@@ -63,13 +63,29 @@ a.sl-link-button.minimal {
 	color: #c4c4c4;
 }
 
+.content-panel,
+.sl-markdown-content,
+.main-pane {
+	min-width: 0;
+	max-width: 100%;
+}
+
 .sl-markdown-content table:not(:where(.not-content *)) {
-	display: table;
+	display: block;
 	width: 100%;
+	max-width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 	border: 1px solid var(--sl-color-hairline);
 	border-radius: 0.625rem;
-	overflow: hidden;
 	background: #0f0f0f;
+}
+
+.sl-markdown-content table:not(:where(.not-content *)) > * {
+	display: table;
+	width: max-content;
+	min-width: 100%;
+	border-collapse: collapse;
 }
 
 .sl-markdown-content thead:not(:where(.not-content *)) {
@@ -87,6 +103,13 @@ a.sl-link-button.minimal {
 
 .sl-markdown-content :is(th, td):not(:where(.not-content *)) {
 	padding: 0.65rem 1rem;
+	word-break: break-word;
+	overflow-wrap: break-word;
+}
+
+.sl-markdown-content :is(th, td) code:not(:where(.not-content *)) {
+	word-break: break-all;
+	white-space: normal;
 }
 
 .sl-markdown-content tbody tr:not(:where(.not-content *)):hover {
@@ -119,6 +142,8 @@ a.sl-link-button.minimal {
 .sl-markdown-content pre:not(:where(.not-content *)) {
 	border-radius: 0.625rem;
 	background: #0c0c0c;
+	max-width: 100%;
+	overflow-x: auto;
 }
 
 .sl-markdown-content a:not(:where(.not-content *)) {

@@ -1,10 +1,10 @@
 ---
 title: Factorio
-description: Factorio headless dedicated server downloaded directly from dockerized/factorio.com.
+description: Factorio headless dedicated server downloaded directly from factorio.com.
 iconFit: contain
 ---
 
-On first start the container downloads the official headless Linux package from dockerized/factorio.com. No Steam account is required. It extracts the server into your data folder and creates a default server-settings.json and an initial save if neither already exists.
+On first start the container downloads the official headless Linux package from factorio.com. No Steam account is required. It extracts the server into your data folder and creates a default server-settings.json and an initial save if neither already exists.
 
 :::note[Before you start]
 - Keep a data folder for the server binary, saves, config, mods, and script output

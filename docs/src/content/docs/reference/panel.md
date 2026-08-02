@@ -24,7 +24,12 @@ Select the game at runtime with `PANEL_GAME`. The Arma 3 image sets `PANEL_GAME=
 | PANEL_SESSION_SECRET | (empty) | Fixed session signing secret |
 | PANEL_ALLOWED_IPS | (empty) | Comma-separated IPs or CIDR allowlist |
 | PANEL_AUTO_START | true | Start the game server when the panel starts |
+| PANEL_LOGIN_MAX_ATTEMPTS | 5 | Failed logins allowed per window before lockout |
+| PANEL_LOGIN_WINDOW | 900 | Login attempt window in seconds |
+| PANEL_LOGIN_LOCKOUT | 900 | Lockout duration in seconds after too many failures |
+| PANEL_MAX_UPLOAD | 512 | Max upload size in megabytes |
 | PANEL_SCHEDULED_RESTART | (empty) | Daily restart time HH:MM |
+| PANEL_SCHEDULED_RESTART_WARN | 15,5,1 | Minutes before restart to warn in-game (comma-separated) |
 | PANEL_WEBHOOK_URL | (empty) | Optional webhook for panel events |
 
 ## Adding a new game
