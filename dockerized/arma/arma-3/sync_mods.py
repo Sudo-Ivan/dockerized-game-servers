@@ -8,6 +8,7 @@ import shutil
 import sys
 
 from api import SteamSession
+from api.config import normalize_steam_username, require_workshop_steam_account
 
 WORKSHOP_ID_PATTERN = re.compile(r"filedetails/\?id=(\d+)")
 
@@ -77,11 +78,16 @@ def main():
     if not preset_file or not os.path.isfile(preset_file):
         return 0
 
-    username = os.environ.get("STEAM_USERNAME", "anonymous")
+    username = normalize_steam_username(os.environ.get("STEAM_USERNAME", "anonymous"))
     password = os.environ.get("STEAM_PASSWORD", "")
 
     try:
-        session = SteamSession.login(username, password)
+        require_workshop_steam_account(username, password)
+        session = SteamSession.login(
+            username,
+            password,
+            auth_code=os.environ.get("STEAM_GUARD_CODE", ""),
+        )
         synced_ids = sync_workshop_mods(preset_file, session)
     except Exception as exc:
         print(f"Workshop sync failed: {exc}", file=sys.stderr)

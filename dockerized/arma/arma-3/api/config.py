@@ -69,6 +69,26 @@ def _env_float(key, default):
         return default
 
 
+def normalize_steam_username(value):
+    username = (value or "").strip()
+    if not username or username.lower() == "anonymous":
+        return "anonymous"
+    return username
+
+
+def require_workshop_steam_account(username, password):
+    """Workshop CDN sync needs a real Steam account, not anonymous login."""
+    if normalize_steam_username(username) == "anonymous":
+        raise RuntimeError(
+            "Workshop mod sync requires STEAM_USERNAME and STEAM_PASSWORD "
+            "(anonymous login cannot download subscribed workshop items)"
+        )
+    if not (password or "").strip():
+        raise RuntimeError(
+            "Workshop mod sync requires STEAM_PASSWORD when STEAM_USERNAME is set"
+        )
+
+
 def resolve_config(config=None):
     """Merge caller config, environment, and defaults without mutating inputs."""
     merged = DEFAULT_CONFIG.copy()

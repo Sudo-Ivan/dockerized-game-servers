@@ -9,6 +9,9 @@ mkdir -p "${ARMA_DIR}/keys"
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
 STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
+if [ -z "${STEAM_USERNAME}" ]; then
+    STEAM_USERNAME="anonymous"
+fi
 ARMA_APP_ID="${ARMA_APP_ID:-233780}"
 
 if [ ! -f "${ARMA_DIR}/arma3server_x64" ]; then
@@ -28,6 +31,10 @@ MOD_LIST=""
 MODLIST_FILE="${MODLIST_FILE:-${ARMA_DIR}/modlist.html}"
 
 if [ -f "${MODLIST_FILE}" ]; then
+    if [ -z "${STEAM_USERNAME}" ] || [ "${STEAM_USERNAME}" = "anonymous" ] || [ -z "${STEAM_PASSWORD}" ]; then
+        echo "modlist.html requires STEAM_USERNAME and STEAM_PASSWORD (anonymous login cannot sync workshop mods)." >&2
+        exit 1
+    fi
     echo "--- Syncing workshop mods from ${MODLIST_FILE} (Steam CDN) ---"
     if ! WORKSHOP_IDS=$(python3 /home/arma3/sync_mods.py "${MODLIST_FILE}"); then
         echo "Workshop sync failed."

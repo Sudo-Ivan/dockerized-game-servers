@@ -4,6 +4,10 @@ import os
 import time
 import threading
 
+import steam.monkey
+
+steam.monkey.patch_minimal()
+
 from steam.client import SteamClient
 from steam.client.cdn import CDNClient
 
@@ -11,6 +15,7 @@ from .config import (
     SESSION_RESET_THRESHOLD,
     WORKSHOP_ROOT,
     WORKSHOP_INDEX_DIR,
+    normalize_steam_username,
     resolve_config,
 )
 from .sync import ContentSyncer
@@ -59,9 +64,10 @@ def _clear_cdn_cache():
 class SteamSession:
     """Steam and CDN client facade with retry and session reset."""
 
-    def __init__(self, username, password, config=None):
-        self._username = username
+    def __init__(self, username, password, config=None, auth_code=""):
+        self._username = normalize_steam_username(username)
         self._password = password or ""
+        self._auth_code = (auth_code or "").strip()
         self._config = config
         self._client = None
         self._cdn_client = None
@@ -82,8 +88,16 @@ class SteamSession:
             self._client.anonymous_login()
             print("Logged in to Steam anonymously")
         else:
-            self._client.login(self._username, self._password)
-            print("Logged in to Steam as", self._client.user.name)
+            login_kwargs = {}
+            if self._auth_code:
+                if len(self._auth_code) == 5 and self._auth_code.isalnum():
+                    login_kwargs["two_factor_code"] = self._auth_code
+                else:
+                    login_kwargs["auth_code"] = self._auth_code
+            self._client.login(self._username, self._password, **login_kwargs)
+            user = self._client.user
+            display_name = user.name if user and getattr(user, "name", None) else self._username
+            print("Logged in to Steam as", display_name)
 
     def _ensure_connected(self):
         if self._client is None:
@@ -159,7 +173,7 @@ class SteamSession:
         syncer.sync(files, destination, workshop_id, f"Workshop {workshop_id}")
 
     @staticmethod
-    def login(username, password, config=None):
-        session = SteamSession(username, password, config=config)
+    def login(username, password, config=None, auth_code=""):
+        session = SteamSession(username, password, config=config, auth_code=auth_code)
         session._ensure_connected()
         return session

@@ -22,7 +22,7 @@ services:
       - ./profiles:/home/arma3/profiles
       - ./cache:/home/arma3/cache
     environment:
-      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_USERNAME: "${STEAM_USERNAME:-}"
       STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
       STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
       ARMA_APP_ID: "233780"
