@@ -62,7 +62,7 @@ func New(
 	if _, err := tmpl.ParseFS(coreTemplateFS, "templates/*.html", "templates/partials/*.html"); err != nil {
 		return nil, err
 	}
-	if _, err := tmpl.ParseFS(mod.TemplateFS(), ".", "partials/*.html"); err != nil {
+	if _, err := tmpl.ParseFS(mod.TemplateFS(), "*.html", "partials/*.html"); err != nil {
 		return nil, err
 	}
 	staticSub, err := fs.Sub(staticFS, "static")
