@@ -15,6 +15,7 @@ Every runnable server is listed below with its compose folder and image name. Fi
 | Valheim Plus | valheim/plus | valheim-plus | [Guide](../servers/valheim/) |
 | Ground Branch | ground-branch | ground-branch | [Guide](../servers/ground-branch/) |
 | Space Engineers | space-engineers | space-engineers | [Guide](../servers/space-engineers/) |
+| Satisfactory | satisfactory | satisfactory | [Guide](../servers/satisfactory/) |
 | Core Keeper | core-keeper | core-keeper | [Guide](../servers/core-keeper/) |
 | Factorio | factorio | factorio | [Guide](../servers/factorio/) |
 | 7 Days to Die | 7-days-to-die | 7-days-to-die | [Guide](../servers/7-days-to-die/) |
@@ -40,14 +41,19 @@ Every runnable server is listed below with its compose folder and image name. Fi
 | Return to Castle Wolfenstein | rtcw | rtcw | [Guide](../servers/rtcw/) |
 | ET: Legacy | etl | etl | [Guide](../servers/etl/) |
 | Eco | eco | eco | [Guide](../servers/eco/) |
+| Enshrouded | enshrouded | enshrouded | [Guide](../servers/enshrouded/) |
 | Palworld | palworld | palworld | [Guide](../servers/palworld/) |
 | Starbound | starbound | starbound | [Guide](../servers/starbound/) |
 | Longvinter | longvinter | longvinter | [Guide](../servers/longvinter/) |
 | Barotrauma | barotrauma | barotrauma | [Guide](../servers/barotrauma/) |
 | Unturned | unturned | unturned | [Guide](../servers/unturned/) |
+| VEIN | vein | vein | [Guide](../servers/vein/) |
+| V Rising | v-rising | v-rising | [Guide](../servers/v-rising/) |
+| Windrose | windrose | windrose | [Guide](../servers/windrose/) |
 | Team Fortress 2 | tf2 | tf2 | [Guide](../servers/tf2/) |
 | Counter-Strike 2 | cs2 | cs2 | [Guide](../servers/cs2/) |
 | Day of Defeat: Source | dod-source | dod-source | [Guide](../servers/dod-source/) |
+| Don't Starve Together | dont-starve-together | dont-starve-together | [Guide](../servers/dont-starve-together/) |
 | Garry's Mod | gmod | gmod | [Guide](../servers/gmod/) |
 | Delta Force: Black Hawk Down | delta-force-bhd | delta-force-bhd | [Guide](../servers/delta-force-bhd/) |
 | OpenMoHAA | openmohaa | openmohaa | [Guide](../servers/openmohaa/) |

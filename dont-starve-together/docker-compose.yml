@@ -1,0 +1,51 @@
+services:
+  dont-starve-together:
+    image: ghcr.io/${IMAGE_OWNER}/dont-starve-together:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: dont-starve-together
+    restart: unless-stopped
+    stop_grace_period: 120s
+    init: true
+    ports:
+      - "10999:10999/udp"
+      - "11000:11000/udp"
+      - "27016:27016/udp"
+    volumes:
+      - ./data:/opt/dst
+    environment:
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+      DST_APP_ID: "343050"
+      DST_FORCE_UPDATE: "${DST_FORCE_UPDATE:-false}"
+      DST_CLUSTER: "Cluster_1"
+      DST_CLUSTER_TOKEN: "${DST_CLUSTER_TOKEN:-}"
+      DST_ENABLE_CAVES: "${DST_ENABLE_CAVES:-true}"
+      DST_MAX_PLAYERS: "6"
+      DST_GAME_MODE: "survival"
+      DST_MASTER_PORT: "10999"
+      DST_CAVES_PORT: "11000"
+      DST_STEAM_MASTER_PORT: "27016"
+      DST_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 900s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETUID
+      - SETGID
+    mem_limit: 4096M

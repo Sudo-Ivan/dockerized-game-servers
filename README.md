@@ -18,6 +18,7 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Valheim Plus | `valheim/plus` | `valheim-plus` |
 | Ground Branch | `ground-branch` | `ground-branch` |
 | Space Engineers | `space-engineers` | `space-engineers` |
+| Satisfactory | `satisfactory` | `satisfactory` |
 | Core Keeper | `core-keeper` | `core-keeper` |
 | Factorio | `factorio` | `factorio` |
 | 7 Days to Die | `7-days-to-die` | `7-days-to-die` |
@@ -43,14 +44,19 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Return to Castle Wolfenstein | `rtcw` | `rtcw` |
 | ET: Legacy | `etl` | `etl` |
 | Eco | `eco` | `eco` |
+| Enshrouded | `enshrouded` | `enshrouded` |
 | Palworld | `palworld` | `palworld` |
 | Starbound | `starbound` | `starbound` |
 | Longvinter | `longvinter` | `longvinter` |
 | Barotrauma | `barotrauma` | `barotrauma` |
 | Unturned | `unturned` | `unturned` |
+| VEIN | `vein` | `vein` |
+| V Rising | `v-rising` | `v-rising` |
+| Windrose | `windrose` | `windrose` |
 | Team Fortress 2 | `tf2` | `tf2` |
 | Counter-Strike 2 | `cs2` | `cs2` |
 | Day of Defeat: Source | `dod-source` | `dod-source` |
+| Don't Starve Together | `dont-starve-together` | `dont-starve-together` |
 | Garry's Mod | `gmod` | `gmod` |
 | Delta Force: Black Hawk Down | `delta-force-bhd` | `delta-force-bhd` |
 | OpenMoHAA | `openmohaa` | `openmohaa` |
@@ -165,6 +171,15 @@ docker run -d --name space-engineers --restart unless-stopped --init \
   -v "$PWD/space-engineers/data/plugins:/opt/spaceengineers/plugins" \
   -e SE_INSTANCE_NAME=Default \
   ghcr.io/sudo-ivan/dockerized-game-servers/space-engineers:latest
+```
+
+Satisfactory:
+
+```bash
+docker run -d --name satisfactory --restart unless-stopped --init \
+  -p 7777:7777/tcp -p 7777:7777/udp -p 8888:8888/tcp \
+  -v "$PWD/satisfactory/data:/opt/satisfactory" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/satisfactory:latest
 ```
 
 Core Keeper (SDR, no ports):
@@ -334,6 +349,52 @@ docker run -d --name longvinter --restart unless-stopped --init \
   ghcr.io/sudo-ivan/dockerized-game-servers/longvinter:latest
 ```
 
+Don't Starve Together:
+
+```bash
+docker run -d --name dont-starve-together --restart unless-stopped --init \
+  -p 10999:10999/udp -p 11000:11000/udp -p 27016:27016/udp \
+  -v "$PWD/dont-starve-together/data:/opt/dst" \
+  -e DST_CLUSTER_TOKEN="your-klei-cluster-token" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/dont-starve-together:latest
+```
+
+Enshrouded:
+
+```bash
+docker run -d --name enshrouded --restart unless-stopped --init \
+  -p 15636:15636/udp -p 15637:15637/udp \
+  -v "$PWD/enshrouded/data:/opt/enshrouded" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/enshrouded:latest
+```
+
+VEIN:
+
+```bash
+docker run -d --name vein --restart unless-stopped --init \
+  -p 7777:7777/udp -p 27015:27015/udp \
+  -v "$PWD/vein/data:/opt/vein" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/vein:latest
+```
+
+V Rising:
+
+```bash
+docker run -d --name v-rising --restart unless-stopped --init \
+  -p 9876:9876/udp -p 9877:9877/udp -p 9877:9877/tcp \
+  -v "$PWD/v-rising/data:/opt/vrising" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/v-rising:latest
+```
+
+Windrose:
+
+```bash
+docker run -d --name windrose --restart unless-stopped --init \
+  -p 7777:7777/tcp -p 7777:7777/udp \
+  -v "$PWD/windrose/data:/opt/windrose" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/windrose:latest
+```
+
 OpenMoHAA (copy your owned MOHAA `main` / `mainta` / `maintt` PK3s into `openmohaa/data` first):
 
 ```bash
@@ -408,6 +469,10 @@ Server config appears under `ground-branch/data/GroundBranch/ServerConfig/` afte
 ### Space Engineers
 
 Steam App 298740 (Windows dedicated server via Wine). Persist `space-engineers/data/dedicated`, `instances`, and `plugins` (Wine/dotnet is baked into the image). Default instance `Default`, config `space-engineers/data/instances/Default/SpaceEngineers-Dedicated.cfg`. First start downloads server files into `data/dedicated` (allow several minutes). UDP game port 27016. Set `SE_PUBLIC_IP` when the container cannot infer a reachable address for the dedicated config.
+
+### Satisfactory
+
+Steam App 1690800. Native Linux `FactoryServer.sh`. TCP/UDP 7777 and TCP 8888 (reliable channel). Persist `satisfactory/data`. Allocate at least 8 GB RAM. Updates: `SATISFACTORY_FORCE_UPDATE=true`.
 
 ### Core Keeper
 
@@ -511,6 +576,10 @@ LinuxGSM [ioRTCW](http://linuxgsm.download/ReturnToCastleWolfenstein/) server ar
 
 Steam App 739590. **Requires `ECO_USER_TOKEN`** from the Eco client. UDP 3000 and 3001. Allocate at least 4 GB RAM. Updates: `ECO_FORCE_UPDATE=true`.
 
+### Enshrouded
+
+Steam App 2278520 (Windows server via Wine). UDP 15636 (game) and 15637 (query). `enshrouded_server.json` is generated in `enshrouded/data/` on first start. Allocate at least 8 GB RAM. Updates: `ENSHROUDED_FORCE_UPDATE=true`.
+
 ### Palworld
 
 Steam App 2394010. Saves and `PalWorldSettings.ini` under `palworld/data/Pal/Saved/` after first run. Default UDP 8211. Allocate at least 8 GB RAM for the container.
@@ -531,6 +600,18 @@ Steam App 1026340. Native Linux `DedicatedServer` binary. UDP 27015 and 27016. C
 
 Steam App 1110390. Linux dedicated via `ServerHelper.sh`. UDP 27015 and 27016. Set `UNTURNED_SERVER_NAME` for the InternetServer slot. Data under `unturned/data/`. Allocate at least 4 GB RAM. Updates: `UNTURNED_FORCE_UPDATE=true`.
 
+### VEIN
+
+Steam App 2131400 (Windows server via Wine). UDP 7777 (game) and 27015 (query). Launch args set port, query port, and player cap. Persist `vein/data` including `.wine`. Allocate at least 8 GB RAM. Updates: `VEIN_FORCE_UPDATE=true`.
+
+### V Rising
+
+Steam App 1829350 (Windows server via Wine). UDP 9876 (game) and 9877 (query, UDP and TCP). `ServerHostSettings.json` is generated under `v-rising/data/VRisingServer_Data/StreamingAssets/Settings/` on first start. Allocate at least 6 GB RAM. Updates: `VRISING_FORCE_UPDATE=true`.
+
+### Windrose
+
+Steam App 4129620 (Windows server via Wine). TCP and UDP 7777 for direct connection. `R5/ServerDescription.json` is generated in `windrose/data/` on first start. Allocate at least 8 GB RAM. Updates: `WINDROSE_FORCE_UPDATE=true`.
+
 ### Team Fortress 2
 
 Steam App 232250. Source `srcds_run` with `-game tf`. Default map `cp_dustbowl`, port 27015 TCP/UDP. Set `TF2_GSLT` for public listing. Config under `tf2/data/tf/cfg/`. Uses `STEAMCMD_WINDOWS_WORKAROUND=full`. SteamCMD may need an account that owns Team Fortress 2.
@@ -542,6 +623,10 @@ Steam App 730 (dedicated server). CS2 binary under `cs2/data/game/bin/linuxsteam
 ### Day of Defeat: Source
 
 Steam App 232290. Source `srcds_run` with `-game dod`. Default map `dod_anzio`, port 27015 TCP/UDP. Set `DOD_GSLT` for public listing. Config under `dod-source/data/dod/cfg/`. Uses `STEAMCMD_WINDOWS_WORKAROUND=full`.
+
+### Don't Starve Together
+
+Steam App 343050. Native Linux dedicated server with Master and Caves shards. UDP 10999 (Master), 11000 (Caves), and 27016 (Steam master). Set `DST_CLUSTER_TOKEN` from https://accounts.klei.com/ for online play. Cluster config and saves under `dont-starve-together/data/klei/DoNotStarveTogether/`. Allocate at least 4 GB RAM. Updates: `DST_FORCE_UPDATE=true`.
 
 ### Garry's Mod
 
@@ -586,6 +671,7 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `valheim-plus` | Valheim Plus |
 | `ground-branch` | Ground Branch (Wine) |
 | `space-engineers` | Space Engineers (Wine) |
+| `satisfactory` | Satisfactory dedicated (native Linux) |
 | `core-keeper` | Core Keeper dedicated |
 | `factorio` | Factorio dedicated |
 | `7-days-to-die` | 7 Days to Die dedicated |
@@ -611,14 +697,19 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `rtcw` | Return to Castle Wolfenstein dedicated (ioRTCW / LinuxGSM files) |
 | `etl` | ET: Legacy dedicated (etlserver-build) |
 | `eco` | Eco dedicated (Steam) |
+| `enshrouded` | Enshrouded dedicated (Wine) |
 | `palworld` | Palworld dedicated |
 | `starbound` | Starbound dedicated |
 | `longvinter` | Longvinter dedicated |
 | `barotrauma` | Barotrauma dedicated |
 | `unturned` | Unturned dedicated |
+| `vein` | VEIN dedicated (Wine) |
+| `v-rising` | V Rising dedicated (Wine) |
+| `windrose` | Windrose dedicated (Wine) |
 | `tf2` | Team Fortress 2 dedicated |
 | `cs2` | Counter-Strike 2 dedicated |
 | `dod-source` | Day of Defeat: Source dedicated |
+| `dont-starve-together` | Don't Starve Together dedicated (native Linux) |
 | `gmod` | Garry's Mod dedicated |
 | `delta-force-bhd` | Delta Force: Black Hawk Down (Wine, BYO game files) |
 | `openmohaa` | OpenMoHAA (BYO MOHAA assets) |
@@ -682,6 +773,7 @@ minecraft/       Fabric, Vanilla, Forge
 valheim/         Vanilla and Plus
 ground-branch/   Ground Branch
 space-engineers/ Space Engineers
+satisfactory/    Satisfactory
 core-keeper/     Core Keeper
 factorio/         Factorio
 7-days-to-die/    7 Days to Die
@@ -697,14 +789,19 @@ the-forest/      The Forest
 sons-of-the-forest/ Sons Of The Forest
 sniper-elite-4/  Sniper Elite 4
 supertuxkart/    SuperTuxKart
+enshrouded/       Enshrouded
 palworld/         Palworld
 starbound/        Starbound
 longvinter/       Longvinter
 barotrauma/      Barotrauma
 unturned/        Unturned
+vein/            VEIN
+v-rising/        V Rising
+windrose/        Windrose
 tf2/             Team Fortress 2
 cs2/             Counter-Strike 2
 dod-source/      Day of Defeat: Source
+dont-starve-together/ Don't Starve Together
 gmod/            Garry's Mod
 delta-force-bhd/ Delta Force: Black Hawk Down (Wine, BYO game files)
 openmohaa/       OpenMoHAA

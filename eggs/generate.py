@@ -73,6 +73,12 @@ EGG_FOLDERS: dict[str, str] = {
     "ground-branch": "sandbox",
     "longvinter": "sandbox",
     "unturned": "sandbox",
+    "dont-starve-together": "survival",
+    "v-rising": "survival",
+    "enshrouded": "survival",
+    "satisfactory": "sandbox",
+    "windrose": "survival",
+    "vein": "survival",
     "quake3": "classic",
     "rtcw": "classic",
     "etl": "classic",
@@ -125,6 +131,12 @@ STEAM_GAMES = {
     "cs2",
     "dod-source",
     "gmod",
+    "dont-starve-together",
+    "v-rising",
+    "enshrouded",
+    "satisfactory",
+    "windrose",
+    "vein",
     "openmohaa",
     "arma-3",
     "arma-reforger",
@@ -179,6 +191,12 @@ DISPLAY_NAMES: dict[str, str] = {
     "dod-source": "Day of Defeat: Source",
     "gmod": "Garry's Mod",
     "delta-force-bhd": "Delta Force: Black Hawk Down",
+    "dont-starve-together": "Don't Starve Together",
+    "v-rising": "V Rising",
+    "enshrouded": "Enshrouded",
+    "satisfactory": "Satisfactory",
+    "windrose": "Windrose",
+    "vein": "VEIN",
     "openmohaa": "OpenMoHAA",
     "arma-3": "Arma 3",
     "arma-reforger": "Arma Reforger",
@@ -225,6 +243,12 @@ DATA_ENV: dict[str, list[tuple[str, str]]] = {
     "cs2": [("CS2_DIR", "")],
     "dod-source": [("DOD_DIR", "")],
     "gmod": [("GMOD_DIR", "")],
+    "dont-starve-together": [("DST_DIR", "")],
+    "v-rising": [("VRISING_DIR", "")],
+    "enshrouded": [("ENSHROUDED_DIR", "")],
+    "satisfactory": [("SATISFACTORY_DIR", "")],
+    "windrose": [("WINDROSE_DIR", "")],
+    "vein": [("VEIN_DIR", "")],
     "delta-force-bhd": [("BHD_DIR", "")],
     "openmohaa": [
         ("MOHAA_INSTALL_DIR", "install"),
@@ -634,6 +658,14 @@ def build_description(game_id: str, image: str, ports: list[dict[str, str]], fir
     if game_id == "arma-3":
         lines.append(
             "Place modlist.html in server/modlist.html under the server data directory for workshop mod sync."
+        )
+    if game_id == "dont-starve-together":
+        lines.append(
+            "Set DST_CLUSTER_TOKEN from Klei accounts for public server listing."
+        )
+    if game_id == "delta-force-bhd":
+        lines.append(
+            "Requires owned Windows game files copied into the data volume before the server can start."
         )
     if first_party == "0":
         lines.append("External image maintained outside this repository.")

@@ -20,6 +20,7 @@ Image prefix: {{IMAGE_PREFIX}}
 | valheim-plus | Valheim Plus |
 | ground-branch | Ground Branch (Wine) |
 | space-engineers | Space Engineers (Wine) |
+| satisfactory | Satisfactory dedicated (native Linux) |
 | core-keeper | Core Keeper dedicated |
 | factorio | Factorio dedicated |
 | 7-days-to-die | 7 Days to Die dedicated |
@@ -45,14 +46,19 @@ Image prefix: {{IMAGE_PREFIX}}
 | rtcw | Return to Castle Wolfenstein dedicated (ioRTCW / LinuxGSM files) |
 | etl | ET: Legacy dedicated (etlserver-build) |
 | eco | Eco dedicated (Steam) |
+| enshrouded | Enshrouded dedicated (Wine) |
 | palworld | Palworld dedicated |
 | starbound | Starbound dedicated |
 | longvinter | Longvinter dedicated |
 | barotrauma | Barotrauma dedicated |
 | unturned | Unturned dedicated |
+| vein | VEIN dedicated (Wine) |
+| v-rising | V Rising dedicated (Wine) |
+| windrose | Windrose dedicated (Wine) |
 | tf2 | Team Fortress 2 dedicated |
 | cs2 | Counter-Strike 2 dedicated |
 | dod-source | Day of Defeat: Source dedicated |
+| dont-starve-together | Don't Starve Together dedicated (native Linux) |
 | gmod | Garry's Mod dedicated |
 | delta-force-bhd | Delta Force: Black Hawk Down (Wine, bring your own game files) |
 | openmohaa | OpenMoHAA (bring your own MOHAA assets) |

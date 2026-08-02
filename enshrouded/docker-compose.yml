@@ -1,0 +1,47 @@
+services:
+  enshrouded:
+    image: ghcr.io/${IMAGE_OWNER}/enshrouded:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: enshrouded
+    restart: unless-stopped
+    stop_grace_period: 120s
+    init: true
+    ports:
+      - "15636:15636/udp"
+      - "15637:15637/udp"
+    volumes:
+      - ./data:/opt/enshrouded
+    environment:
+      STEAM_USERNAME: "${STEAM_USERNAME:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+      ENSHROUDED_APP_ID: "2278520"
+      ENSHROUDED_FORCE_UPDATE: "${ENSHROUDED_FORCE_UPDATE:-false}"
+      ENSHROUDED_SERVER_NAME: "Enshrouded Server"
+      ENSHROUDED_PASSWORD: ""
+      ENSHROUDED_GAME_PORT: "15636"
+      ENSHROUDED_QUERY_PORT: "15637"
+      ENSHROUDED_SLOT_COUNT: "16"
+      ENSHROUDED_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 900s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETUID
+      - SETGID
+    mem_limit: 8192M

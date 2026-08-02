@@ -38,14 +38,20 @@ quake3/           Quake 3: Arena (LinuxGSM)
 rtcw/             Return to Castle Wolfenstein (ioRTCW / LinuxGSM)
 etl/              ET: Legacy (etlserver-build)
 eco/              Eco (Steam)
+enshrouded/       Enshrouded (Wine)
 palworld/         Palworld
 starbound/        Starbound
+satisfactory/    Satisfactory (native Linux)
 longvinter/       Longvinter
 barotrauma/      Barotrauma
 unturned/        Unturned
+vein/            VEIN (Wine)
+v-rising/        V Rising (Wine)
+windrose/        Windrose (Wine)
 tf2/             Team Fortress 2
 cs2/             Counter-Strike 2
 dod-source/      Day of Defeat: Source
+dont-starve-together/ Don't Starve Together (native Linux)
 gmod/            Garry's Mod
 delta-force-bhd/ Delta Force: Black Hawk Down (Wine, BYO game files)
 openmohaa/       OpenMoHAA (BYO game assets)
