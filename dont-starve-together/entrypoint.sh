@@ -25,7 +25,8 @@ DST_CAVES_AUTH_PORT="${DST_CAVES_AUTH_PORT:-8767}"
 DST_CLUSTER_TOKEN="${DST_CLUSTER_TOKEN:-}"
 DST_EXTRA_ARGS="${DST_EXTRA_ARGS:-}"
 
-DST_BIN="${DST_DIR}/bin64/dontstarve_dedicated_server_nullrenderer_x64"
+DST_BIN_DIR="${DST_DIR}/bin64"
+DST_BIN="${DST_BIN_DIR}/dontstarve_dedicated_server_nullrenderer_x64"
 CLUSTER_DIR="${DST_STORAGE_ROOT}/${DST_CONF_DIR}/${DST_CLUSTER}"
 CAVES_PID=""
 
@@ -144,7 +145,8 @@ fi
 
 ensure_cluster_layout
 
-cd "${DST_DIR}"
+export LD_LIBRARY_PATH="${DST_BIN_DIR}:${DST_DIR}/lib64:${LD_LIBRARY_PATH:-}"
+cd "${DST_BIN_DIR}"
 
 common_args=(
     -persistent_storage_root "${DST_STORAGE_ROOT}"
@@ -167,7 +169,7 @@ if [ "${DST_ENABLE_CAVES}" = "true" ]; then
         caves_args+=("${extra[@]}")
     fi
     echo "--- Starting Don't Starve Together Caves shard on UDP ${DST_CAVES_PORT} ---"
-    "${DST_BIN}" "${caves_args[@]}" &
+    ./dontstarve_dedicated_server_nullrenderer_x64 "${caves_args[@]}" &
     CAVES_PID=$!
     sleep 3
 fi
@@ -187,4 +189,4 @@ if [ -n "${DST_EXTRA_ARGS}" ]; then
 fi
 
 echo "--- Starting Don't Starve Together Master shard on UDP ${DST_MASTER_PORT} ---"
-exec "${DST_BIN}" "${master_args[@]}"
+exec ./dontstarve_dedicated_server_nullrenderer_x64 "${master_args[@]}"

@@ -5,7 +5,8 @@ LABEL org.opencontainers.image.title="dont-starve-together" \
       org.opencontainers.image.description="Don't Starve Together dedicated server (Master + Caves)" \
       org.opencontainers.image.licenses="ISC"
 
-RUN pacman -Scc --noconfirm \
+RUN pacman -Sy --noconfirm --needed libcurl-gnutls \
+  && pacman -Scc --noconfirm \
   && rm -rf /var/cache/pacman/pkg/* /tmp/* /var/tmp/* \
   && useradd -m -u 1000 dst \
   && mkdir -p /opt/dst /home/dst/steamcmd /home/dst/Steam \
