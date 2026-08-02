@@ -10,8 +10,10 @@ steam.monkey.patch_minimal()
 
 from steam.client import SteamClient
 from steam.client.cdn import CDNClient
+from steam.enums import EResult
 
 from .config import (
+    CACHE_DIR,
     SESSION_RESET_THRESHOLD,
     WORKSHOP_ROOT,
     WORKSHOP_INDEX_DIR,
@@ -82,22 +84,49 @@ class SteamSession:
         _clear_cdn_cache()
         self._ensure_connected()
 
+    def _steam_credential_dir(self):
+        credential_dir = os.environ.get(
+            "STEAM_CREDENTIAL_DIR",
+            os.path.join(CACHE_DIR, "steam"),
+        )
+        os.makedirs(credential_dir, exist_ok=True)
+        return credential_dir
+
+    def _wait_logged_on(self, timeout=60):
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            if self._client and self._client.logged_on:
+                return
+            time.sleep(0.25)
+        raise RuntimeError("Steam login timed out waiting for logged_on")
+
     def _login(self):
         self._client = SteamClient()
+        self._client.set_credential_location(self._steam_credential_dir())
+
         if self._username == "anonymous":
-            self._client.anonymous_login()
+            eresult = self._client.anonymous_login()
+            if eresult != EResult.OK:
+                raise RuntimeError(f"Steam anonymous login failed: {EResult(eresult).name}")
+            self._wait_logged_on()
             print("Logged in to Steam anonymously")
-        else:
-            login_kwargs = {}
-            if self._auth_code:
-                if len(self._auth_code) == 5 and self._auth_code.isalnum():
-                    login_kwargs["two_factor_code"] = self._auth_code
-                else:
-                    login_kwargs["auth_code"] = self._auth_code
-            self._client.login(self._username, self._password, **login_kwargs)
-            user = self._client.user
-            display_name = user.name if user and getattr(user, "name", None) else self._username
-            print("Logged in to Steam as", display_name)
+            return
+
+        login_kwargs = {}
+        if self._auth_code:
+            if len(self._auth_code) == 5 and self._auth_code.isalnum():
+                login_kwargs["two_factor_code"] = self._auth_code
+            else:
+                login_kwargs["auth_code"] = self._auth_code
+
+        eresult = self._client.login(self._username, self._password, **login_kwargs)
+        if eresult != EResult.OK:
+            raise RuntimeError(f"Steam login failed: {EResult(eresult).name}")
+
+        self._wait_logged_on()
+        user = self._client.user
+        display_name = user.name if user and getattr(user, "name", None) else self._username
+        print("Logged in to Steam as", display_name)
 
     def _ensure_connected(self):
         if self._client is None:

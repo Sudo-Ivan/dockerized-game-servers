@@ -14,9 +14,13 @@ RUN pacman -Sy --noconfirm --needed \
 USER arma3
 WORKDIR /home/arma3
 
+COPY --chown=arma3:arma3 patch-steam.py /tmp/patch-steam.py
+
 RUN python -m venv /home/arma3/venv \
   && /home/arma3/venv/bin/pip install --no-cache-dir -U pip zstandard \
     "steam[client] @ git+https://github.com/brettmayson/valvepythonsteam" \
+  && /home/arma3/venv/bin/python /tmp/patch-steam.py /home/arma3/venv \
+  && rm /tmp/patch-steam.py \
   && mkdir -p /home/arma3/steamcmd /home/arma3/profiles /home/arma3/configs /home/arma3/cache \
   && cp -a /opt/steamcmd/. /home/arma3/steamcmd/ \
   && (/home/arma3/steamcmd/steamcmd.sh +quit || true) \
