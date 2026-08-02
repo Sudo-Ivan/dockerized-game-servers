@@ -39,7 +39,7 @@ For direct connect instead of SDR, set SERVER_PORT (and optionally SERVER_IP) an
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not anonymous |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code for the login above |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code for the login above |
 | CK_APP_ID | 1963720 | Steam app ID for the Core Keeper dedicated server |
 | CK_STEAMWORKS_APP_ID | 1007 | Steamworks Common Redistributables app ID, installed alongside the server |
 | CK_FORCE_UPDATE | false | Re-download both app IDs from Steam on next start |
@@ -62,7 +62,7 @@ For direct connect instead of SDR, set SERVER_PORT (and optionally SERVER_IP) an
 
 ## Data folder and file layout
 
-Mount core-keeper/data at /opt/corekeeper. Two paths live under it:
+Mount dockerized/core-keeper/data at /opt/corekeeper. Two paths live under it:
 
 | Path | Purpose |
 | --- | --- |
@@ -82,14 +82,14 @@ The container reports healthy when the Core Keeper server is running and GameID.
 ## Compose
 
 ```bash
-docker compose -f core-keeper/docker-compose.yml up -d
+docker compose -f dockerized/core-keeper/docker-compose.yml up -d
 ```
 
 ## Docker run
 
 ```bash
 docker run -d --name core-keeper --restart unless-stopped --init \
-  -v "$PWD/core-keeper/data:/opt/corekeeper" \
+  -v "$PWD/dockerized/core-keeper/data:/opt/corekeeper" \
   -e WORLD_NAME="Core Keeper Server" \
   -e MAX_PLAYERS=10 \
   {{IMAGE_PREFIX}}/core-keeper:latest

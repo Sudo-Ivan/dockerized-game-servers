@@ -116,7 +116,7 @@ Have fun and follow the rules.</textarea>
 </label>
 
 <label class="a3cfg-field">
-<span>VoN codec</span>
+<span>VoN dockerized/codec</span>
 <select id="a3cfg-vonCodec">
 <option value="0">SPEEX</option>
 <option value="1" selected>OPUS</option>
@@ -124,7 +124,7 @@ Have fun and follow the rules.</textarea>
 </label>
 
 <label class="a3cfg-field">
-<span>VoN codec quality <small>(1-20 OPUS, 1-10 SPEEX)</small></span>
+<span>VoN dockerized/codec quality <small>(1-20 OPUS, 1-10 SPEEX)</small></span>
 <input type="number" id="a3cfg-vonCodecQuality" value="15" min="1" max="20" />
 </label>
 
@@ -441,11 +441,11 @@ Have fun and follow the rules.</textarea>
 ## Using the generated file
 
 1. Copy or download the config from the preview panel.
-2. Save it as arma/arma-3/configs/server.cfg in your clone of this repo.
+2. Save it as dockerized/arma/arma-3/configs/server.cfg in your clone of this repo.
 3. Start the server:
 
 ```bash
-docker compose -f arma/arma-3/docker-compose.yml up -d
+docker compose -f dockerized/arma/arma-3/docker-compose.yml up -d
 ```
 
 CDLC, EXTRA_MODS, and workshop presets are set outside server.cfg. See the [Arma 3 guide](../servers/arma-3/) for mods and config path details.

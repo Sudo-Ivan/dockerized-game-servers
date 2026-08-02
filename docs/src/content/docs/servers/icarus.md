@@ -26,7 +26,7 @@ This image downloads the Icarus dedicated server through Steam and runs the Wind
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
 | ICARUS_APP_ID | 2089300 | Steam app id for the dedicated server tool |
 | ICARUS_STEAM_APP_ID | 1149460 | Icarus game app id, written to steam_appid.txt |
 | ICARUS_FORCE_UPDATE | false | Reinstall the server on next start |
@@ -63,7 +63,7 @@ The container reports healthy while the Icarus server process is running. Startu
 ## Compose
 
 ```bash
-docker compose -f icarus/docker-compose.yml up -d
+docker compose -f dockerized/icarus/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -71,7 +71,7 @@ docker compose -f icarus/docker-compose.yml up -d
 ```bash
 docker run -d --name icarus --restart unless-stopped --init \
   -p 17777:17777/udp -p 27015:27015/udp \
-  -v "$PWD/icarus/data:/opt/icarus" \
+  -v "$PWD/dockerized/icarus/data:/opt/icarus" \
   -e ICARUS_SESSION_NAME="My Prospect" \
   -e ICARUS_GAME_MODE=Prospect \
   {{IMAGE_PREFIX}}/icarus:latest

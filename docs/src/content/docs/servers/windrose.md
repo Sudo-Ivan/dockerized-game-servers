@@ -25,7 +25,7 @@ This image downloads the Windrose dedicated server through Steam and runs the Wi
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
 | WINDROSE_APP_ID | 4129620 | Steam app id for the dedicated server tool |
 | WINDROSE_FORCE_UPDATE | false | Reinstall the server on next start |
 | WINDROSE_SERVER_NAME | Windrose Server | Server name in ServerDescription.json |
@@ -39,7 +39,7 @@ This image downloads the Windrose dedicated server through Steam and runs the Wi
 R5/ServerDescription.json is written once from the settings above, then left alone. Edit it on the host at:
 
 ```text
-windrose/data/R5/ServerDescription.json
+dockerized/windrose/data/R5/ServerDescription.json
 ```
 
 Stop the container before editing, then start it again for changes to take effect.
@@ -58,7 +58,7 @@ If SteamCMD installs files under a nested steamapps/common folder, the container
 ## Compose
 
 ```bash
-docker compose -f windrose/docker-compose.yml up -d
+docker compose -f dockerized/windrose/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -66,7 +66,7 @@ docker compose -f windrose/docker-compose.yml up -d
 ```bash
 docker run -d --name windrose --restart unless-stopped --init \
   -p 7777:7777/tcp -p 7777:7777/udp \
-  -v "$PWD/windrose/data:/opt/windrose" \
+  -v "$PWD/dockerized/windrose/data:/opt/windrose" \
   -e WINDROSE_SERVER_NAME="My Windrose Server" \
   {{IMAGE_PREFIX}}/windrose:latest
 ```

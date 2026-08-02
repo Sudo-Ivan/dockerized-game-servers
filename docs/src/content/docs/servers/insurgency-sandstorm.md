@@ -25,7 +25,7 @@ On first start the container downloads the Linux dedicated server (Steam app 581
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
 | STEAMCMD_WINDOWS_WORKAROUND | prime | How SteamCMD fetches depots. full, prime, and off control how much is downloaded |
 | INS_SANDSTORM_APP_ID | 581330 | Steam app id for the dedicated server download |
 | INS_SANDSTORM_FORCE_UPDATE | false | Re-download and validate server files on next start |
@@ -74,7 +74,7 @@ Browse [mod.io Insurgency Sandstorm](https://mod.io/g/insurgencysandstorm). Open
 On the host, under the data folder, create:
 
 ```text
-insurgency-sandstorm/data/Insurgency/Config/Server/
+dockerized/insurgency-sandstorm/data/Insurgency/Config/Server/
 ```
 
 Add these text files:
@@ -136,7 +136,7 @@ Restart the container after changing config files or settings.
 ## Compose
 
 ```bash
-docker compose -f insurgency-sandstorm/docker-compose.yml up -d
+docker compose -f dockerized/insurgency-sandstorm/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -144,7 +144,7 @@ docker compose -f insurgency-sandstorm/docker-compose.yml up -d
 ```bash
 docker run -d --name insurgency-sandstorm --restart unless-stopped --init \
   -p 27102:27102/udp -p 27131:27131/udp \
-  -v "$PWD/insurgency-sandstorm/data:/opt/insurgency-sandstorm" \
+  -v "$PWD/dockerized/insurgency-sandstorm/data:/opt/insurgency-sandstorm" \
   -e INS_SANDSTORM_GSLT="your-gslt" \
   -e INS_SANDSTORM_GAMESTATS_TOKEN="your-gamestats-token" \
   {{IMAGE_PREFIX}}/insurgency-sandstorm:latest

@@ -27,7 +27,7 @@ On first start the container downloads the Team Fortress 2 dedicated server thro
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
 | TF2_APP_ID | 232250 | Steam app id for the dedicated server download |
 | TF2_FORCE_UPDATE | false | Re-download and validate server files on next start |
 | STEAMCMD_WINDOWS_WORKAROUND | full | How SteamCMD fetches depots. full downloads a Windows pass first, then Linux. prime and off are lighter options |
@@ -62,7 +62,7 @@ Your data folder mounts to /opt/tf2 inside the container.
 ## Compose
 
 ```bash
-docker compose -f tf2/docker-compose.yml up -d
+docker compose -f dockerized/tf2/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -70,7 +70,7 @@ docker compose -f tf2/docker-compose.yml up -d
 ```bash
 docker run -d --name tf2 --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
-  -v "$PWD/tf2/data:/opt/tf2" \
+  -v "$PWD/dockerized/tf2/data:/opt/tf2" \
   -e TF2_GSLT="your-gslt" \
   {{IMAGE_PREFIX}}/tf2:latest
 ```

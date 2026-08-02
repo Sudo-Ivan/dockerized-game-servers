@@ -43,7 +43,7 @@ set g_allowvote 1
 set sv_maxclients <RTCW_MAXPLAYERS>
 ```
 
-The default rcon password is changeme. Edit rtcw/data/main/server.cfg on the host with the container stopped to change the rcon password, max clients, or other options. Your edits persist because an existing server.cfg is never overwritten.
+The default rcon password is changeme. Edit dockerized/rtcw/data/main/server.cfg on the host with the container stopped to change the rcon password, max clients, or other options. Your edits persist because an existing server.cfg is never overwritten.
 
 The copied tree also includes a Punkbuster folder from the ioRTCW release. Punkbuster is disabled at launch (sv_punkbuster 0).
 
@@ -58,7 +58,7 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f rtcw/docker-compose.yml up -d
+docker compose -f dockerized/rtcw/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -66,7 +66,7 @@ docker compose -f rtcw/docker-compose.yml up -d
 ```bash
 docker run -d --name rtcw --restart unless-stopped --init \
   -p 27960:27960/udp \
-  -v "$PWD/rtcw/data:/opt/rtcw" \
+  -v "$PWD/dockerized/rtcw/data:/opt/rtcw" \
   -e RTCW_PORT=27960 \
   -e RTCW_MAXPLAYERS=32 \
   -e RTCW_STARTMAP=mp_beach \

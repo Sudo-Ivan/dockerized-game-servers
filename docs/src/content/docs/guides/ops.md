@@ -44,7 +44,7 @@ Games without update flags (for example Arma 3) cannot use gs update.
 First-party images run a health check script. Compose mirrors the same check.
 
 ```bash
-docker compose -f core-keeper/docker-compose.yml ps
+docker compose -f dockerized/core-keeper/docker-compose.yml ps
 docker inspect --format '{{.State.Health.Status}}' core-keeper
 ```
 

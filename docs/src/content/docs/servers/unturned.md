@@ -28,7 +28,7 @@ Unturned uses UDP only for gameplay. Do not publish TCP on these ports.
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
 | UNTURNED_APP_ID | 1110390 | SteamCMD app ID for the dedicated server depot |
 | UNTURNED_FORCE_UPDATE | false | Re-download the server from Steam on next start |
 | UNTURNED_SERVER_NAME | UnturnedServer | Internet server slot name, passed as +InternetServer/name |
@@ -53,7 +53,7 @@ Your data folder mounts to /opt/unturned inside the container.
 ## Compose
 
 ```bash
-docker compose -f unturned/docker-compose.yml up -d
+docker compose -f dockerized/unturned/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -61,7 +61,7 @@ docker compose -f unturned/docker-compose.yml up -d
 ```bash
 docker run -d --name unturned --restart unless-stopped --init \
   -p 27015:27015/udp -p 27016:27016/udp \
-  -v "$PWD/unturned/data:/opt/unturned" \
+  -v "$PWD/dockerized/unturned/data:/opt/unturned" \
   -e UNTURNED_SERVER_NAME="MyUnturnedServer" \
   {{IMAGE_PREFIX}}/unturned:latest
 ```

@@ -30,7 +30,7 @@ On first start the container downloads the Eco dedicated server (Steam app 73959
 | ECO_APP_ID | 739590 | Steam app ID to install |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password, needed alongside a real STEAM_USERNAME |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code for the login step |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code for the login step |
 | STEAMCMD_WINDOWS_WORKAROUND | prime | SteamCMD platform-login workaround. Other values are full and off |
 
 See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
@@ -48,17 +48,17 @@ When mapping non-default host ports (for example 3060:3000), use the host port i
 ## Compose
 
 ```bash
-docker compose -f eco/docker-compose.yml up -d
+docker compose -f dockerized/eco/docker-compose.yml up -d
 ```
 
-The included eco/docker-compose.yml sets STEAM_USERNAME and STEAM_PASSWORD to literal values (anonymous and empty), not variable substitution. If Eco needs a real Steam account to install, pass -e STEAM_USERNAME=... -e STEAM_PASSWORD=... with docker run instead, or edit those two lines in the compose file. ECO_FORCE_UPDATE and ECO_USER_TOKEN do use variable substitution, so you can set those from your shell or a .env file next to the compose file.
+The included dockerized/eco/docker-compose.yml sets STEAM_USERNAME and STEAM_PASSWORD to literal values (anonymous and empty), not variable substitution. If Eco needs a real Steam account to install, pass -e STEAM_USERNAME=... -e STEAM_PASSWORD=... with docker run instead, or edit those two lines in the compose file. ECO_FORCE_UPDATE and ECO_USER_TOKEN do use variable substitution, so you can set those from your shell or a .env file next to the compose file.
 
 ## Docker run
 
 ```bash
 docker run -d --name eco --restart unless-stopped --init \
   -p 3000:3000/udp -p 3001:3001/udp \
-  -v "$PWD/eco/data:/opt/eco" \
+  -v "$PWD/dockerized/eco/data:/opt/eco" \
   -e ECO_USER_TOKEN="your-token-here" \
   {{IMAGE_PREFIX}}/eco:latest
 ```

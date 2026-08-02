@@ -27,7 +27,7 @@ This image downloads the Sniper Elite 4 dedicated server through Steam and runs 
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
 | SE4_APP_ID | 568880 | Steam app id for the dedicated server tool |
 | SE4_STEAM_APP_ID | 312660 | Game app id, written to steam_appid.txt |
 | SE4_FORCE_UPDATE | false | Reinstall the server on next start |
@@ -54,7 +54,7 @@ Edit server.cfg directly for settings beyond map rotation and player count. If S
 
 ## Tuning the server
 
-Stop the container, edit sniper-elite-4/data/server.cfg, and start again. The server reads the file once at launch. Useful lines beyond what the settings above generate:
+Stop the container, edit dockerized/sniper-elite-4/data/server.cfg, and start again. The server reads the file once at launch. Useful lines beyond what the settings above generate:
 
 | Setting | What it does |
 | --- | --- |
@@ -81,7 +81,7 @@ The container reports healthy while the Sniper Elite 4 server process is running
 ## Compose
 
 ```bash
-docker compose -f sniper-elite-4/docker-compose.yml up -d
+docker compose -f dockerized/sniper-elite-4/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -89,7 +89,7 @@ docker compose -f sniper-elite-4/docker-compose.yml up -d
 ```bash
 docker run -d --name sniper-elite-4 --restart unless-stopped --init \
   -p 27000:27000/udp -p 27005:27005/udp -p 27010:27010/tcp -p 27015:27015/udp \
-  -v "$PWD/sniper-elite-4/data:/opt/se4" \
+  -v "$PWD/dockerized/sniper-elite-4/data:/opt/se4" \
   -e SE4_SERVER_NAME="My SE4 Server" \
   {{IMAGE_PREFIX}}/sniper-elite-4:latest
 ```

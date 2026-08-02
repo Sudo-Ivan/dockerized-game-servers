@@ -26,7 +26,7 @@ On first start the container downloads the Satisfactory Linux dedicated server (
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
 | SATISFACTORY_APP_ID | 1690800 | Steam app ID to install |
 | SATISFACTORY_FORCE_UPDATE | false | Re-download the server from Steam on next start |
 | SATISFACTORY_PORT | 7777 | Game TCP/UDP port, passed as -Port= |
@@ -42,7 +42,7 @@ If SteamCMD installs files under a nested steamapps/common folder, the container
 ## Compose
 
 ```bash
-docker compose -f satisfactory/docker-compose.yml up -d
+docker compose -f dockerized/satisfactory/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -50,7 +50,7 @@ docker compose -f satisfactory/docker-compose.yml up -d
 ```bash
 docker run -d --name satisfactory --restart unless-stopped --init \
   -p 7777:7777/tcp -p 7777:7777/udp -p 8888:8888/tcp \
-  -v "$PWD/satisfactory/data:/opt/satisfactory" \
+  -v "$PWD/dockerized/satisfactory/data:/opt/satisfactory" \
   {{IMAGE_PREFIX}}/satisfactory:latest
 ```
 

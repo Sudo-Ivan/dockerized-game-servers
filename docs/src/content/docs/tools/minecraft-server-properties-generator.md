@@ -27,10 +27,10 @@ Everything runs in your browser. Nothing is sent to a server.
 <label class="mcprops-field">
 <span>Level type</span>
 <select id="mcprops-level-type">
-<option value="minecraft:normal" selected>Normal</option>
-<option value="minecraft:flat">Flat</option>
-<option value="minecraft:large_biomes">Large biomes</option>
-<option value="minecraft:amplified">Amplified</option>
+<option value="dockerized/minecraft:normal" selected>Normal</option>
+<option value="dockerized/minecraft:flat">Flat</option>
+<option value="dockerized/minecraft:large_biomes">Large biomes</option>
+<option value="dockerized/minecraft:amplified">Amplified</option>
 </select>
 </label>
 
@@ -379,7 +379,7 @@ Everything runs in your browser. Nothing is sent to a server.
 ## Using the generated file
 
 1. Copy or download the file from the preview panel.
-2. Save it under your flavor's data folder, for example minecraft/vanilla/data/server.properties.
+2. Save it under your flavor's data folder, for example dockerized/minecraft/vanilla/data/server.properties.
 3. Restart the container. Most server.properties changes only apply after a restart.
 
 Set EULA=true when starting the container. See the [Minecraft guide](../servers/minecraft/) for volumes, mods, and datapacks.

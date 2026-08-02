@@ -7,7 +7,7 @@ set -eu
 ROOT="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
 cd "${ROOT}"
 
-printf '%s\n' ci tools bases
+printf '%s\n' ci tools dockerized/bases
 
 ./ci/server-catalog.sh | while IFS="$(printf '\t')" read -r id compose _container _volumes _update_envs _health _first_party; do
   [ -n "${id}" ] || continue

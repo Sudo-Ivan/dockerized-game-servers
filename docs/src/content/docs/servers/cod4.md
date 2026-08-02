@@ -18,7 +18,7 @@ This image ships with a CoD4x game server built in. On first run the files are c
 | --- | --- | --- |
 | 28960 | UDP | Game traffic (COD4_PORT) |
 
-If you run more than one Call of Duty family server on one host (cod, cod2, codwaw, and cod4 all default to 28960), change COD4_PORT and the matching port mapping so they do not collide.
+If you run more than one Call of Duty family server on one host (dockerized/cod, dockerized/cod2, dockerized/codwaw, and dockerized/cod4 all default to 28960), change COD4_PORT and the matching port mapping so they do not collide.
 
 ## Settings
 
@@ -46,7 +46,7 @@ set sv_hostname "<COD4_HOSTNAME>"
 set rcon_password "changeme"
 ```
 
-Unlike the other Call of Duty guides here, the generated config does not set g_allowvote. The default rcon password is changeme. Edit cod4/data/server.cfg on the host with the container stopped to change the rcon password or add other options. Your edits persist because an existing server.cfg is never overwritten.
+Unlike the other Call of Duty guides here, the generated config does not set g_allowvote. The default rcon password is changeme. Edit dockerized/cod4/data/server.cfg on the host with the container stopped to change the rcon password or add other options. Your edits persist because an existing server.cfg is never overwritten.
 
 ## Updates
 
@@ -59,7 +59,7 @@ The container reports healthy while the CoD4x server process is running. Startup
 ## Compose
 
 ```bash
-docker compose -f cod4/docker-compose.yml up -d
+docker compose -f dockerized/cod4/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -67,7 +67,7 @@ docker compose -f cod4/docker-compose.yml up -d
 ```bash
 docker run -d --name cod4 --restart unless-stopped --init \
   -p 28960:28960/udp \
-  -v "$PWD/cod4/data:/opt/cod4" \
+  -v "$PWD/dockerized/cod4/data:/opt/cod4" \
   -e COD4_PORT=28960 \
   -e COD4_MAXPLAYERS=32 \
   -e COD4_STARTMAP=mp_crossfire \

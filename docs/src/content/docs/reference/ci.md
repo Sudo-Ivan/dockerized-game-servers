@@ -11,7 +11,7 @@ This page describes the automated checks and image builds that run on GitHub. Yo
 
 **build** runs weekly (Sunday 06:00 UTC), when Dockerfiles, base images, or CI scripts change on master or main, and on manual trigger. The job list comes from `ci/image-matrix.sh` (`ci/github-matrix.py`). It builds and pushes images to GHCR through the reusable `docker-image` workflow, then scans them with Trivy. A CRITICAL finding fails the job.
 
-**build-minecraft** is manual only. Pick Fabric, Vanilla, Forge, or NeoForge and a Minecraft version. Java is resolved from Mojang's javaVersion. Temurin Alpine JRE is pinned from Adoptium. Fabric loader and installer, and Forge promos, auto-fill when left blank. NeoForge resolves from Maven when omitted. The workflow publishes minecraft-base:javaN and minecraft-flavor:tag.
+**build-minecraft** is manual only. Pick Fabric, Vanilla, Forge, or NeoForge and a Minecraft version. Java is resolved from Mojang's javaVersion. Temurin Alpine JRE is pinned from Adoptium. Fabric loader and installer, and Forge promos, auto-fill when left blank. NeoForge resolves from Maven when omitted. The workflow publishes `minecraft-base`:javaN and `minecraft-flavor`:tag.
 
 ## What ci-check covers
 
@@ -47,7 +47,7 @@ Preview what a Minecraft build would resolve to before triggering the workflow:
 
 ## Security scanning
 
-Trivy is installed from a pinned GitHub release tarball with SHA-256 verification (`ci/install-trivy.sh`). This repo does not use aquasecurity/trivy-action after the March 2026 supply-chain compromise. Shared scan settings live in `trivy.yaml`.
+Trivy is installed from a pinned GitHub release tarball with SHA-256 verification (`ci/install-trivy.sh`). This repo does not use aquasecurity/trivy-action after the March 2026 supply-chain compromise. Shared scan settings live in `dockerized/trivy.yaml`.
 
 ## Workflow security
 

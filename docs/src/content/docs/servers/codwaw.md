@@ -18,7 +18,7 @@ This image ships with the game server files built in. On first run they are copi
 | --- | --- | --- |
 | 28960 | UDP | Game traffic (CODWAW_PORT) |
 
-If you run more than one Call of Duty family server on one host (cod, cod2, codwaw, and cod4 all default to 28960), change CODWAW_PORT and the matching port mapping so they do not collide.
+If you run more than one Call of Duty family server on one host (dockerized/cod, dockerized/cod2, dockerized/codwaw, and dockerized/cod4 all default to 28960), change CODWAW_PORT and the matching port mapping so they do not collide.
 
 ## Settings
 
@@ -45,7 +45,7 @@ set rcon_password "changeme"
 set g_allowvote 1
 ```
 
-The default rcon password is changeme and there is no setting to change it at create time. Edit codwaw/data/server.cfg on the host with the container stopped to change the rcon password, voting, or other options. Your edits persist because an existing server.cfg is never overwritten.
+The default rcon password is changeme and there is no setting to change it at create time. Edit dockerized/codwaw/data/server.cfg on the host with the container stopped to change the rcon password, voting, or other options. Your edits persist because an existing server.cfg is never overwritten.
 
 Punkbuster is disabled (sv_punkbuster 0) and com_hunkMegs is fixed at 128.
 
@@ -60,7 +60,7 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f codwaw/docker-compose.yml up -d
+docker compose -f dockerized/codwaw/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -68,7 +68,7 @@ docker compose -f codwaw/docker-compose.yml up -d
 ```bash
 docker run -d --name codwaw --restart unless-stopped --init \
   -p 28960:28960/udp \
-  -v "$PWD/codwaw/data:/opt/codwaw" \
+  -v "$PWD/dockerized/codwaw/data:/opt/codwaw" \
   -e CODWAW_PORT=28960 \
   -e CODWAW_MAXPLAYERS=20 \
   -e CODWAW_STARTMAP=mp_castle \

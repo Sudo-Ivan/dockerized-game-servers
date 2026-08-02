@@ -47,7 +47,7 @@ The container reports healthy while the game process is running. Startup gets a 
 ## Compose
 
 ```bash
-docker compose -f delta-force-bhd/docker-compose.yml up -d
+docker compose -f dockerized/delta-force-bhd/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -55,7 +55,7 @@ docker compose -f delta-force-bhd/docker-compose.yml up -d
 ```bash
 docker run -d --name delta-force-bhd --restart unless-stopped --init \
   -p 3568:3568/udp \
-  -v "$PWD/delta-force-bhd/data:/opt/dfbhd" \
+  -v "$PWD/dockerized/delta-force-bhd/data:/opt/dfbhd" \
   -e BHD_EXTRA_ARGS="" \
   {{IMAGE_PREFIX}}/delta-force-bhd:latest
 ```

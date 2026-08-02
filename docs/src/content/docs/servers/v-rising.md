@@ -26,7 +26,7 @@ This image downloads the V Rising dedicated server through Steam and runs the Wi
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
 | VRISING_APP_ID | 1829350 | Steam app id for the dedicated server tool |
 | VRISING_STEAM_APP_ID | 1604030 | Game app id, written to steam_appid.txt |
 | VRISING_FORCE_UPDATE | false | Reinstall the server on next start |
@@ -43,7 +43,7 @@ This image downloads the V Rising dedicated server through Steam and runs the Wi
 ServerHostSettings.json is written once from the settings above, then left alone. Edit it on the host at:
 
 ```text
-v-rising/data/VRisingServer_Data/StreamingAssets/Settings/ServerHostSettings.json
+dockerized/v-rising/data/VRisingServer_Data/StreamingAssets/Settings/ServerHostSettings.json
 ```
 
 Stop the container before editing, then start it again for changes to take effect.
@@ -63,7 +63,7 @@ If SteamCMD installs files under a nested steamapps/common folder, the container
 ## Compose
 
 ```bash
-docker compose -f v-rising/docker-compose.yml up -d
+docker compose -f dockerized/v-rising/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -71,7 +71,7 @@ docker compose -f v-rising/docker-compose.yml up -d
 ```bash
 docker run -d --name v-rising --restart unless-stopped --init \
   -p 9876:9876/udp -p 9877:9877/udp -p 9877:9877/tcp \
-  -v "$PWD/v-rising/data:/opt/vrising" \
+  -v "$PWD/dockerized/v-rising/data:/opt/vrising" \
   -e VRISING_SERVER_NAME="My V Rising Server" \
   {{IMAGE_PREFIX}}/v-rising:latest
 ```

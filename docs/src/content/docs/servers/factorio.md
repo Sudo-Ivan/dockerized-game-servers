@@ -1,10 +1,10 @@
 ---
 title: Factorio
-description: Factorio headless dedicated server downloaded directly from factorio.com.
+description: Factorio headless dedicated server downloaded directly from dockerized/factorio.com.
 iconFit: contain
 ---
 
-On first start the container downloads the official headless Linux package from factorio.com. No Steam account is required. It extracts the server into your data folder and creates a default server-settings.json and an initial save if neither already exists.
+On first start the container downloads the official headless Linux package from dockerized/factorio.com. No Steam account is required. It extracts the server into your data folder and creates a default server-settings.json and an initial save if neither already exists.
 
 :::note[Before you start]
 - Keep a data folder for the server binary, saves, config, mods, and script output
@@ -44,7 +44,7 @@ On first start the container downloads the official headless Linux package from 
 
 ## Data folder and file layout
 
-Mount factorio/data at /opt/factorio. These folders survive reinstalls and version upgrades. Everything else under /opt/factorio is replaced on install:
+Mount dockerized/factorio/data at /opt/factorio. These folders survive reinstalls and version upgrades. Everything else under /opt/factorio is replaced on install:
 
 | Path | Purpose |
 | --- | --- |
@@ -68,7 +68,7 @@ The container reports healthy while the Factorio server is running. Startup gets
 
 ```bash
 export RCON_PASSWORD=changeme
-docker compose -f factorio/docker-compose.yml up -d
+docker compose -f dockerized/factorio/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -76,9 +76,9 @@ docker compose -f factorio/docker-compose.yml up -d
 ```bash
 docker run -d --name factorio --restart unless-stopped --init \
   -p 34197:34197/udp -p 27015:27015/tcp \
-  -v "$PWD/factorio/data:/opt/factorio" \
+  -v "$PWD/dockerized/factorio/data:/opt/factorio" \
   -e RCON_PASSWORD=changeme \
   {{IMAGE_PREFIX}}/factorio:latest
 ```
 
-Match mod versions in factorio/data/mods/ to your server's Factorio version. The included compose file caps the container at 4096 MB of memory.
+Match mod versions in dockerized/factorio/data/mods/ to your server's Factorio version. The included compose file caps the container at 4096 MB of memory.

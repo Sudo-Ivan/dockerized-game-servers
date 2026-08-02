@@ -26,7 +26,7 @@ This image downloads the VEIN dedicated server through Steam and runs the Window
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
 | VEIN_APP_ID | 2131400 | Steam app id for the dedicated server tool |
 | VEIN_FORCE_UPDATE | false | Reinstall the server on next start |
 | VEIN_PORT | 7777 | Game UDP port, passed as -port= |
@@ -48,7 +48,7 @@ The container does not write a config file. All settings above are launch argume
 ## Compose
 
 ```bash
-docker compose -f vein/docker-compose.yml up -d
+docker compose -f dockerized/vein/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -56,7 +56,7 @@ docker compose -f vein/docker-compose.yml up -d
 ```bash
 docker run -d --name vein --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp \
-  -v "$PWD/vein/data:/opt/vein" \
+  -v "$PWD/dockerized/vein/data:/opt/vein" \
   -e VEIN_MAX_PLAYERS=16 \
   {{IMAGE_PREFIX}}/vein:latest
 ```

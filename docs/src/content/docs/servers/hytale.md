@@ -20,7 +20,7 @@ This stack runs a Hytale dedicated server using the third-party deinfreu/hytale-
 
 ## Settings
 
-These are the variables wired in hytale/docker-compose.yml. The upstream image may support more. Check its [Docker Hub page](https://hub.docker.com/r/deinfreu/hytale-server) for anything not listed here.
+These are the variables wired in dockerized/hytale/docker-compose.yml. The upstream image may support more. Check its [Docker Hub page](https://hub.docker.com/r/deinfreu/hytale-server) for anything not listed here.
 
 | Setting | Default | What it does |
 | --- | --- | --- |
@@ -32,15 +32,15 @@ These are the variables wired in hytale/docker-compose.yml. The upstream image m
 
 ## Data folder
 
-Mount hytale/data at /home/container. The internal file layout is controlled entirely by the upstream image.
+Mount dockerized/hytale/data at /home/container. The internal file layout is controlled entirely by the upstream image.
 
 ## Updates
 
 ./tools/gs update hytale is not available. Pull a newer tag and recreate the container instead:
 
 ```bash
-docker compose -f hytale/docker-compose.yml pull
-docker compose -f hytale/docker-compose.yml up -d
+docker compose -f dockerized/hytale/docker-compose.yml pull
+docker compose -f dockerized/hytale/docker-compose.yml up -d
 ```
 
 ./tools/gs backup hytale and restore do work since the catalog lists a data volume. See [Ops](/guides/ops/).
@@ -48,7 +48,7 @@ docker compose -f hytale/docker-compose.yml up -d
 ## Compose
 
 ```bash
-docker compose -f hytale/docker-compose.yml up -d
+docker compose -f dockerized/hytale/docker-compose.yml up -d
 ```
 
 The compose file also sets tty and stdin_open so you can attach an interactive console with docker attach hytale-server. Detach with Ctrl-p Ctrl-q (do not use Ctrl-c, which would stop the server).
@@ -58,7 +58,7 @@ The compose file also sets tty and stdin_open so you can attach an interactive c
 ```bash
 docker run -d --name hytale-server --restart unless-stopped --init \
   -p 5520:5520/udp \
-  -v "$PWD/hytale/data:/home/container" \
+  -v "$PWD/dockerized/hytale/data:/home/container" \
   -v /etc/machine-id:/etc/machine-id:ro \
   -e SERVER_IP=0.0.0.0 \
   -e SERVER_PORT=5520 \

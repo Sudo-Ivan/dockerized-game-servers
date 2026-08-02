@@ -25,9 +25,9 @@ This image downloads the Space Engineers dedicated server through Steam and runs
 
 | Host path | Container path | Purpose |
 | --- | --- | --- |
-| space-engineers/data/dedicated | /opt/spaceengineers/dedicated | SteamCMD install of the server and game content |
-| space-engineers/data/instances | /opt/spaceengineers/instances | Per-instance config and saves. Default instance name is Default |
-| space-engineers/data/plugins | /opt/spaceengineers/plugins | Drop .dll plugins here. They are added to the instance config on every start |
+| dockerized/space-engineers/data/dedicated | /opt/spaceengineers/dedicated | SteamCMD install of the server and game content |
+| dockerized/space-engineers/data/instances | /opt/spaceengineers/instances | Per-instance config and saves. Default instance name is Default |
+| dockerized/space-engineers/data/plugins | /opt/spaceengineers/plugins | Drop .dll plugins here. They are added to the instance config on every start |
 
 The Wine prefix is baked into the image at build time, not stored in any mounted folder. Rebuilding the image resets it. Recreating the container does not.
 
@@ -37,7 +37,7 @@ The Wine prefix is baked into the image at build time, not stored in any mounted
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
 | SE_APP_ID | 298740 | Steam app id for the dedicated server tool |
 | SE_GAME_APP_ID | 244850 | Space Engineers game app id, written to steam_appid.txt |
 | SE_FORCE_UPDATE | false | Reinstall the server on next start |
@@ -79,7 +79,7 @@ The container reports healthy while the Space Engineers server process is runnin
 ## Compose
 
 ```bash
-docker compose -f space-engineers/docker-compose.yml up -d
+docker compose -f dockerized/space-engineers/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -87,9 +87,9 @@ docker compose -f space-engineers/docker-compose.yml up -d
 ```bash
 docker run -d --name space-engineers --restart unless-stopped --init \
   -p 27016:27016/udp \
-  -v "$PWD/space-engineers/data/dedicated:/opt/spaceengineers/dedicated" \
-  -v "$PWD/space-engineers/data/instances:/opt/spaceengineers/instances" \
-  -v "$PWD/space-engineers/data/plugins:/opt/spaceengineers/plugins" \
+  -v "$PWD/dockerized/space-engineers/data/dedicated:/opt/spaceengineers/dedicated" \
+  -v "$PWD/dockerized/space-engineers/data/instances:/opt/spaceengineers/instances" \
+  -v "$PWD/dockerized/space-engineers/data/plugins:/opt/spaceengineers/plugins" \
   -e SE_PUBLIC_IP=203.0.113.10 \
   -e SE_EXTRA_ARGS= \
   {{IMAGE_PREFIX}}/space-engineers:latest

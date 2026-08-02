@@ -18,8 +18,7 @@ match_workflow() {
     .github/workflows/ci.yml|.github/workflows/docker-image.yml) return 0 ;;
     ci/*) return 0 ;;
     tools/*) return 0 ;;
-    bases/*) return 0 ;;
-    trivy.yaml|.trivyignore) return 0 ;;
+    dockerized/*) return 0 ;;
     */docker-compose.yml) return 0 ;;
     */Dockerfile) return 0 ;;
     */compose.yml) return 0 ;;
@@ -34,10 +33,8 @@ match_docker_verify() {
   file="$1"
   case "${file}" in
     .github/workflows/docker-image.yml|.github/workflows/ci.yml) return 0 ;;
-    bases/*) return 0 ;;
-    */Dockerfile) return 0 ;;
+    dockerized/*) return 0 ;;
     ci/build-image.sh|ci/build-one-image.sh|ci/image-matrix.sh|ci/github-matrix.py) return 0 ;;
-    trivy.yaml|.trivyignore) return 0 ;;
   esac
   return 1
 }

@@ -33,7 +33,7 @@ On first start the container downloads the Terraria dedicated server (Steam app 
 | TERRARIA_APP_ID | 105600 | Steam app ID to install |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
 
 See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
 
@@ -41,7 +41,7 @@ See [Quick start](/guides/quick-start/) if you need to log in with a real Steam 
 
 The container only writes serverconfig.txt when the file does not already exist. It fills in the settings above plus worldpath=WORLD_PATH/ and autocreate=1. autocreate=1 tells Terraria to generate a small world named WORLD_NAME if none exists yet. Terraria defines 1 as small, 2 as medium, and 3 as large for that setting.
 
-Settings in the table above only take effect on this first write. To change a running server, edit terraria/data/serverconfig.txt directly. You can also place your own .wld file at terraria/data/Worlds/WORLD_NAME.wld before the first start so Terraria loads it instead of generating a new one.
+Settings in the table above only take effect on this first write. To change a running server, edit dockerized/terraria/data/serverconfig.txt directly. You can also place your own .wld file at dockerized/terraria/data/Worlds/WORLD_NAME.wld before the first start so Terraria loads it instead of generating a new one.
 
 ## Data folder
 
@@ -50,7 +50,7 @@ Your data folder mounts to /opt/terraria inside the container. It holds the inst
 ## Compose
 
 ```bash
-docker compose -f terraria/docker-compose.yml up -d
+docker compose -f dockerized/terraria/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -58,7 +58,7 @@ docker compose -f terraria/docker-compose.yml up -d
 ```bash
 docker run -d --name terraria --restart unless-stopped --init \
   -p 7777:7777/tcp \
-  -v "$PWD/terraria/data:/opt/terraria" \
+  -v "$PWD/dockerized/terraria/data:/opt/terraria" \
   {{IMAGE_PREFIX}}/terraria:latest
 ```
 

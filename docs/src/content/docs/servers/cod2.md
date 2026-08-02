@@ -17,7 +17,7 @@ This image ships with the game server files built in. On first run they are copi
 | --- | --- | --- |
 | 28960 | UDP | Game traffic (COD2_PORT) |
 
-If you run more than one Call of Duty family server on one host (cod, cod2, codwaw, and cod4 all default to 28960), change COD2_PORT and the matching port mapping so they do not collide.
+If you run more than one Call of Duty family server on one host (dockerized/cod, dockerized/cod2, dockerized/codwaw, and dockerized/cod4 all default to 28960), change COD2_PORT and the matching port mapping so they do not collide.
 
 ## Settings
 
@@ -44,7 +44,7 @@ set rcon_password "changeme"
 set g_allowvote 1
 ```
 
-The default rcon password is changeme and there is no setting to change it at create time. Edit cod2/data/server.cfg on the host with the container stopped to change the rcon password, voting, or other options. Your edits persist because an existing server.cfg is never overwritten.
+The default rcon password is changeme and there is no setting to change it at create time. Edit dockerized/cod2/data/server.cfg on the host with the container stopped to change the rcon password, voting, or other options. Your edits persist because an existing server.cfg is never overwritten.
 
 Punkbuster is disabled (sv_punkbuster 0).
 
@@ -59,7 +59,7 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f cod2/docker-compose.yml up -d
+docker compose -f dockerized/cod2/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -67,7 +67,7 @@ docker compose -f cod2/docker-compose.yml up -d
 ```bash
 docker run -d --name cod2 --restart unless-stopped --init \
   -p 28960:28960/udp \
-  -v "$PWD/cod2/data:/opt/cod2" \
+  -v "$PWD/dockerized/cod2/data:/opt/cod2" \
   -e COD2_PORT=28960 \
   -e COD2_MAXPLAYERS=20 \
   -e COD2_STARTMAP=mp_leningrad \

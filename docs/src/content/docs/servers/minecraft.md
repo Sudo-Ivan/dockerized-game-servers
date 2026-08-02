@@ -8,10 +8,10 @@ Four server types are available: Fabric, Vanilla, Forge, and NeoForge. They all 
 
 | Flavor | Compose folder | Image name |
 | --- | --- | --- |
-| Fabric | minecraft/fabric | minecraft-fabric |
-| Vanilla | minecraft/vanilla | minecraft-vanilla |
-| Forge | minecraft/forge | minecraft-forge |
-| NeoForge | minecraft/neoforge | minecraft-neoforge |
+| Fabric | dockerized/minecraft/fabric | minecraft-fabric |
+| Vanilla | dockerized/minecraft/vanilla | minecraft-vanilla |
+| Forge | dockerized/minecraft/forge | minecraft-forge |
+| NeoForge | dockerized/minecraft/neoforge | minecraft-neoforge |
 
 :::note[Before you start]
 - Accept the Minecraft EULA (set EULA to true)
@@ -21,7 +21,7 @@ Four server types are available: Fabric, Vanilla, Forge, and NeoForge. They all 
 
 ## Default versions
 
-The included compose files pin versions in [minecraft/defaults.env]({{GITHUB_URL}}/blob/master/minecraft/defaults.env). CI keeps those values in sync with each image.
+The included compose files pin versions in [dockerized/minecraft/defaults.env]({{GITHUB_URL}}/blob/master/dockerized/minecraft/defaults.env). CI keeps those values in sync with each image.
 
 | Flavor | Settings | Current default |
 | --- | --- | --- |
@@ -66,7 +66,7 @@ Edit server.properties while the server is stopped. Some settings can be reloade
 Datapacks depend on the game version. For vanilla:
 
 1. Download or build a datapack zip.
-2. Put it in minecraft/vanilla/data/world/datapacks/ (create folders if needed).
+2. Put it in dockerized/minecraft/vanilla/data/world/datapacks/ (create folders if needed).
 3. Restart the server, or run /reload if the pack supports it.
 
 For a new world, set level-name in server.properties before the first start, or add datapacks before the world folder is created.
@@ -76,7 +76,7 @@ Fabric and Forge use the same world/datapacks/ layout. Some mods add rules that 
 ## Mods (Fabric, Forge, and NeoForge)
 
 1. Match mod jars to your loader version.
-2. Drop jar files into minecraft/<flavor>/data/mods/.
+2. Drop jar files into dockerized/minecraft/<flavor>/data/mods/.
 3. Restart the server and check logs/latest.log for loader errors.
 
 Fabric downloads the server launcher on first start. Forge and NeoForge run the official installer into /data. After changing loader versions, set FORGE_FORCE_INSTALL or NEOFORGE_FORCE_INSTALL to true once so binaries match your mods.
@@ -86,7 +86,7 @@ Client-only mods do not belong on the dedicated server. Use server or universal 
 ## Compose (pinned defaults)
 
 ```bash
-docker compose -f minecraft/fabric/docker-compose.yml up
+docker compose -f dockerized/minecraft/fabric/docker-compose.yml up
 ```
 
 Replace fabric with vanilla, forge, or neoforge as needed.
@@ -96,20 +96,20 @@ Replace fabric with vanilla, forge, or neoforge as needed.
 Use docker-compose.scaffold.yml when you want versions in a local .env file instead of only the repo defaults.
 
 ```bash
-cd minecraft/fabric
+cd dockerized/minecraft/fabric
 cp .env.example .env
 # edit .env, then:
 docker compose -f docker-compose.scaffold.yml up
 ```
 
-Scaffold compose loads minecraft/defaults.env, an optional .env in the flavor folder, and explicit environment entries so your overrides win. You can also pass the defaults file on the command line:
+Scaffold compose loads dockerized/minecraft/defaults.env, an optional .env in the flavor folder, and explicit environment entries so your overrides win. You can also pass the defaults file on the command line:
 
 ```bash
-docker compose -f minecraft/vanilla/docker-compose.scaffold.yml \
-  --env-file minecraft/defaults.env up
+docker compose -f dockerized/minecraft/vanilla/docker-compose.scaffold.yml \
+  --env-file dockerized/minecraft/defaults.env up
 ```
 
-The same pattern works under minecraft/vanilla, minecraft/forge, and minecraft/neoforge with their .env.example files.
+The same pattern works under dockerized/minecraft/vanilla, dockerized/minecraft/forge, and dockerized/minecraft/neoforge with their .env.example files.
 
 ## Docker run
 
@@ -120,7 +120,7 @@ Fabric:
 ```bash
 docker run -d --name fabric --restart unless-stopped --init \
   -p 25565:25565/tcp \
-  -v "$PWD/minecraft/fabric/data:/data" \
+  -v "$PWD/dockerized/minecraft/fabric/data:/data" \
   -e EULA=true \
   -e FABRIC_MINECRAFT_VERSION=26.2 \
   -e FABRIC_LOADER_VERSION=0.19.3 \
@@ -133,7 +133,7 @@ Vanilla:
 ```bash
 docker run -d --name vanilla --restart unless-stopped --init \
   -p 25565:25565/tcp \
-  -v "$PWD/minecraft/vanilla/data:/data" \
+  -v "$PWD/dockerized/minecraft/vanilla/data:/data" \
   -e EULA=true \
   -e VANILLA_VERSION=26.2 \
   {{IMAGE_PREFIX}}/minecraft-vanilla:latest
@@ -144,7 +144,7 @@ Forge:
 ```bash
 docker run -d --name forge --restart unless-stopped --init \
   -p 25565:25565/tcp \
-  -v "$PWD/minecraft/forge/data:/data" \
+  -v "$PWD/dockerized/minecraft/forge/data:/data" \
   -e EULA=true \
   -e FORGE_MINECRAFT_VERSION=26.2 \
   -e FORGE_VERSION=65.0.9 \
@@ -156,7 +156,7 @@ NeoForge:
 ```bash
 docker run -d --name neoforge --restart unless-stopped --init \
   -p 25565:25565/tcp \
-  -v "$PWD/minecraft/neoforge/data:/data" \
+  -v "$PWD/dockerized/minecraft/neoforge/data:/data" \
   -e EULA=true \
   -e NEOFORGE_VERSION=26.2.0.35-beta \
   {{IMAGE_PREFIX}}/minecraft-neoforge:latest
@@ -175,5 +175,5 @@ The manual build-minecraft workflow can publish tags for a chosen Minecraft vers
 ## See also
 
 - [All servers](/reference/servers/) for compose paths and image names
-- [Images](/reference/images/) for the shared minecraft-base image
+- [Images](/reference/images/) for the shared `minecraft-base` image
 - [Ops](/guides/ops/) for backup, restore, and update with ./tools/gs

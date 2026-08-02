@@ -55,4 +55,4 @@ Full walkthrough: [Quick start](guides/quick-start/).
 
 ## Curious how it is built
 
-Every image is small on purpose and shares a handful of common bases (a Java runtime for Minecraft, SteamCMD for Steam-downloaded games, a slim Linux runtime for everything else) so they are easy to keep secure and up to date. That side of things lives in [Images](reference/images/) and [CI](reference/ci/) if you want to build your own copies or contribute.
+Every image is small on purpose and shares a handful of common bases under `dockerized/bases/` (a Java runtime for Minecraft, SteamCMD for Steam-downloaded games, a slim Linux runtime for everything else) so they are easy to keep secure and up to date. That side of things lives in [Images](reference/images/) and [CI](reference/ci/) if you want to build your own copies or contribute.

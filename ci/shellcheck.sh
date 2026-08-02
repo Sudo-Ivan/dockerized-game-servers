@@ -27,7 +27,7 @@ fi
 rm -f "${roots_tmp}"
 
 sort -u "${tmp}" -o "${tmp}"
-printf '%s\n' bases/steam/steamcmd-app-update.sh bases/runtime/http-download.sh bases/runtime/linuxgsm-tar-install.sh bases/runtime/install-legacy32-libs.sh >>"${tmp}"
+printf '%s\n' dockerized/bases/steam/steamcmd-app-update.sh dockerized/bases/runtime/http-download.sh dockerized/bases/runtime/linuxgsm-tar-install.sh dockerized/bases/runtime/install-legacy32-libs.sh >>"${tmp}"
 sort -u "${tmp}" -o "${tmp}"
 fail=0
 while IFS= read -r script; do
@@ -45,6 +45,9 @@ while IFS= read -r script; do
     sc_exclude="${sc_exclude},SC1091"
   fi
   if grep -q 'linuxgsm-tar-install.sh' "${script}" 2>/dev/null; then
+    sc_exclude="${sc_exclude},SC1091"
+  fi
+  if grep -q 'http-download.sh' "${script}" 2>/dev/null; then
     sc_exclude="${sc_exclude},SC1091"
   fi
   if ! shellcheck -x -e "${sc_exclude}" "${script}"; then

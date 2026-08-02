@@ -25,7 +25,7 @@ On first start the container downloads the Insurgency (2014) dedicated server th
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
 | INS_SOURCE_APP_ID | 237410 | Steam app id for the dedicated server download |
 | INS_SOURCE_FORCE_UPDATE | false | Re-download and validate server files on next start |
 | STEAMCMD_WINDOWS_WORKAROUND | full | How SteamCMD fetches depots. full downloads a Windows pass first, then Linux. prime and off are lighter options |
@@ -70,7 +70,7 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f insurgency-source/docker-compose.yml up -d
+docker compose -f dockerized/insurgency-source/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -78,7 +78,7 @@ docker compose -f insurgency-source/docker-compose.yml up -d
 ```bash
 docker run -d --name insurgency-source --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27016:27016/udp \
-  -v "$PWD/insurgency-source/data:/opt/insurgency-source" \
+  -v "$PWD/dockerized/insurgency-source/data:/opt/insurgency-source" \
   -e STEAM_USERNAME="your_steam_user" \
   -e STEAM_PASSWORD="your_steam_password" \
   {{IMAGE_PREFIX}}/insurgency-source:latest

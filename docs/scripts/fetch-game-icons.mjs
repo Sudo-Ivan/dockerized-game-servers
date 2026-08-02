@@ -25,6 +25,7 @@ import { resolveRepo } from '../src/lib/repo.mjs'
 
 const docsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = path.resolve(docsDir, '..')
+const dockerizedRoot = path.join(repoRoot, 'dockerized')
 const serversDir = path.join(docsDir, 'src/content/docs/servers')
 const iconsDir = path.join(docsDir, 'public/game-icons')
 const generatedDir = path.join(docsDir, 'src/generated')
@@ -125,8 +126,10 @@ function catalogEntries() {
 function rootsForSlug(slug, catalog) {
 	/** @type {Set<string>} */
 	const roots = new Set()
-	const direct = path.join(repoRoot, slug)
+	const direct = path.join(dockerizedRoot, slug)
 	if (existsSync(direct)) roots.add(direct)
+	const legacy = path.join(repoRoot, slug)
+	if (existsSync(legacy)) roots.add(legacy)
 
 	for (const entry of catalog) {
 		const composeDir = path.dirname(path.join(repoRoot, entry.compose))
@@ -142,13 +145,13 @@ function rootsForSlug(slug, catalog) {
 	// Minecraft docs cover fabric/vanilla/forge variants.
 	if (slug === 'minecraft') {
 		for (const variant of ['fabric', 'vanilla', 'forge', 'neoforge']) {
-			const dir = path.join(repoRoot, 'minecraft', variant)
+			const dir = path.join(dockerizedRoot, 'minecraft', variant)
 			if (existsSync(dir)) roots.add(dir)
 		}
 	}
 	if (slug === 'valheim') {
 		for (const variant of ['vanilla', 'plus']) {
-			const dir = path.join(repoRoot, 'valheim', variant)
+			const dir = path.join(dockerizedRoot, 'valheim', variant)
 			if (existsSync(dir)) roots.add(dir)
 		}
 	}

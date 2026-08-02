@@ -13,10 +13,10 @@ description: OpenMoHAA dedicated server, requires your own Medal of Honor Allied
 
 ## Game data (required)
 
-Copy folders from your owned install into openmohaa/data/:
+Copy folders from your owned install into dockerized/openmohaa/data/:
 
 ```text
-openmohaa/data/
+dockerized/openmohaa/data/
   main/     Pak*.pk3 from Allied Assault (required)
   mainta/   pak*.pk3 from Spearhead (optional)
   maintt/   pak*.pk3 from Breakthrough (optional)
@@ -98,7 +98,7 @@ The container sends a UDP status query to the game port and checks for a valid r
 ## Compose
 
 ```bash
-docker compose -f openmohaa/docker-compose.yml up -d
+docker compose -f dockerized/openmohaa/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -106,8 +106,8 @@ docker compose -f openmohaa/docker-compose.yml up -d
 ```bash
 docker run -d --name openmohaa --restart unless-stopped --init \
   -p 12203:12203/udp -p 12300:12300/udp \
-  -v "$PWD/openmohaa/data:/usr/local/share/mohaa" \
+  -v "$PWD/dockerized/openmohaa/data:/usr/local/share/mohaa" \
   {{IMAGE_PREFIX}}/openmohaa:latest
 ```
 
-Populate openmohaa/data/main (and expansion folders if needed) before starting. Otherwise the container exits immediately. The shipped compose file caps memory at 2048 MB.
+Populate dockerized/openmohaa/data/main (and expansion folders if needed) before starting. Otherwise the container exits immediately. The shipped compose file caps memory at 2048 MB.

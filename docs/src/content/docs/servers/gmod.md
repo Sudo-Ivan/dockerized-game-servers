@@ -27,7 +27,7 @@ On first start the container downloads the Garry's Mod dedicated server through 
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
 | GMOD_APP_ID | 4020 | Steam app id for the dedicated server download |
 | GMOD_FORCE_UPDATE | false | Re-download and validate server files on next start |
 | STEAMCMD_WINDOWS_WORKAROUND | full | How SteamCMD fetches depots. full downloads a Windows pass first, then Linux. prime and off are lighter options |
@@ -62,7 +62,7 @@ Your data folder mounts to /opt/gmod inside the container.
 ## Compose
 
 ```bash
-docker compose -f gmod/docker-compose.yml up -d
+docker compose -f dockerized/gmod/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -70,7 +70,7 @@ docker compose -f gmod/docker-compose.yml up -d
 ```bash
 docker run -d --name gmod --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
-  -v "$PWD/gmod/data:/opt/gmod" \
+  -v "$PWD/dockerized/gmod/data:/opt/gmod" \
   -e GMOD_GSLT="your-gslt" \
   {{IMAGE_PREFIX}}/gmod:latest
 ```

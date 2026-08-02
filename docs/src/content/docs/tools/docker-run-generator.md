@@ -36,7 +36,7 @@ Everything runs in your browser. Nothing is sent to a server.
 
 <label class="drun-field drun-checkbox">
 <input type="checkbox" id="drun-init" checked />
-<span>Run with an init process (<code>--init</code>)</span>
+<span>Run with an init process (<dockerized/code>--init</code>)</span>
 </label>
 </fieldset>
 

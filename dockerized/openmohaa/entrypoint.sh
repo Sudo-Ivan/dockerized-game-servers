@@ -60,7 +60,7 @@ install_openmohaa() {
     local archive="/tmp/openmohaa.zip"
     local install_dir="${MOHAA_INSTALL_DIR}/lib/openmohaa"
 
-    # shellcheck source=bases/runtime/http-download.sh
+    # shellcheck source=dockerized/bases/runtime/http-download.sh
     . /usr/local/bin/http-download.sh
     http_download_file \
         "https://github.com/openmoh/openmohaa/releases/download/${OPENMOHAA_VERSION}/openmohaa-${OPENMOHAA_VERSION}-linux-amd64.zip" \

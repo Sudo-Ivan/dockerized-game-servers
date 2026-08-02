@@ -2,7 +2,7 @@
 # Fetch and verify LinuxGSM-hosted server archives (same URLs as LinuxGSM install_server_files.sh).
 set -eu
 
-# shellcheck source=bases/runtime/http-download.sh
+# shellcheck source=dockerized/bases/runtime/http-download.sh
 . /usr/local/bin/http-download.sh
 
 lgsm_tar_install() {

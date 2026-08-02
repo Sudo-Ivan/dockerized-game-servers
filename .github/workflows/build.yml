@@ -9,11 +9,11 @@ on:
       - master
       - main
     paths:
-      - "bases/**"
+      - "dockerized/bases/**"
       - "**/Dockerfile"
       - "ci/**"
-      - "trivy.yaml"
-      - ".trivyignore"
+      - "dockerized/trivy.yaml"
+      - "dockerized/.trivyignore"
       - ".github/workflows/build.yml"
       - ".github/workflows/docker-image.yml"
       - ".github/workflows/ci.yml"

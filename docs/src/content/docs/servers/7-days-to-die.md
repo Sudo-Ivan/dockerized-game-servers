@@ -32,7 +32,7 @@ Before every start the container also writes steam_appid.txt with the game's cli
 | SEVENDTD_APP_ID | 294420 | Steam app ID to install |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
 
 See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
 
@@ -52,7 +52,7 @@ The container only writes the file at CONFIG_FILE when it does not already exist
 | GameDifficulty | 2 |
 | ServerDisabledNetworkProtocols | SteamNetworking |
 
-None of these settings have their own environment variable. Edit 7-days-to-die/data/serverconfig.xml (or whatever CONFIG_FILE points to) on the host, then restart the container. CONFIG_FILE is mainly useful for keeping more than one hand-edited config in the same data folder.
+None of these settings have their own environment variable. Edit dockerized/7-days-to-die/data/serverconfig.xml (or whatever CONFIG_FILE points to) on the host, then restart the container. CONFIG_FILE is mainly useful for keeping more than one hand-edited config in the same data folder.
 
 If startserver.sh exists in the install, the container uses that instead of launching the server binary directly. It passes the same -configfile= and SEVENDTD_EXTRA_ARGS either way.
 
@@ -63,7 +63,7 @@ Your data folder mounts to /opt/7dtd inside the container. It holds the installe
 ## Compose
 
 ```bash
-docker compose -f 7-days-to-die/docker-compose.yml up -d
+docker compose -f dockerized/7-days-to-die/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -72,7 +72,7 @@ docker compose -f 7-days-to-die/docker-compose.yml up -d
 docker run -d --name 7-days-to-die --restart unless-stopped --init \
   -p 26900:26900/tcp -p 26900:26900/udp \
   -p 26901-26903:26901-26903/udp \
-  -v "$PWD/7-days-to-die/data:/opt/7dtd" \
+  -v "$PWD/dockerized/7-days-to-die/data:/opt/7dtd" \
   {{IMAGE_PREFIX}}/7-days-to-die:latest
 ```
 

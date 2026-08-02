@@ -52,7 +52,7 @@ set g_allowvote 1
 set net_port <ETL_PORT>
 ```
 
-Both rcon and referee passwords default to changeme. Edit etl/data/etmain/server.cfg on the host with the container stopped to change them or any other option. Your edits persist because an existing server.cfg is never overwritten.
+Both rcon and referee passwords default to changeme. Edit dockerized/etl/data/etmain/server.cfg on the host with the container stopped to change them or any other option. Your edits persist because an existing server.cfg is never overwritten.
 
 The copied tree also includes legacy mod assets, omni-bot files, and map rotation configs under etmain/ that you can edit directly.
 
@@ -67,7 +67,7 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f etl/docker-compose.yml up -d
+docker compose -f dockerized/etl/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -75,7 +75,7 @@ docker compose -f etl/docker-compose.yml up -d
 ```bash
 docker run -d --name etl --restart unless-stopped --init \
   -p 27960:27960/udp -p 27961:27961/udp \
-  -v "$PWD/etl/data:/opt/etl" \
+  -v "$PWD/dockerized/etl/data:/opt/etl" \
   -e ETL_PORT=27960 \
   -e ETL_MAXPLAYERS=32 \
   -e ETL_STARTMAP=oasis \

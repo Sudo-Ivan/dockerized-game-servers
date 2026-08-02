@@ -26,7 +26,7 @@ This image downloads the Sons Of The Forest dedicated server through Steam and r
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required for this server |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
 | SOTF_APP_ID | 2465200 | Steam app id for the dedicated server tool |
 | SOTF_STEAM_APP_ID | 1326470 | Game app id, written to steam_appid.txt |
 | SOTF_FORCE_UPDATE | false | Reinstall the server on next start |
@@ -70,7 +70,7 @@ The container reports healthy while the Sons Of The Forest server process is run
 ## Compose
 
 ```bash
-docker compose -f sons-of-the-forest/docker-compose.yml up -d
+docker compose -f dockerized/sons-of-the-forest/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -78,7 +78,7 @@ docker compose -f sons-of-the-forest/docker-compose.yml up -d
 ```bash
 docker run -d --name sons-of-the-forest --restart unless-stopped --init \
   -p 8766:8766/udp -p 27016:27016/udp -p 9700:9700/udp \
-  -v "$PWD/sons-of-the-forest/data:/opt/sotf" \
+  -v "$PWD/dockerized/sons-of-the-forest/data:/opt/sotf" \
   -e SOTF_SERVER_NAME="My SOTF Server" \
   {{IMAGE_PREFIX}}/sons-of-the-forest:latest
 ```

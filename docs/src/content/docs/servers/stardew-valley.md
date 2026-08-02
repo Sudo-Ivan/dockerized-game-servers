@@ -22,7 +22,7 @@ This stack runs an always-on Stardew Valley farm using [JunimoServer](https://gi
 
 ## Data folders
 
-All paths are under stardew-valley/data/ on the host:
+All paths are under dockerized/stardew-valley/data/ on the host:
 
 | Mount | Container path | Purpose |
 | --- | --- | --- |
@@ -34,7 +34,7 @@ All paths are under stardew-valley/data/ on the host:
 ## Quick start
 
 ```bash
-cd stardew-valley
+cd dockerized/stardew-valley
 cp .env.example .env
 # Edit .env: STEAM_USERNAME, STEAM_PASSWORD, SDVD_VNC_PASSWORD
 docker compose run --rm -it steam-auth setup
@@ -64,7 +64,7 @@ Prefix SDVD_ avoids clashes with other compose stacks. Steam credentials use STE
 
 Host port overrides (container ports stay fixed): SDVD_VNC_PORT, SDVD_API_PORT, SDVD_GAME_PORT, SDVD_QUERY_PORT. SDVD_STEAM_AUTH_PORT (default 3001) is the internal server-to-steam-auth link and is not published.
 
-See stardew-valley/.env.example for Steam login and common overrides. The discord-bot service takes its own vars directly in docker-compose.yml.
+See dockerized/stardew-valley/.env.example for Steam login and common overrides. The discord-bot service takes its own vars directly in docker-compose.yml.
 
 ## Discord bot (optional)
 

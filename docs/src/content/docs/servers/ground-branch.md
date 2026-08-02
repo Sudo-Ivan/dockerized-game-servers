@@ -25,7 +25,7 @@ This image downloads the Ground Branch dedicated server through Steam and runs t
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
 | GB_APP_ID | 476400 | Steam app id for the dedicated server tool |
 | GB_STEAM_APP_ID | 16900 | Ground Branch game app id, written to steam_appid.txt on every start |
 | GB_FORCE_UPDATE | false | Reinstall the server on next start |
@@ -65,7 +65,7 @@ The container reports healthy while the Ground Branch server process is running.
 ## Compose
 
 ```bash
-docker compose -f ground-branch/docker-compose.yml up -d
+docker compose -f dockerized/ground-branch/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -73,7 +73,7 @@ docker compose -f ground-branch/docker-compose.yml up -d
 ```bash
 docker run -d --name ground-branch --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp \
-  -v "$PWD/ground-branch/data:/opt/groundbranch" \
+  -v "$PWD/dockerized/ground-branch/data:/opt/groundbranch" \
   -e GB_MAP=GB-Woodland \
   -e GB_MAX_PLAYERS=8 \
   {{IMAGE_PREFIX}}/ground-branch:latest

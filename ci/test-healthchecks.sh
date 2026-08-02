@@ -39,12 +39,12 @@ echo "==> Core Keeper healthcheck logic"
 ck_tmp="$(mktemp -d)"
 export CK_INSTALL_DIR="${ck_tmp}"
 export CK_HEALTH_SKIP_PROCESS=1
-if sh "${ROOT}/core-keeper/healthcheck.sh"; then
+if sh "${ROOT}/dockerized/core-keeper/healthcheck.sh"; then
   echo "expected fail without GameID.txt" >&2
   fail=1
 fi
 printf 'TestGameID12345\n' >"${ck_tmp}/GameID.txt"
-if ! sh "${ROOT}/core-keeper/healthcheck.sh"; then
+if ! sh "${ROOT}/dockerized/core-keeper/healthcheck.sh"; then
   echo "expected pass with GameID.txt" >&2
   fail=1
 fi
@@ -55,7 +55,7 @@ ready_out="$(mktemp)"
 bash -c '
   set -e
   # shellcheck disable=SC1091
-  . "$1/core-keeper/ready.sh"
+  . "$1/dockerized/core-keeper/ready.sh"
   ck_print_game_id "ABC123XYZ"
   ck_print_ready_status
 ' bash "${ROOT}" >"${ready_out}"
@@ -72,7 +72,7 @@ rm -f "${ready_out}"
 
 echo "==> Minecraft TCP healthcheck against closed port"
 export SERVER_PORT=1
-if sh "${ROOT}/minecraft/fabric/healthcheck.sh"; then
+if sh "${ROOT}/dockerized/minecraft/fabric/healthcheck.sh"; then
   echo "expected fail for closed TCP port 1" >&2
   fail=1
 fi

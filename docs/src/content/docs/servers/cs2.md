@@ -27,7 +27,7 @@ On first start the container downloads the Counter-Strike 2 dedicated server thr
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
 | CS2_APP_ID | 730 | Steam app id for the dedicated server download |
 | CS2_FORCE_UPDATE | false | Re-download and validate server files on next start |
 | CS2_PORT | 27015 | Game port |
@@ -58,7 +58,7 @@ Your data folder mounts to /opt/cs2 inside the container.
 ## Compose
 
 ```bash
-docker compose -f cs2/docker-compose.yml up -d
+docker compose -f dockerized/cs2/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -66,7 +66,7 @@ docker compose -f cs2/docker-compose.yml up -d
 ```bash
 docker run -d --name cs2 --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27020:27020/udp \
-  -v "$PWD/cs2/data:/opt/cs2" \
+  -v "$PWD/dockerized/cs2/data:/opt/cs2" \
   -e CS2_GSLT="your-gslt" \
   {{IMAGE_PREFIX}}/cs2:latest
 ```

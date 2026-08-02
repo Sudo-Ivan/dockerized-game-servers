@@ -26,7 +26,7 @@ On first start the container downloads the Counter-Strike: Source dedicated serv
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
 | CSS_APP_ID | 232330 | Steam app id for the dedicated server download |
 | CSS_FORCE_UPDATE | false | Re-download and validate server files on next start |
 | STEAMCMD_WINDOWS_WORKAROUND | full | How SteamCMD fetches depots. full downloads a Windows pass first, then Linux. prime and off are lighter options |
@@ -79,7 +79,7 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f cs-source/docker-compose.yml up -d
+docker compose -f dockerized/cs-source/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -87,7 +87,7 @@ docker compose -f cs-source/docker-compose.yml up -d
 ```bash
 docker run -d --name cs-source --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
-  -v "$PWD/cs-source/data:/opt/cs-source" \
+  -v "$PWD/dockerized/cs-source/data:/opt/cs-source" \
   -e CSS_GSLT="your-gslt" \
   {{IMAGE_PREFIX}}/cs-source:latest
 ```

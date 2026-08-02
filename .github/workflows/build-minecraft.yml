@@ -145,8 +145,8 @@ jobs:
           chmod +x ci/*.sh
           ./ci/build-image.sh \
             minecraft-base \
-            bases/minecraft \
-            bases/minecraft/Dockerfile
+            dockerized/bases/minecraft \
+            dockerized/bases/minecraft/Dockerfile
 
       - name: Write game build args
         env:
@@ -164,26 +164,26 @@ jobs:
                 echo "FABRIC_LOADER_VERSION=${FABRIC_LOADER_VERSION}"
                 echo "FABRIC_INSTALLER_VERSION=${FABRIC_INSTALLER_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=minecraft/fabric/Dockerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=dockerized/minecraft/fabric/Dockerfile" >> "${GITHUB_ENV}"
               ;;
             vanilla)
               {
                 echo "VANILLA_VERSION=${MINECRAFT_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=minecraft/vanilla/Dockerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=dockerized/minecraft/vanilla/Dockerfile" >> "${GITHUB_ENV}"
               ;;
             forge)
               {
                 echo "FORGE_MINECRAFT_VERSION=${MINECRAFT_VERSION}"
                 echo "FORGE_VERSION=${FORGE_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=minecraft/forge/Dockerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=dockerized/minecraft/forge/Dockerfile" >> "${GITHUB_ENV}"
               ;;
             neoforge)
               {
                 echo "NEOFORGE_VERSION=${NEOFORGE_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=minecraft/neoforge/Dockerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=dockerized/minecraft/neoforge/Dockerfile" >> "${GITHUB_ENV}"
               ;;
             *)
               echo "unknown flavor: ${FLAVOR}" >&2
@@ -204,7 +204,7 @@ jobs:
           base_image="${REGISTRY}/${IMAGE_OWNER}/minecraft-base:${BASE_TAG}"
           ./ci/build-image.sh \
             "${IMAGE_NAME}" \
-            minecraft \
+            dockerized/minecraft \
             "${DOCKERFILE}" \
             "${base_image}"
 

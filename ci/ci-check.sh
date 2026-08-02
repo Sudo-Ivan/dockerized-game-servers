@@ -54,12 +54,12 @@ chmod +x ci/check-minecraft-defaults.sh
 echo "==> Minecraft scaffold compose"
 if command -v docker >/dev/null 2>&1; then
   for scaffold in \
-    minecraft/fabric/docker-compose.scaffold.yml \
-    minecraft/vanilla/docker-compose.scaffold.yml \
-    minecraft/forge/docker-compose.scaffold.yml \
-    minecraft/neoforge/docker-compose.scaffold.yml
+    dockerized/minecraft/fabric/docker-compose.scaffold.yml \
+    dockerized/minecraft/vanilla/docker-compose.scaffold.yml \
+    dockerized/minecraft/forge/docker-compose.scaffold.yml \
+    dockerized/minecraft/neoforge/docker-compose.scaffold.yml
   do
-    if ! docker compose -f "${scaffold}" --env-file minecraft/defaults.env config >/dev/null; then
+    if ! docker compose -f "${scaffold}" --env-file dockerized/minecraft/defaults.env config >/dev/null; then
       echo "compose invalid: ${scaffold}" >&2
       fail=1
     fi

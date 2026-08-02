@@ -63,7 +63,7 @@ The container reports healthy while the SuperTuxKart server process is running. 
 ## Compose
 
 ```bash
-docker compose -f supertuxkart/docker-compose.yml up -d
+docker compose -f dockerized/supertuxkart/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -71,7 +71,7 @@ docker compose -f supertuxkart/docker-compose.yml up -d
 ```bash
 docker run -d --name supertuxkart --restart unless-stopped --init \
   -p 2759:2759/udp \
-  -v "$PWD/supertuxkart/data:/opt/supertuxkart/data" \
+  -v "$PWD/dockerized/supertuxkart/data:/opt/supertuxkart/data" \
   -e STK_SERVER_NAME="My Kart Server" \
   {{IMAGE_PREFIX}}/supertuxkart:latest
 ```

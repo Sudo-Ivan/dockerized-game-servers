@@ -26,7 +26,7 @@ Official reference: [DayZ: Hosting a Linux Server](https://community.bohemia.net
 | --- | --- | --- |
 | STEAM_USERNAME | (empty, required) | Steam account that owns DayZ |
 | STEAM_PASSWORD | (empty, required) | Password for STEAM_USERNAME |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code for the login step |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code for the login step |
 | STEAMCMD_WINDOWS_WORKAROUND | off | SteamCMD depot fetch mode (full, prime, or off) |
 | DAYZ_APP_ID | 223350 | SteamCMD app id for the dedicated server |
 | DAYZ_FORCE_UPDATE | false | Re-run SteamCMD for the server depot |
@@ -35,7 +35,7 @@ Official reference: [DayZ: Hosting a Linux Server](https://community.bohemia.net
 | DAYZ_MAX_PLAYERS | 60 | Seeds maxPlayers in new serverDZ.cfg only |
 | DAYZ_EXTRA_ARGS | (empty) | Appended to the server command line (mods go here) |
 
-Edit dayz/data/serverDZ.cfg on the host for live settings (passwordAdmin, time acceleration, verifySignatures, and so on).
+Edit dockerized/dayz/data/serverDZ.cfg on the host for live settings (passwordAdmin, time acceleration, verifySignatures, and so on).
 
 ## Updates
 
@@ -60,7 +60,7 @@ Run on the host (or docker compose exec with Steam credentials) with install dir
 Replace the numeric IDs with Workshop mod IDs from each mod's Steam page. Files land under:
 
 ```text
-dayz/data/steamapps/workshop/content/221100/<WORKSHOP_ID>/
+dockerized/dayz/data/steamapps/workshop/content/221100/<WORKSHOP_ID>/
 ```
 
 Common examples (verify current IDs on Workshop before use):
@@ -75,7 +75,7 @@ Common examples (verify current IDs on Workshop before use):
 Bohemia's Linux guide uses symlinks from the workshop content path into the server root, then references numeric mod IDs in -mod:
 
 ```bash
-cd dayz/data
+cd dockerized/dayz/data
 ln -s steamapps/workshop/content/221100/1559212036 1559212036
 ln -s steamapps/workshop/content/221100/1564026768 1564026768
 ```
@@ -84,11 +84,11 @@ Some hosts use @ModName folders instead. Names are case-sensitive and must match
 
 ### 3. Copy signature keys
 
-With verifySignatures = 2 in serverDZ.cfg, every mod's .bikey must be in dayz/data/keys/:
+With verifySignatures = 2 in serverDZ.cfg, every mod's .bikey must be in dockerized/dayz/data/keys/:
 
 ```bash
-mkdir -p dayz/data/keys
-cp dayz/data/steamapps/workshop/content/221100/1559212036/keys/*.bikey dayz/data/keys/
+mkdir -p dockerized/dayz/data/keys
+cp dockerized/dayz/data/steamapps/workshop/content/221100/1559212036/keys/*.bikey dockerized/dayz/data/keys/
 ```
 
 Missing keys usually cause kicks or wrong signature errors for clients.
@@ -121,22 +121,22 @@ Stop the server, re-run workshop_download_item for each ID, refresh symlinks if 
 | Everyone kicked on join | .bikey not in keys/ or verifySignatures too strict |
 | Wrong version | Server workshop files out of date, clients must subscribe to same mods |
 | BattlEye script errors | Mod not allowed by BE, check mod docs and server BE logs |
-| Broken symlinks | Re-download mod and recreate symlinks into dayz/data |
+| Broken symlinks | Re-download mod and recreate symlinks into dockerized/dayz/data |
 
 Economy mods may ship extra types.xml or CE files you must merge into mpmissions/ manually.
 
 ## BattlEye and RCon
 
-After first install, configure BattlEye under dayz/data/battleye/. Set the RCon password in beserver_x64.cfg. Open the RCon port only if you need remote admin.
+After first install, configure BattlEye under dockerized/dayz/data/battleye/. Set the RCon password in beserver_x64.cfg. Open the RCon port only if you need remote admin.
 
 ## Persistence and missions
 
-Default generated config uses dayzOffline.chernarusplus. Other maps use different mission templates under mpmissions/. Back up profiles/ and any custom mission folders before major updates.
+Default generated config uses dockerized/dayzOffline.chernarusplus. Other maps use different mission templates under mpmissions/. Back up profiles/ and any custom mission folders before major updates.
 
 ## Compose
 
 ```bash
-docker compose -f dayz/docker-compose.yml up -d
+docker compose -f dockerized/dayz/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -145,7 +145,7 @@ docker compose -f dayz/docker-compose.yml up -d
 docker run -d --name dayz --restart unless-stopped --init \
   -p 2302:2302/udp -p 2303:2303/udp -p 2304:2304/udp \
   -p 2305:2305/udp -p 2306:2306/udp \
-  -v "$PWD/dayz/data:/opt/dayz" \
+  -v "$PWD/dockerized/dayz/data:/opt/dayz" \
   -e STEAM_USERNAME="your_steam_user" \
   -e STEAM_PASSWORD="your_steam_password" \
   -e STEAM_GUARD_CODE="" \

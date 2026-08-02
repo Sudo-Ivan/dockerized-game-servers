@@ -2,7 +2,7 @@
 # Legacy i386 (and matching amd64) libs for LinuxGSM-era game server binaries.
 set -eu
 
-# shellcheck source=bases/runtime/http-download.sh
+# shellcheck source=dockerized/bases/runtime/http-download.sh
 . "$(dirname "$0")/http-download.sh"
 
 DEB_MIRROR="${DEB_MIRROR:-http://deb.debian.org/debian/pool/main}"

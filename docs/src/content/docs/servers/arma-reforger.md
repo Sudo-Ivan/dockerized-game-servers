@@ -26,7 +26,7 @@ Official reference: [Arma Reforger server hosting](https://community.bistudio.co
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login for the install step |
 | STEAM_PASSWORD | (empty) | Steam password, only needed if anonymous install fails |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code for the login step |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code for the login step |
 | STEAMCMD_WINDOWS_WORKAROUND | full | SteamCMD depot fetch mode (full, prime, or off). full pulls a Windows depot pass before the Linux depot |
 | ARMAR_APP_ID | 1874900 | SteamCMD app id. Set 1890870 for the experimental branch |
 | ARMAR_FORCE_UPDATE | false | Re-run SteamCMD install on next start |
@@ -38,7 +38,7 @@ Official reference: [Arma Reforger server hosting](https://community.bistudio.co
 | ARMAR_MAX_FPS | 60 | Server FPS cap |
 | ARMAR_EXTRA_ARGS | (empty) | Extra CLI args appended to the launch command |
 
-After the first start, edit arma/reforger/data/Configs/ServerConfig.json directly for hostname, password, RCON, mods, and scenario. Restart the container to apply changes.
+After the first start, edit dockerized/arma/reforger/data/Configs/ServerConfig.json directly for hostname, password, RCON, mods, and scenario. Restart the container to apply changes.
 
 ## Updates
 
@@ -103,7 +103,7 @@ The generated config is minimal. For RCON, add an rcon block to ServerConfig.jso
 ## Compose
 
 ```bash
-docker compose -f arma/reforger/docker-compose.yml up -d
+docker compose -f dockerized/arma/reforger/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -111,7 +111,7 @@ docker compose -f arma/reforger/docker-compose.yml up -d
 ```bash
 docker run -d --name arma-reforger --restart unless-stopped --init \
   -p 2001:2001/udp -p 17777:17777/udp \
-  -v "$PWD/arma/reforger/data:/opt/arma-reforger" \
+  -v "$PWD/dockerized/arma/reforger/data:/opt/arma-reforger" \
   -e STEAMCMD_WINDOWS_WORKAROUND=full \
   {{IMAGE_PREFIX}}/arma-reforger:latest
 ```

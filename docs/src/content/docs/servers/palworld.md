@@ -32,7 +32,7 @@ On first start the container downloads the Palworld Linux dedicated server (Stea
 | PALWORLD_APP_ID | 2394010 | Steam app ID to install |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
 
 See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
 
@@ -43,7 +43,7 @@ Every launch also passes -useperfthreads, -NoAsyncLoadingThread, and -UseMultith
 Palworld does not read the settings above for world name, difficulty, or passwords. Those live in PalWorldSettings.ini, which the game creates on first run. Edit it on the host at:
 
 ```text
-palworld/data/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+dockerized/palworld/data/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 ```
 
 Stop the container before editing, then start it again for changes to take effect.
@@ -55,7 +55,7 @@ Your data folder mounts to /opt/palworld inside the container. It holds the inst
 ## Compose
 
 ```bash
-docker compose -f palworld/docker-compose.yml up -d
+docker compose -f dockerized/palworld/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -63,7 +63,7 @@ docker compose -f palworld/docker-compose.yml up -d
 ```bash
 docker run -d --name palworld --restart unless-stopped --init \
   -p 8211:8211/udp \
-  -v "$PWD/palworld/data:/opt/palworld" \
+  -v "$PWD/dockerized/palworld/data:/opt/palworld" \
   {{IMAGE_PREFIX}}/palworld:latest
 ```
 

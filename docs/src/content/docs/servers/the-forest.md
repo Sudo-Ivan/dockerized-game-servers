@@ -26,7 +26,7 @@ This image downloads and runs the native Linux dedicated server for The Forest t
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required for this server |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
 | FOREST_APP_ID | 556450 | Steam app id, shared by the server and the game |
 | FOREST_FORCE_UPDATE | false | Reinstall the server on next start |
 | FOREST_IP | 0.0.0.0 | Bind address (-serverip) |
@@ -69,7 +69,7 @@ The container reports healthy while The Forest server process is running. Startu
 ## Compose
 
 ```bash
-docker compose -f the-forest/docker-compose.yml up -d
+docker compose -f dockerized/the-forest/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -79,7 +79,7 @@ docker run -d --name the-forest --restart unless-stopped --init \
   -p 8766:8766/tcp -p 8766:8766/udp \
   -p 27015:27015/tcp -p 27015:27015/udp \
   -p 27016:27016/tcp -p 27016:27016/udp \
-  -v "$PWD/the-forest/data:/opt/theforest" \
+  -v "$PWD/dockerized/the-forest/data:/opt/theforest" \
   -e FOREST_SERVER_NAME="My Forest Server" \
   {{IMAGE_PREFIX}}/the-forest:latest
 ```

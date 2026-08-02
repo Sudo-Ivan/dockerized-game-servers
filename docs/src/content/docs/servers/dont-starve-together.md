@@ -27,7 +27,7 @@ On first start the container downloads the Don't Starve Together Linux dedicated
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
 | DST_APP_ID | 343050 | Steam app ID to install |
 | DST_FORCE_UPDATE | false | Re-download the server from Steam on next start |
 | DST_CLUSTER | Cluster_1 | Cluster folder name under klei/DoNotStarveTogether/ |
@@ -45,7 +45,7 @@ On first start the container downloads the Don't Starve Together Linux dedicated
 The container writes cluster.ini, Master/server.ini, and Caves/server.ini on first start if they are missing. DST_CLUSTER_TOKEN is written to cluster_token.txt once when the file does not exist. After that, edit cluster files on the host directly.
 
 ```text
-dont-starve-together/data/klei/DoNotStarveTogether/Cluster_1/
+dockerized/dont-starve-together/data/klei/DoNotStarveTogether/Cluster_1/
 ```
 
 Stop the container before editing, then start it again for changes to take effect.
@@ -57,7 +57,7 @@ Your data folder mounts to /opt/dst inside the container. It holds the installed
 ## Compose
 
 ```bash
-docker compose -f dont-starve-together/docker-compose.yml up -d
+docker compose -f dockerized/dont-starve-together/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -65,7 +65,7 @@ docker compose -f dont-starve-together/docker-compose.yml up -d
 ```bash
 docker run -d --name dont-starve-together --restart unless-stopped --init \
   -p 10999:10999/udp -p 11000:11000/udp -p 27016:27016/udp \
-  -v "$PWD/dont-starve-together/data:/opt/dst" \
+  -v "$PWD/dockerized/dont-starve-together/data:/opt/dst" \
   -e DST_CLUSTER_TOKEN="your-klei-cluster-token" \
   {{IMAGE_PREFIX}}/dont-starve-together:latest
 ```

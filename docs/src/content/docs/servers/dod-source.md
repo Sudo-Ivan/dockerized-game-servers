@@ -26,7 +26,7 @@ On first start the container downloads the Day of Defeat: Source dedicated serve
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
 | DOD_APP_ID | 232290 | Steam app id for the dedicated server download |
 | DOD_FORCE_UPDATE | false | Re-download and validate server files on next start |
 | STEAMCMD_WINDOWS_WORKAROUND | full | How SteamCMD fetches depots. full downloads a Windows pass first, then Linux. prime and off are lighter options |
@@ -61,7 +61,7 @@ Your data folder mounts to /opt/dod-source inside the container.
 ## Compose
 
 ```bash
-docker compose -f dod-source/docker-compose.yml up -d
+docker compose -f dockerized/dod-source/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -69,7 +69,7 @@ docker compose -f dod-source/docker-compose.yml up -d
 ```bash
 docker run -d --name dod-source --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
-  -v "$PWD/dod-source/data:/opt/dod-source" \
+  -v "$PWD/dockerized/dod-source/data:/opt/dod-source" \
   -e DOD_GSLT="your-gslt" \
   {{IMAGE_PREFIX}}/dod-source:latest
 ```

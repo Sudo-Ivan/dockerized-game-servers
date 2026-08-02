@@ -25,7 +25,7 @@ MySQL stays on the internal network and is not published by default.
 
 ## Data folders
 
-All paths are under azerothcore/data/ on the host:
+All paths are under dockerized/azerothcore/data/ on the host:
 
 | Mount | Container path | Purpose |
 | --- | --- | --- |
@@ -38,7 +38,7 @@ All paths are under azerothcore/data/ on the host:
 ## Quick start
 
 ```bash
-cd azerothcore
+cd dockerized/azerothcore
 cp .env.example .env
 # edit .env if you want a stronger ACORE_DB_ROOT_PASSWORD
 docker compose up -d
@@ -76,7 +76,7 @@ Point a 3.3.5a client at your host (default realm port 8085). See [AzerothCore c
 | ACORE_PHPMYADMIN_PORT | 8080 | Host port when using the admin profile |
 | ACORE_DOCKER_USER | acore | UID inside worldserver |
 
-See azerothcore/.env.example for commented overrides.
+See dockerized/azerothcore/.env.example for commented overrides.
 
 ## Optional phpMyAdmin
 
@@ -106,7 +106,7 @@ Drop Eluna scripts into data/scripts/lua/. The worldserver image ships with Elun
 ./tools/gs update azerothcore is not available for this stack. Pull newer images instead:
 
 ```bash
-cd azerothcore
+cd dockerized/azerothcore
 docker compose down
 docker compose pull
 docker compose rm -s -v -f azerothcore-client-data
@@ -120,7 +120,7 @@ Recreating azerothcore-client-data refreshes bundled map data from the image. Sk
 ## Compose from repo root
 
 ```bash
-docker compose -f azerothcore/docker-compose.yml up -d
+docker compose -f dockerized/azerothcore/docker-compose.yml up -d
 ```
 
 ## See also

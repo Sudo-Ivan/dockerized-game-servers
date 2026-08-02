@@ -27,7 +27,7 @@ Barotrauma uses UDP only for gameplay. Do not publish TCP on these ports.
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
 | BAROTRAUMA_APP_ID | 1026340 | Steam app ID to install |
 | BAROTRAUMA_FORCE_UPDATE | false | Re-download the server from Steam on next start |
 | BAROTRAUMA_EXTRA_ARGS | (empty) | Extra command-line flags added to the server launch |
@@ -47,7 +47,7 @@ Your data folder mounts to /opt/barotrauma inside the container. It holds the in
 ## Compose
 
 ```bash
-docker compose -f barotrauma/docker-compose.yml up -d
+docker compose -f dockerized/barotrauma/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -55,7 +55,7 @@ docker compose -f barotrauma/docker-compose.yml up -d
 ```bash
 docker run -d --name barotrauma --restart unless-stopped --init \
   -p 27015:27015/udp -p 27016:27016/udp \
-  -v "$PWD/barotrauma/data:/opt/barotrauma" \
+  -v "$PWD/dockerized/barotrauma/data:/opt/barotrauma" \
   {{IMAGE_PREFIX}}/barotrauma:latest
 ```
 

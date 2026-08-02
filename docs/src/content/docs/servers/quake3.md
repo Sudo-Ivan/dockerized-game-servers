@@ -40,7 +40,7 @@ set sv_hostname "<Q3_HOSTNAME>"
 set g_allowvote 1
 ```
 
-There is no rcon password in the generated config, so remote console is disabled until you add one. Edit quake3/data/server.cfg on the host with the container stopped to set an rcon password or other options. Your edits persist because an existing server.cfg is never overwritten.
+There is no rcon password in the generated config, so remote console is disabled until you add one. Edit dockerized/quake3/data/server.cfg on the host with the container stopped to set an rcon password or other options. Your edits persist because an existing server.cfg is never overwritten.
 
 Punkbuster is disabled (sv_punkbuster 0) and com_hunkMegs is fixed at 32.
 
@@ -55,7 +55,7 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f quake3/docker-compose.yml up -d
+docker compose -f dockerized/quake3/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -63,7 +63,7 @@ docker compose -f quake3/docker-compose.yml up -d
 ```bash
 docker run -d --name quake3 --restart unless-stopped --init \
   -p 27960:27960/udp \
-  -v "$PWD/quake3/data:/opt/quake3" \
+  -v "$PWD/dockerized/quake3/data:/opt/quake3" \
   -e Q3_PORT=27960 \
   -e Q3_STARTMAP=q3dm17 \
   -e Q3_HOSTNAME="Quake 3 Arena Server" \

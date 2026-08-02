@@ -24,7 +24,7 @@ On first start the container downloads the Project Zomboid Linux dedicated serve
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not anonymous |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code for the login above |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code for the login above |
 | PZ_APP_ID | 380870 | Steam app ID for the dedicated server |
 | PZ_FORCE_UPDATE | false | Re-download the server from Steam on next start |
 | PZ_SERVER_NAME | servertest | Server profile name. Controls the .ini file and save folder |
@@ -32,11 +32,11 @@ On first start the container downloads the Project Zomboid Linux dedicated serve
 | PZ_NO_STEAM | false | Adds -nosteam for GOG installs or non-Steam clients |
 | PZ_EXTRA_ARGS | (empty) | Extra launch arguments, space-separated |
 
-The included docker-compose.yml reads STEAM_USERNAME, STEAM_PASSWORD, STEAM_GUARD_CODE, PZ_FORCE_UPDATE, and PZ_ADMIN_PASSWORD from your shell or a .env file. PZ_SERVER_NAME, PZ_NO_STEAM, and PZ_EXTRA_ARGS are fixed in that file. Edit project-zomboid/docker-compose.yml to change them, or use docker run -e instead.
+The included docker-compose.yml reads STEAM_USERNAME, STEAM_PASSWORD, STEAM_GUARD_CODE, PZ_FORCE_UPDATE, and PZ_ADMIN_PASSWORD from your shell or a .env file. PZ_SERVER_NAME, PZ_NO_STEAM, and PZ_EXTRA_ARGS are fixed in that file. Edit dockerized/project-zomboid/docker-compose.yml to change them, or use docker run -e instead.
 
 ## Data folder and file layout
 
-Mount project-zomboid/data at /opt/zomboid. Two paths live under it:
+Mount dockerized/project-zomboid/data at /opt/zomboid. Two paths live under it:
 
 | Path | Purpose |
 | --- | --- |
@@ -57,7 +57,7 @@ The container reports healthy while the Project Zomboid server is running. Start
 
 ```bash
 export PZ_ADMIN_PASSWORD=changeme
-docker compose -f project-zomboid/docker-compose.yml up -d
+docker compose -f dockerized/project-zomboid/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -65,7 +65,7 @@ docker compose -f project-zomboid/docker-compose.yml up -d
 ```bash
 docker run -d --name project-zomboid --restart unless-stopped --init \
   -p 16261:16261/udp -p 16262:16262/udp \
-  -v "$PWD/project-zomboid/data:/opt/zomboid" \
+  -v "$PWD/dockerized/project-zomboid/data:/opt/zomboid" \
   -e STEAM_USERNAME=anonymous \
   -e PZ_ADMIN_PASSWORD=changeme \
   -e PZ_SERVER_NAME=servertest \

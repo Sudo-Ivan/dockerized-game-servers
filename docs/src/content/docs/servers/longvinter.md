@@ -41,11 +41,11 @@ Longvinter uses UDP only for gameplay. Do not publish TCP 7777.
 | LONGVINTER_APP_ID | 1639880 | Steam app ID to install |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
 
 See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
 
-LONGVINTER_PORT is passed on every launch. The other LONGVINTER_* settings that map to Game.ini only apply when the container creates that file on first start. After that, edit longvinter/data/Longvinter/Saved/Config/LinuxServer/Game.ini on the host for server name, PvP, admins, and every other Longvinter setting. See the [Longvinter server configuration wiki](https://wiki.longvinter.com/server/configuration) for the full option list.
+LONGVINTER_PORT is passed on every launch. The other LONGVINTER_* settings that map to Game.ini only apply when the container creates that file on first start. After that, edit dockerized/longvinter/data/Longvinter/Saved/Config/LinuxServer/Game.ini on the host for server name, PvP, admins, and every other Longvinter setting. See the [Longvinter server configuration wiki](https://wiki.longvinter.com/server/configuration) for the full option list.
 
 ## Data folder
 
@@ -54,7 +54,7 @@ Your data folder mounts to /opt/longvinter inside the container. It holds the in
 ## Compose
 
 ```bash
-docker compose -f longvinter/docker-compose.yml up -d
+docker compose -f dockerized/longvinter/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -62,7 +62,7 @@ docker compose -f longvinter/docker-compose.yml up -d
 ```bash
 docker run -d --name longvinter --restart unless-stopped --init \
   -p 7777:7777/udp \
-  -v "$PWD/longvinter/data:/opt/longvinter" \
+  -v "$PWD/dockerized/longvinter/data:/opt/longvinter" \
   {{IMAGE_PREFIX}}/longvinter:latest
 ```
 

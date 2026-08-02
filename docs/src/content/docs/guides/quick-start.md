@@ -26,15 +26,15 @@ If you only build and run locally and never pull from GitHub Container Registry,
 ## 3. Run with Compose
 
 ```bash
-docker compose -f minecraft/fabric/docker-compose.yml up
+docker compose -f dockerized/minecraft/fabric/docker-compose.yml up
 ```
 
-Swap the path for any other server, for example valheim/vanilla/docker-compose.yml or core-keeper/docker-compose.yml.
+Swap the path for any other server, for example dockerized/valheim/vanilla/docker-compose.yml or dockerized/core-keeper/docker-compose.yml.
 
 To build the image on your machine instead of pulling:
 
 ```bash
-docker compose -f minecraft/fabric/docker-compose.yml up --build
+docker compose -f dockerized/minecraft/fabric/docker-compose.yml up --build
 ```
 
 Every compose file names a published image and also includes a build section for local builds. With pull_policy set to missing, Compose uses an image already on disk before it tries to pull. Add --pull always to force a fresh pull.
@@ -58,7 +58,7 @@ For example, Minecraft Fabric with no mods needs only the EULA flag:
 ```bash
 docker run -d --name fabric --restart unless-stopped --init \
   -p 25565:25565/tcp \
-  -v "$PWD/minecraft/fabric/data:/data" \
+  -v "$PWD/dockerized/minecraft/fabric/data:/data" \
   -e EULA=true \
   {{IMAGE_PREFIX}}/minecraft-fabric:latest
 ```
@@ -82,7 +82,7 @@ These show up on many servers, but not all. Always check the game's own guide fo
 | PUID, PGID | Minecraft only | Match file ownership to a host user and group |
 
 :::note[Steam login]
-Anonymous Steam downloads work for most dedicated server tools. A few games (Arma 3 is the common case) need an account that owns the server files. Set STEAM_USERNAME and STEAM_PASSWORD, and STEAM_GUARD_CODE if Steam Guard asks for a code. Anonymous logins can also fail to list a server publicly for some titles. In that case use real credentials.
+Anonymous Steam downloads work for most dedicated server tools. A few games (Arma 3 is the common case) need an account that owns the server files. Set STEAM_USERNAME and STEAM_PASSWORD, and STEAM_GUARD_CODE if Steam Guard asks for a dockerized/code. Anonymous logins can also fail to list a server publicly for some titles. In that case use real credentials.
 :::
 
 ## Networking: getting friends onto your server

@@ -47,7 +47,7 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f bfv/docker-compose.yml up -d
+docker compose -f dockerized/bfv/docker-compose.yml up -d
 ```
 
 ## Docker run
@@ -55,7 +55,7 @@ docker compose -f bfv/docker-compose.yml up -d
 ```bash
 docker run -d --name bfv --restart unless-stopped --init \
   -p 4755:4755/udp -p 27900:27900/udp \
-  -v "$PWD/bfv/data:/opt/bfv" \
+  -v "$PWD/dockerized/bfv/data:/opt/bfv" \
   -e BFV_EXTRA_ARGS="" \
   {{IMAGE_PREFIX}}/bfv:latest
 ```
