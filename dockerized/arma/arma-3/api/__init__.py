@@ -1,7 +1,6 @@
 """Steam CDN sync for Arma 3 workshop and depot content."""
 
 from .config import CDLC_IDS, DEFAULT_CONFIG, ARMA3_SERVER_APP_ID
-from .session import SteamSession
 
 __all__ = [
     "SteamSession",
@@ -9,3 +8,11 @@ __all__ = [
     "DEFAULT_CONFIG",
     "ARMA3_SERVER_APP_ID",
 ]
+
+
+def __getattr__(name):
+    if name == "SteamSession":
+        from .session import SteamSession
+
+        return SteamSession
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

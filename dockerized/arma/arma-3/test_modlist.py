@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
 from api.config import normalize_steam_username, require_workshop_steam_account
-from sync_mods import extract_workshop_ids
+from modlist import extract_workshop_ids
 
 FIXTURE = ROOT / "fixtures" / "modlist.html"
 EXPECTED_IDS = [

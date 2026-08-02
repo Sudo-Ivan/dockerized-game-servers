@@ -131,6 +131,10 @@ if ! python3 -m py_compile ci/github-matrix.py; then
   echo "python syntax error: ci/github-matrix.py" >&2
   fail=1
 fi
+if ! python3 -m py_compile dockerized/arma/arma-3/modlist.py dockerized/arma/arma-3/test_modlist.py; then
+  echo "python syntax error: arma-3 modlist tests" >&2
+  fail=1
+fi
 if ! python3 dockerized/arma/arma-3/test_modlist.py; then
   fail=1
 fi

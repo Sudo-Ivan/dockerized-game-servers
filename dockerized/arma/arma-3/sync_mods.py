@@ -3,14 +3,11 @@
 
 import glob
 import os
-import re
 import shutil
 import sys
 
-from api import SteamSession
 from api.config import normalize_steam_username, require_workshop_steam_account
-
-WORKSHOP_ID_PATTERN = re.compile(r"filedetails/\?id=(\d+)")
+from modlist import extract_workshop_ids
 
 
 def arma_dir():
@@ -23,19 +20,6 @@ def keys_directory():
 
 def workshop_mod_path(mod_id):
     return os.path.join(arma_dir(), "workshop", str(mod_id))
-
-
-def extract_workshop_ids(file_path):
-    with open(file_path, encoding="utf-8") as f:
-        html = f.read()
-    seen = set()
-    ordered = []
-    for match in WORKSHOP_ID_PATTERN.finditer(html):
-        mod_id = match.group(1)
-        if mod_id not in seen:
-            seen.add(mod_id)
-            ordered.append(mod_id)
-    return ordered
 
 
 def copy_mod_keys(mod_path):
@@ -83,6 +67,8 @@ def main():
 
     try:
         require_workshop_steam_account(username, password)
+        from api import SteamSession
+
         session = SteamSession.login(
             username,
             password,
