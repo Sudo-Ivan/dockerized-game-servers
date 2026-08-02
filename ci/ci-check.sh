@@ -135,7 +135,8 @@ if ! python3 -m py_compile dockerized/arma/arma-3/modlist.py dockerized/arma/arm
   echo "python syntax error: arma-3 modlist tests" >&2
   fail=1
 fi
-	if !python3 dockerized/arma/arma-3/test_modlist.py; then
+if ! python3 dockerized/arma/arma-3/test_modlist.py; then
+  echo "arma-3 modlist tests failed" >&2
   fail=1
 fi
 
