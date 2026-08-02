@@ -161,6 +161,50 @@ a.sl-link-button.minimal {
 	font-weight: 600;
 }
 
+/* Keep the right "On this page" column narrow on wide viewports. Starlight
+   otherwise grows it to half of the leftover horizontal space. */
+@media (min-width: 72rem) {
+	:root {
+		--sl-toc-width: 11.5rem;
+	}
+
+	[data-has-toc] {
+		--sl-content-width: 52rem;
+	}
+
+	.right-sidebar-container {
+		width: var(--sl-toc-width);
+		flex-shrink: 0;
+	}
+
+	.right-sidebar {
+		padding-inline: 0.75rem 1rem;
+	}
+
+	.right-sidebar #starlight__on-this-page {
+		font-size: var(--sl-text-xs);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--sl-color-gray-3);
+	}
+
+	.right-sidebar nav a {
+		font-size: var(--sl-text-xs);
+	}
+
+	.right-sidebar nav a span {
+		overflow-wrap: anywhere;
+	}
+
+	[data-has-sidebar][data-has-toc] .main-pane {
+		width: calc(100% - var(--sl-sidebar-width) - var(--sl-toc-width));
+	}
+
+	[data-has-toc]:not([data-has-sidebar]) .main-pane {
+		width: calc(100% - var(--sl-toc-width));
+	}
+}
+
 /* Interactive tool widgets (docs/tools/*) need a wider reading column than
    prose pages so the form and output panel do not squish. */
 body:has([data-tool]) {
