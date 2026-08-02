@@ -18,7 +18,7 @@ Select the game at runtime with `PANEL_GAME`. The Arma 3 image sets `PANEL_GAME=
 | Setting | Default | What it does |
 | --- | --- | --- |
 | PANEL_GAME | (required) | Registered game module id, e.g. `arma3` |
-| PANEL_PORT | 9283 | TCP port (Arma image also accepts ARMA_PANEL_PORT) |
+| PANEL_PORT | 9283 | TCP port |
 | PANEL_ADDR | :9283 | Listen address |
 | PANEL_PASSWORD | (empty) | Enable login when set |
 | PANEL_SESSION_SECRET | (empty) | Fixed session signing secret |
@@ -26,8 +26,6 @@ Select the game at runtime with `PANEL_GAME`. The Arma 3 image sets `PANEL_GAME=
 | PANEL_AUTO_START | true | Start the game server when the panel starts |
 | PANEL_SCHEDULED_RESTART | (empty) | Daily restart time HH:MM |
 | PANEL_WEBHOOK_URL | (empty) | Optional webhook for panel events |
-
-Legacy `ARMA_PANEL_*` variables still work in the Arma 3 image for backward compatibility.
 
 ## Adding a new game
 

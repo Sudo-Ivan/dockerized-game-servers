@@ -60,10 +60,9 @@ RUN pacman -Sy --noconfirm --needed \
 ENV ARMA_DIR="/home/arma3/server" \
     STEAM_DIR="/home/arma3/steamcmd" \
     ARMA_CACHE_DIR="/home/arma3/cache" \
-    ARMA_PANEL_ADDR=":9283" \
     PANEL_GAME="arma3" \
     PANEL_ADDR=":9283" \
-    ARMA_AUTO_START="true" \
+    PANEL_AUTO_START="true" \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH="/home/arma3" \
     PATH="/home/arma3/bin:/home/arma3/venv/bin:/home/arma3/.local/bin:${PATH}"

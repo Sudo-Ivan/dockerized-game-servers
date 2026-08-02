@@ -25,7 +25,7 @@ The server launches with -config pointing at configs/server.cfg, UDP port 2302, 
 
 ## Web panel
 
-The image bundles the shared [game server panel](../reference/panel/) (Go + HTMX) on **TCP port 9283** by default. Set `PANEL_GAME=arma3` (default in this image). Generic panel settings use `PANEL_*` env vars; Arma-specific settings still use `ARMA_*` where noted below.
+The image bundles the shared [game server panel](../reference/panel/) (Go + HTMX) on **TCP port 9283** by default. Set `PANEL_GAME=arma3` (default in this image). Panel settings use `PANEL_*` env vars (see the [panel reference](../reference/panel/)); Arma-specific settings use `ARMA_*` where noted below.
 
 Open `http://<host>:9283` after the container starts. The panel can:
 
@@ -40,15 +40,13 @@ Open `http://<host>:9283` after the container starts. The panel can:
 | Setting | Default | What it does |
 | --- | --- | --- |
 | PANEL_GAME | arma3 | Game module loaded by the panel |
-| PANEL_PORT / ARMA_PANEL_PORT | 9283 | Host and container TCP port for the panel |
-| PANEL_ADDR / ARMA_PANEL_ADDR | :9283 | Listen address inside the container |
-| PANEL_PASSWORD / ARMA_PANEL_PASSWORD | (empty) | Enable login when set |
-| PANEL_ALLOWED_IPS / ARMA_PANEL_ALLOWED_IPS | (empty) | Comma-separated IPs or CIDRs allowed to reach the panel |
+| PANEL_PORT | 9283 | Host and container TCP port for the panel |
+| PANEL_PASSWORD | (empty) | Enable login when set |
 | ARMA_RCON_PASSWORD | (empty) | BattlEye RCON password for the in-panel console |
-| ARMA_SCHEDULED_RESTART | (empty) | Daily restart time in HH:MM (local time), e.g. 04:00 |
-| ARMA_AUTO_START | true | Start the game server when the panel starts |
 
-Set `ARMA_PANEL_PASSWORD` before exposing port 9283 beyond your LAN. Put a reverse proxy with TLS in front if you access the panel over the internet.
+See the [panel reference](../reference/panel/) for other `PANEL_*` settings (addr, allowlist, scheduled restart, webhook, auto start).
+
+Set `PANEL_PASSWORD` before exposing port 9283 beyond your LAN. Put a reverse proxy with TLS in front if you access the panel over the internet.
 
 ./tools/gs backup arma-3 backs up server, configs, and profiles. The cache folder is left out since it regenerates on the next sync. ./tools/gs update arma-3 is not available for this server. See [Ops](/guides/ops/) for what does work.
 

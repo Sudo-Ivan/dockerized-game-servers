@@ -42,11 +42,11 @@ func LoadConfig(panel panelconfig.Config) Config {
 		ArmaDir:        env("ARMA_DIR", "/home/arma3/server"),
 		ConfigDir:      env("ARMA_CONFIG_DIR", "/home/arma3/configs"),
 		ProfilesDir:    env("ARMA_PROFILES_DIR", "/home/arma3/profiles"),
-		CacheDir:       envFirst([]string{"PANEL_CACHE_DIR", "ARMA_CACHE_DIR"}, panel.CacheDir),
+		CacheDir:       env("ARMA_CACHE_DIR", "/home/arma3/cache"),
 		ModlistFile:    env("MODLIST_FILE", "/home/arma3/server/modlist.html"),
 		Port:           envInt("ARMA_PORT", 2302),
 		World:          env("ARMA_WORLD", "empty"),
-		AutoStart:      envBoolFirst([]string{"PANEL_AUTO_START", "ARMA_AUTO_START"}, panel.AutoStart),
+		AutoStart:      panel.AutoStart,
 		SteamUsername:  strings.TrimSpace(os.Getenv("STEAM_USERNAME")),
 		SteamPassword:  os.Getenv("STEAM_PASSWORD"),
 		SteamGuardCode: os.Getenv("STEAM_GUARD_CODE"),
@@ -75,15 +75,6 @@ func env(key, fallback string) string {
 	return fallback
 }
 
-func envFirst(keys []string, fallback string) string {
-	for _, key := range keys {
-		if v := strings.TrimSpace(os.Getenv(key)); v != "" {
-			return v
-		}
-	}
-	return fallback
-}
-
 func envInt(key string, fallback int) int {
 	v := strings.TrimSpace(os.Getenv(key))
 	if v == "" {
@@ -94,22 +85,4 @@ func envInt(key string, fallback int) int {
 		return fallback
 	}
 	return n
-}
-
-func envBoolFirst(keys []string, fallback bool) bool {
-	for _, key := range keys {
-		v := strings.TrimSpace(strings.ToLower(os.Getenv(key)))
-		if v == "" {
-			continue
-		}
-		switch v {
-		case "1", "true", "yes", "on":
-			return true
-		case "0", "false", "no", "off":
-			return false
-		default:
-			return fallback
-		}
-	}
-	return fallback
 }

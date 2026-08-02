@@ -12,11 +12,7 @@ type WebhookPlugin struct {
 }
 
 func NewWebhookPlugin() *WebhookPlugin {
-	url := strings.TrimSpace(os.Getenv("PANEL_WEBHOOK_URL"))
-	if url == "" {
-		url = strings.TrimSpace(os.Getenv("ARMA_PANEL_WEBHOOK_URL"))
-	}
-	return &WebhookPlugin{url: url}
+	return &WebhookPlugin{url: strings.TrimSpace(os.Getenv("PANEL_WEBHOOK_URL"))}
 }
 
 func (p *WebhookPlugin) Name() string {

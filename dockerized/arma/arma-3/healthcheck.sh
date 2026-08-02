@@ -3,8 +3,8 @@
 
 set -eu
 
-python3 -c "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:'+os.environ.get('ARMA_PANEL_PORT','9283')+'/health', timeout=3)"
+python3 -c "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:'+os.environ.get('PANEL_PORT','9283')+'/health', timeout=3)"
 
-if [ "${ARMA_AUTO_START:-true}" = "true" ]; then
+if [ "${PANEL_AUTO_START:-true}" = "true" ]; then
   pgrep -f 'arma3server_x64' >/dev/null 2>&1
 fi
