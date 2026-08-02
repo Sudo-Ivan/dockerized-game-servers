@@ -51,6 +51,7 @@ ENV ARMA_DIR="/home/arma3/server" \
 COPY --from=builder --chown=arma3:arma3 /home/arma3/venv /home/arma3/venv
 COPY --from=builder --chown=arma3:arma3 /home/arma3/steamcmd /home/arma3/steamcmd
 COPY --chown=arma3:arma3 sync_mods.py /home/arma3/sync_mods.py
+COPY --chown=arma3:arma3 modlist.py /home/arma3/modlist.py
 COPY --chown=arma3:arma3 api/ /home/arma3/api/
 COPY --chown=arma3:arma3 --chmod=755 entrypoint.sh /home/arma3/entrypoint.sh
 COPY --chmod=755 docker-entrypoint.sh /docker-entrypoint.sh
