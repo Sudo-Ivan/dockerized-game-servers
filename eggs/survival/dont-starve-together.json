@@ -4,7 +4,7 @@
     "version": "PTDL_v2",
     "update_url": null
   },
-  "exported_at": "2026-08-02T01:19:13+00:00",
+  "exported_at": "2026-08-02T20:15:20+00:00",
   "name": "Don't Starve Together",
   "author": "sudo-ivan@users.noreply.github.com",
   "description": "Don't Starve Together using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/dont-starve-together:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 10999/udp, 11000/udp, 27016/udp Set DST_CLUSTER_TOKEN from Klei accounts for public server listing.",

@@ -1,0 +1,26 @@
+{{define "partials/players.html"}}
+<table>
+  <thead><tr><th>ID</th><th>Name</th><th>Ping</th><th>Actions</th></tr></thead>
+  <tbody>
+    {{range .Players}}
+    <tr>
+      <td>{{.ID}}</td>
+      <td>{{.Name}}</td>
+      <td>{{.Ping}}</td>
+      <td class="actions-inline">
+        <form hx-post="/rcon/kick" hx-target="#players-panel" hx-swap="innerHTML">
+          <input type="hidden" name="player_id" value="{{.ID}}">
+          <button type="submit" class="secondary">Kick</button>
+        </form>
+        <form hx-post="/rcon/ban" hx-target="#players-panel" hx-swap="innerHTML">
+          <input type="hidden" name="player_id" value="{{.ID}}">
+          <button type="submit" class="warn">Ban</button>
+        </form>
+      </td>
+    </tr>
+    {{else}}
+    <tr><td colspan="4">No players or server offline.</td></tr>
+    {{end}}
+  </tbody>
+</table>
+{{if .Error}}<div class="flash err">{{.Error}}</div>{{end}}

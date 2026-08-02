@@ -4,15 +4,15 @@ set -eu
 # shellcheck source=/opt/steamcmd/steamcmd-app-update.sh
 . /opt/steamcmd/steamcmd-app-update.sh
 
-mkdir -p "${ARMA_DIR}/keys"
+mkdir -p "${ARMA_DIR}/keys" "${ARMA_DIR}/mpmissions"
 
 STEAM_USERNAME="${STEAM_USERNAME:-anonymous}"
 STEAM_PASSWORD="${STEAM_PASSWORD:-}"
-STEAM_GUARD_CODE="${STEAM_GUARD_CODE:-}"
+ARMA_APP_ID="${ARMA_APP_ID:-233780}"
+
 if [ -z "${STEAM_USERNAME}" ]; then
     STEAM_USERNAME="anonymous"
 fi
-ARMA_APP_ID="${ARMA_APP_ID:-233780}"
 
 if [ ! -f "${ARMA_DIR}/arma3server_x64" ]; then
     echo "--- Installing Arma 3 server (App ${ARMA_APP_ID}) ---"
@@ -27,63 +27,7 @@ if [ ! -f "${ARMA_DIR}/arma3server_x64" ]; then
     exit 1
 fi
 
-MOD_LIST=""
-MODLIST_FILE="${MODLIST_FILE:-${ARMA_DIR}/modlist.html}"
-
-if [ -f "${MODLIST_FILE}" ]; then
-    if [ -z "${STEAM_USERNAME}" ] || [ "${STEAM_USERNAME}" = "anonymous" ] || [ -z "${STEAM_PASSWORD}" ]; then
-        echo "modlist.html requires STEAM_USERNAME and STEAM_PASSWORD (anonymous login cannot sync workshop mods)." >&2
-        exit 1
-    fi
-    echo "--- Syncing workshop mods from ${MODLIST_FILE} (Steam CDN) ---"
-    if ! WORKSHOP_IDS=$(python3 /home/arma3/sync_mods.py "${MODLIST_FILE}"); then
-        echo "Workshop sync failed."
-        exit 1
-    fi
-
-    for MOD_ID in $WORKSHOP_IDS; do
-        MOD_PATH="${ARMA_DIR}/workshop/${MOD_ID}"
-
-        if [ -d "$MOD_PATH" ]; then
-            ln -sfn "$MOD_PATH" "${ARMA_DIR}/@${MOD_ID}"
-
-            if [ -z "$MOD_LIST" ]; then
-                MOD_LIST="@${MOD_ID}"
-            else
-                MOD_LIST="${MOD_LIST};@${MOD_ID}"
-            fi
-        fi
-    done
-fi
-
-if [ -n "${CDLC:-}" ]; then
-    echo "--- Adding Creator DLCs: $CDLC ---"
-    if [ -z "$MOD_LIST" ]; then
-        MOD_LIST="${CDLC}"
-    else
-        MOD_LIST="${MOD_LIST};${CDLC}"
-    fi
-fi
-
-if [ -n "${EXTRA_MODS:-}" ]; then
-    if [ -z "$MOD_LIST" ]; then
-        MOD_LIST="${EXTRA_MODS}"
-    else
-        MOD_LIST="${MOD_LIST};${EXTRA_MODS}"
-    fi
-fi
-
-echo "--- Starting Arma 3 with mods: $MOD_LIST ---"
-
 chmod +x "${ARMA_DIR}/arma3server_x64"
 
-cd "${ARMA_DIR}"
-exec ./arma3server_x64 \
-    -config=/home/arma3/configs/server.cfg \
-    -port=2302 \
-    -name=server \
-    -profiles=/home/arma3/profiles \
-    -mod="${MOD_LIST}" \
-    -world=empty \
-    -noSound \
-    -filePatching
+echo "--- Starting Arma 3 panel ---"
+exec /home/arma3/bin/arma-panel

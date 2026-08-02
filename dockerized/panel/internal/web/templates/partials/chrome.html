@@ -1,0 +1,32 @@
+{{define "head"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{.Title}} | {{.PanelTitle}}</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+{{end}}
+
+{{define "nav"}}
+  <header class="topbar">
+    <div class="brand">{{.PanelTitle}}</div>
+    <nav>
+      {{range .Nav}}<a href="{{.Path}}">{{.Label}}</a>{{end}}
+      {{if .AuthEnabled}}<a href="/logout">Logout</a>{{end}}
+    </nav>
+  </header>
+  <main class="container">
+    {{if .Error}}<div class="flash err">{{.Error}}</div>{{end}}
+    {{if .Flash}}<div class="flash ok">{{.Flash}}</div>{{end}}
+{{end}}
+
+{{define "foot"}}
+  </main>
+</body>
+</html>
+{{end}}

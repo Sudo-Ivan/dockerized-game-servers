@@ -659,6 +659,9 @@ def build_description(game_id: str, image: str, ports: list[dict[str, str]], fir
         lines.append(
             "Place modlist.html in server/modlist.html under the server data directory for workshop mod sync."
         )
+        lines.append(
+            "Web panel on TCP 9283 (missions, config, mod sync, RCON). Set ARMA_PANEL_PASSWORD when exposing the panel."
+        )
     if game_id == "dont-starve-together":
         lines.append(
             "Set DST_CLUSTER_TOKEN from Klei accounts for public server listing."

@@ -14,6 +14,7 @@ docs/            Starlight site (this documentation)
 eggs/            Pterodactyl egg JSON (optional)
 dockerized/
   bases/           shared Docker bases (minecraft, steam, runtime)
+  panel/           shared Go game server panel (gameserverpanel module)
   trivy.yaml       Trivy scan config for Dockerfiles
   minecraft/       Fabric, Vanilla, Forge, NeoForge
   valheim/         Vanilla and Plus

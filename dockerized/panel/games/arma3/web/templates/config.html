@@ -1,0 +1,43 @@
+{{define "config.html"}}
+{{template "head" .}}
+{{template "nav" .}}
+<section class="card">
+  <h2>server.cfg</h2>
+  <div class="actions">
+    <a href="/config?tab=form" class="button-link {{if eq .Tab "form"}}active{{end}}">Form</a>
+    <a href="/config?tab=advanced" class="button-link {{if eq .Tab "advanced"}}active{{end}}">Advanced</a>
+  </div>
+  {{if .Err}}<div class="flash err">{{.Err}}</div>{{end}}
+  {{if eq .Tab "advanced"}}
+  <form hx-post="/config/save" hx-target="#config-flash" hx-swap="innerHTML">
+    <div id="config-flash"></div>
+    <textarea name="config" rows="24" spellcheck="false">{{.ConfigText}}</textarea>
+    <button type="submit">Save raw config</button>
+  </form>
+  {{else}}
+  <form hx-post="/config/form" hx-target="#config-flash" hx-swap="innerHTML">
+    <div id="config-flash"></div>
+    <div class="grid two">
+      <label><span>Hostname</span><input name="hostname" value="{{.Form.Hostname}}"></label>
+      <label><span>Max players</span><input name="maxPlayers" type="number" value="{{.Form.MaxPlayers}}"></label>
+      <label><span>Server password</span><input name="password" value="{{.Form.Password}}"></label>
+      <label><span>Admin password</span><input name="passwordAdmin" value="{{.Form.PasswordAdmin}}"></label>
+      <label><span>Command password</span><input name="serverCommandPassword" value="{{.Form.ServerCommandPassword}}"></label>
+      <label><span>Mission template</span><input name="template" value="{{.Form.Template}}"></label>
+      <label><span>MOTD interval</span><input name="motdInterval" type="number" value="{{.Form.MOTDInterval}}"></label>
+      <label><span>Verify signatures</span><input name="verifySignatures" type="number" value="{{.Form.VerifySignatures}}"></label>
+      <label><span>Allowed file patching</span><input name="allowedFilePatching" type="number" value="{{.Form.AllowedFilePatching}}"></label>
+      <label><span>Disconnect timeout</span><input name="disconnectTimeout" type="number" value="{{.Form.DisconnectTimeout}}"></label>
+      <label><span>VoN codec</span><input name="vonCodec" type="number" value="{{.Form.VonCodec}}"></label>
+    </div>
+    <label class="checkbox"><input type="checkbox" name="kickDuplicate" value="1" {{if .Form.KickDuplicate}}checked{{end}}> Kick duplicate</label>
+    <label class="checkbox"><input type="checkbox" name="battlEye" value="1" {{if .Form.BattlEye}}checked{{end}}> BattlEye</label>
+    <label class="checkbox"><input type="checkbox" name="persistent" value="1" {{if .Form.Persistent}}checked{{end}}> Persistent</label>
+    <label class="checkbox"><input type="checkbox" name="disableVoN" value="1" {{if .Form.DisableVoN}}checked{{end}}> Disable VoN</label>
+    <label><span>MOTD</span><textarea name="motd" rows="4">{{.Form.MOTD}}</textarea></label>
+    <button type="submit">Save form</button>
+  </form>
+  {{end}}
+</section>
+{{template "foot" .}}
+{{end}}

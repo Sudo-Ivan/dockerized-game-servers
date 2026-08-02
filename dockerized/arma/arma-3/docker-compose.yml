@@ -2,8 +2,8 @@ services:
   arma3:
     image: ghcr.io/${IMAGE_OWNER}/arma-3:latest
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: arma/arma-3/Dockerfile
       args:
         BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
     pull_policy: missing
@@ -16,6 +16,7 @@ services:
       - "2304:2304/udp"
       - "2305:2305/udp"
       - "2306:2306/udp"
+      - "9283:9283/tcp"
     volumes:
       - ./server:/home/arma3/server
       - ./configs:/home/arma3/configs
@@ -29,6 +30,24 @@ services:
       MODLIST_FILE: "/home/arma3/server/modlist.html"
       CDLC: ""
       EXTRA_MODS: ""
+      PANEL_GAME: "arma3"
+      PANEL_PASSWORD: "${PANEL_PASSWORD:-${ARMA_PANEL_PASSWORD:-}}"
+      PANEL_SESSION_SECRET: "${PANEL_SESSION_SECRET:-${ARMA_PANEL_SESSION_SECRET:-}}"
+      PANEL_ALLOWED_IPS: "${PANEL_ALLOWED_IPS:-${ARMA_PANEL_ALLOWED_IPS:-}}"
+      PANEL_WEBHOOK_URL: "${PANEL_WEBHOOK_URL:-${ARMA_PANEL_WEBHOOK_URL:-}}"
+      ARMA_PANEL_PASSWORD: "${ARMA_PANEL_PASSWORD:-}"
+      ARMA_PANEL_SESSION_SECRET: "${ARMA_PANEL_SESSION_SECRET:-}"
+      ARMA_PANEL_ALLOWED_IPS: "${ARMA_PANEL_ALLOWED_IPS:-}"
+      ARMA_PANEL_LOGIN_MAX_ATTEMPTS: "${ARMA_PANEL_LOGIN_MAX_ATTEMPTS:-5}"
+      ARMA_PANEL_LOGIN_LOCKOUT: "${ARMA_PANEL_LOGIN_LOCKOUT:-900}"
+      ARMA_SCHEDULED_RESTART: "${ARMA_SCHEDULED_RESTART:-}"
+      ARMA_SCHEDULED_RESTART_WARN: "${ARMA_SCHEDULED_RESTART_WARN:-15,5,1}"
+      ARMA_PANEL_WEBHOOK_URL: "${ARMA_PANEL_WEBHOOK_URL:-}"
+      ARMA_RCON_PASSWORD: "${ARMA_RCON_PASSWORD:-}"
+      ARMA_RCON_PORT: "${ARMA_RCON_PORT:-}"
+      ARMA_AUTO_START: "${ARMA_AUTO_START:-true}"
+      ARMA_PANEL_PORT: "9283"
+      ARMA_PANEL_ADDR: ":9283"
       ARMA_DOWNLOAD_MAX_WORKERS: "4"
       ARMA_DOWNLOAD_CHUNK_SIZE: "4194304"
       ARMA_DOWNLOAD_PROGRESS_INTERVAL: "60"

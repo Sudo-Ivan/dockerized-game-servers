@@ -1,0 +1,36 @@
+{{define "rcon.html"}}
+{{template "head" .}}
+{{template "nav" .}}
+<section class="grid two">
+  <div class="card">
+    <h2>Players</h2>
+    <div id="players-panel">
+      {{template "partials/players.html" .}}
+    </div>
+    <form hx-post="/rcon/say" hx-target="#say-result" hx-swap="innerHTML" class="stack">
+      <label><span>Broadcast</span><input name="message" required></label>
+      <button type="submit">Send say</button>
+      <div id="say-result"></div>
+    </form>
+  </div>
+  <div class="card">
+    <h2>RCON Console</h2>
+    <p class="hint">Target {{.Host}}:{{.Port}}</p>
+    <form hx-post="/rcon/mission" hx-target="#mission-result" hx-swap="innerHTML" class="stack">
+      <label><span>Switch mission</span>
+        <select name="mission">
+          {{range .Missions}}<option value="{{.}}">{{.}}</option>{{end}}
+        </select>
+      </label>
+      <button type="submit">Load mission</button>
+      <div id="mission-result"></div>
+    </form>
+    <form hx-post="/rcon/send" hx-target="#rcon-result" hx-swap="innerHTML">
+      <label><span>Command</span><input name="command" placeholder="players" required></label>
+      <button type="submit">Send</button>
+    </form>
+    <div id="rcon-result"></div>
+  </div>
+</section>
+{{template "foot" .}}
+{{end}}

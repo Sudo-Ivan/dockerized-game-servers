@@ -1,0 +1,35 @@
+{{define "dashboard.html"}}
+{{template "head" .}}
+{{template "nav" .}}
+<section class="grid two">
+  <div class="card">
+    <h2>Server Control</h2>
+    <div id="status-panel">
+      {{template "partials/status.html" .Status}}
+    </div>
+    <div class="actions">
+      <form hx-post="/server/start" hx-target="#status-panel" hx-swap="innerHTML">
+        <button type="submit">Start</button>
+      </form>
+      <form hx-post="/server/stop" hx-target="#status-panel" hx-swap="innerHTML">
+        <button type="submit" class="secondary">Stop</button>
+      </form>
+      <form hx-post="/server/restart" hx-target="#status-panel" hx-swap="innerHTML">
+        <button type="submit" class="warn">Restart</button>
+      </form>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Quick Links</h2>
+    <ul class="links">
+      <li><a href="/missions">Manage mission PBO files</a></li>
+      <li><a href="/config">Edit server.cfg</a></li>
+      <li><a href="/modlist">Upload launcher modlist HTML</a></li>
+      <li><a href="/rcon">BattlEye RCON console</a></li>
+      <li><a href="/logs">Live logs</a></li>
+      <li><a href="/backup">Backup and restore</a></li>
+    </ul>
+  </div>
+</section>
+{{template "foot" .}}
+{{end}}

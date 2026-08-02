@@ -1,0 +1,9 @@
+{{define "partials/status.html"}}
+<div class="status">
+  <div><strong>State:</strong> <span class="pill {{.State}}">{{.State}}</span></div>
+  <div><strong>PID:</strong> {{if .PID}}{{.PID}}{{else}}-{{end}}</div>
+  <div><strong>Uptime:</strong> {{if .Uptime}}{{.Uptime}}{{else}}-{{end}}</div>
+  <div><strong>Mods:</strong> <code>{{if .ModList}}{{.ModList}}{{else}}none{{end}}</code></div>
+  {{if .LastErr}}<div class="flash err">{{.LastErr}}</div>{{end}}
+</div>
+{{end}}

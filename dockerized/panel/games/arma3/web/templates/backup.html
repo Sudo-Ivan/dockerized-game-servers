@@ -1,0 +1,16 @@
+{{define "backup.html"}}
+{{template "head" .}}
+{{template "nav" .}}
+<section class="card">
+  <h2>Backup and Restore</h2>
+  <p class="hint">Backup includes configs, mpmissions, and modlist.html.</p>
+  <div class="actions">
+    <a class="button-link" href="/backup/download">Download backup</a>
+  </div>
+  <form class="upload" method="post" action="/backup/restore" enctype="multipart/form-data">
+    <input type="file" name="backup" accept=".zip" required>
+    <button type="submit" class="warn">Restore backup</button>
+  </form>
+</section>
+{{template "foot" .}}
+{{end}}

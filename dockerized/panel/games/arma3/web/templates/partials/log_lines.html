@@ -1,0 +1,9 @@
+{{define "partials/log_lines.html"}}
+<div id="log-lines" class="logbox">
+  {{range .Lines}}
+  <div class="log-{{.Source}}">{{.Text}}</div>
+  {{else}}
+  <div>No log lines.</div>
+  {{end}}
+</div>
+{{end}}

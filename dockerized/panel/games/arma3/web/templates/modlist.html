@@ -1,0 +1,27 @@
+{{define "modlist.html"}}
+{{template "head" .}}
+{{template "nav" .}}
+<section class="card">
+  <h2>Workshop Modlist</h2>
+  <p class="hint">Path: <code>{{.Path}}</code></p>
+  {{if .Err}}<div class="flash err">{{.Err}}</div>{{end}}
+  <form class="upload" method="post" action="/modlist/upload" enctype="multipart/form-data">
+    <input type="file" name="modlist" accept=".html,.htm" required>
+    <button type="submit">Upload modlist</button>
+  </form>
+  <div class="actions">
+    <form hx-post="/mods/sync" hx-target="#sync-panel" hx-swap="outerHTML">
+      <button type="submit">Sync mods now</button>
+    </form>
+    {{if .Exists}}
+    <form method="post" action="/modlist/delete" onsubmit="return confirm('Remove modlist.html?')">
+      <button type="submit" class="warn">Remove modlist</button>
+    </form>
+    {{end}}
+  </div>
+  <div id="sync-panel">
+    {{template "partials/sync_status.html" .Sync}}
+  </div>
+</section>
+{{template "foot" .}}
+{{end}}

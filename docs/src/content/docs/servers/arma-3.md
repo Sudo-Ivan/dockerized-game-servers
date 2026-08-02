@@ -7,7 +7,7 @@ This image installs the Arma 3 dedicated server through SteamCMD and can downloa
 
 :::note[Before you start]
 - Keep separate folders for server files, configs, profiles, and cache (see Data folders below)
-- Open UDP ports 2302 through 2306
+- Open UDP ports 2302 through 2306 and TCP port 9283 for the web panel
 - Set STEAM_USERNAME, STEAM_PASSWORD, and STEAM_GUARD_CODE when Steam Guard prompts during login
 - Create dockerized/arma/arma-3/configs/server.cfg before first start
 :::
@@ -22,6 +22,33 @@ This image installs the Arma 3 dedicated server through SteamCMD and can downloa
 | dockerized/arma/arma-3/cache | /home/arma3/cache | SteamCMD download cache |
 
 The server launches with -config pointing at configs/server.cfg, UDP port 2302, and -profiles pointing at the profiles folder.
+
+## Web panel
+
+The image bundles the shared [game server panel](../reference/panel/) (Go + HTMX) on **TCP port 9283** by default. Set `PANEL_GAME=arma3` (default in this image). Generic panel settings use `PANEL_*` env vars; Arma-specific settings still use `ARMA_*` where noted below.
+
+Open `http://<host>:9283` after the container starts. The panel can:
+
+- Start, stop, and restart the Arma server
+- Sync workshop mods without a full manual restart (with Steam Guard prompt in the UI)
+- Upload missions, edit server.cfg (form or raw), manage modlist HTML
+- View RPT, BattlEye, and process logs
+- RCON player list, kick, ban, broadcast, mission switch
+- Backup and restore configs, missions, and modlist
+- Optional password auth, login rate limiting, and IP allowlist
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| PANEL_GAME | arma3 | Game module loaded by the panel |
+| PANEL_PORT / ARMA_PANEL_PORT | 9283 | Host and container TCP port for the panel |
+| PANEL_ADDR / ARMA_PANEL_ADDR | :9283 | Listen address inside the container |
+| PANEL_PASSWORD / ARMA_PANEL_PASSWORD | (empty) | Enable login when set |
+| PANEL_ALLOWED_IPS / ARMA_PANEL_ALLOWED_IPS | (empty) | Comma-separated IPs or CIDRs allowed to reach the panel |
+| ARMA_RCON_PASSWORD | (empty) | BattlEye RCON password for the in-panel console |
+| ARMA_SCHEDULED_RESTART | (empty) | Daily restart time in HH:MM (local time), e.g. 04:00 |
+| ARMA_AUTO_START | true | Start the game server when the panel starts |
+
+Set `ARMA_PANEL_PASSWORD` before exposing port 9283 beyond your LAN. Put a reverse proxy with TLS in front if you access the panel over the internet.
 
 ./tools/gs backup arma-3 backs up server, configs, and profiles. The cache folder is left out since it regenerates on the next sync. ./tools/gs update arma-3 is not available for this server. See [Ops](/guides/ops/) for what does work.
 
@@ -90,6 +117,7 @@ docker compose -f dockerized/arma/arma-3/docker-compose.yml up -d
 ```bash
 docker run -d --name arma3 --restart unless-stopped --init \
   -p 2302-2306:2302-2306/udp \
+  -p 9283:9283/tcp \
   -v "$PWD/dockerized/arma/arma-3/server:/home/arma3/server" \
   -v "$PWD/dockerized/arma/arma-3/configs:/home/arma3/configs" \
   -v "$PWD/dockerized/arma/arma-3/profiles:/home/arma3/profiles" \
