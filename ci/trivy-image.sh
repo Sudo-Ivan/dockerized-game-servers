@@ -23,6 +23,7 @@ if ! docker image inspect "${IMAGE_REF}" >/dev/null 2>&1; then
 fi
 trivy image \
   --config dockerized/trivy.yaml \
+  --ignorefile dockerized/.trivyignore \
   --scanners vuln,secret,misconfig \
   --misconfig-scanners dockerfile \
   --severity CRITICAL \

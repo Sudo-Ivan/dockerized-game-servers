@@ -13,6 +13,7 @@ export PATH="${HOME}/.local/bin:${PATH}"
 echo "==> Trivy Dockerfile config scan"
 trivy config \
   --config dockerized/trivy.yaml \
+  --ignorefile dockerized/.trivyignore \
   --misconfig-scanners dockerfile \
   --severity MEDIUM,HIGH,CRITICAL \
   --exit-code 1 \
