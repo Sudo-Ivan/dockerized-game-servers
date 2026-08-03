@@ -7,7 +7,7 @@ This image installs the Arma 3 dedicated server through SteamCMD and can downloa
 
 :::note[Before you start]
 - Keep separate folders for server files, configs, profiles, and cache (see Data folders below)
-- Open UDP ports 2302 through 2306 and TCP port 9283 for the web panel
+- Open UDP ports 2302 through 2306
 - Set STEAM_USERNAME, STEAM_PASSWORD, and STEAM_GUARD_CODE when Steam Guard prompts during login
 - Create dockerized/arma/arma-3/configs/server.cfg before first start
 :::
@@ -21,34 +21,7 @@ This image installs the Arma 3 dedicated server through SteamCMD and can downloa
 | dockerized/arma/arma-3/profiles | /home/arma3/profiles | Server profile |
 | dockerized/arma/arma-3/cache | /home/arma3/cache | SteamCMD download cache |
 
-The server launches with -config pointing at configs/server.cfg, UDP port 2302, and -profiles pointing at the profiles folder.
-
-## Web panel
-
-The image bundles the shared [game server panel](../reference/panel/) (Go + HTMX) on **TCP port 9283** by default. Set `PANEL_GAME=arma3` (default in this image). Panel settings use `PANEL_*` env vars (see the [panel reference](../reference/panel/)); Arma-specific settings use `ARMA_*` where noted below.
-
-Open `http://<host>:9283` after the container starts. The panel can:
-
-- Start, stop, and restart the Arma server
-- Sync workshop mods without a full manual restart (with Steam Guard prompt in the UI)
-- Upload missions, edit server.cfg (form or raw), manage modlist HTML
-- View RPT, BattlEye, and process logs
-- RCON player list, kick, ban, broadcast, mission switch
-- Backup and restore configs, missions, and modlist
-- Optional password auth, login rate limiting, and IP allowlist
-
-| Setting | Default | What it does |
-| --- | --- | --- |
-| PANEL_GAME | arma3 | Game module loaded by the panel |
-| PANEL_PORT | 9283 | Host and container TCP port for the panel |
-| PANEL_PASSWORD | (empty) | Enable login when set |
-| ARMA_RCON_PASSWORD | (empty) | BattlEye RCON password for the in-panel console |
-
-See the [panel reference](../reference/panel/) for other `PANEL_*` settings (addr, allowlist, scheduled restart, webhook, auto start).
-
-Set `PANEL_PASSWORD` before exposing port 9283 beyond your LAN. Put a reverse proxy with TLS in front if you access the panel over the internet.
-
-./tools/gs backup arma-3 backs up server, configs, and profiles. The cache folder is left out since it regenerates on the next sync. ./tools/gs update arma-3 is not available for this server. See [Ops](/guides/ops/) for what does work.
+The server launches with -config pointing at configs/server.cfg, UDP port from ARMA_PORT (default 2302), and -profiles pointing at the profiles folder.
 
 ## Workshop preset (HTML)
 
@@ -84,14 +57,15 @@ serverTime = "SystemTime";
 maxPlayers = 32;
 ```
 
-Point template and mission classes at missions you install under the server directory. The server starts with -world=empty and -filePatching so unpacked missions and mods on the volume are visible.
+Point template and mission classes at missions you install under the server directory. The server starts with -world from ARMA_WORLD (default empty) and -filePatching so unpacked missions and mods on the volume are visible.
 
-## Settings (workshop CDN tuning)
-
-These control parallel downloads for large mod lists. All are set in docker-compose.yml:
+## Settings
 
 | Setting | Default | What it does |
 | --- | --- | --- |
+| ARMA_PORT | 2302 | UDP game port passed to -port |
+| ARMA_WORLD | empty | World name passed to -world |
+| ARMA_APP_ID | 233780 | Steam App ID for server install and workshop sync |
 | ARMA_DOWNLOAD_MAX_WORKERS | 4 | Parallel CDN download workers |
 | ARMA_DOWNLOAD_CHUNK_SIZE | 4194304 | Bytes per download chunk (4 MiB) |
 | ARMA_DOWNLOAD_PROGRESS_INTERVAL | 60 | Seconds between download progress log lines |
@@ -99,8 +73,6 @@ These control parallel downloads for large mod lists. All are set in docker-comp
 | ARMA_CDN_CLIENT_BASE_DELAY | 1.5 | Base backoff seconds between CDN client retries |
 | ARMA_CDN_OP_RETRIES | 3 | Retries for a failed CDN manifest or file operation |
 | ARMA_CDN_OP_BASE_DELAY | 1.5 | Base backoff seconds between CDN operation retries |
-
-ARMA_APP_ID (default 233780) overrides the Steam App ID used for both the server install and workshop sync.
 
 ## Compose
 
@@ -115,7 +87,6 @@ docker compose -f dockerized/arma/arma-3/docker-compose.yml up -d
 ```bash
 docker run -d --name arma3 --restart unless-stopped --init \
   -p 2302-2306:2302-2306/udp \
-  -p 9283:9283/tcp \
   -v "$PWD/dockerized/arma/arma-3/server:/home/arma3/server" \
   -v "$PWD/dockerized/arma/arma-3/configs:/home/arma3/configs" \
   -v "$PWD/dockerized/arma/arma-3/profiles:/home/arma3/profiles" \
@@ -130,3 +101,5 @@ docker run -d --name arma3 --restart unless-stopped --init \
 
 - [All servers](/reference/servers/) for compose paths and image names
 - [Ops](/guides/ops/) for ./tools/gs backup and restore
+
+./tools/gs backup arma-3 backs up server, configs, and profiles. The cache folder is left out since it regenerates on the next sync. ./tools/gs update arma-3 is not available for this server. See [Ops](/guides/ops/) for what does work.

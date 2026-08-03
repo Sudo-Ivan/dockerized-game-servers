@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-VS_VERSION="${VS_VERSION:-1.21.5}"
+VS_VERSION="${VS_VERSION:-1.22.6}"
 VS_BRANCH="${VS_BRANCH:-stable}"
 VS_FORCE_UPDATE="${VS_FORCE_UPDATE:-false}"
 VS_DOWNLOAD_URL="${VS_DOWNLOAD_URL:-https://cdn.vintagestory.at/gamefiles/${VS_BRANCH}/vs_server_linux-x64_${VS_VERSION}.tar.gz}"

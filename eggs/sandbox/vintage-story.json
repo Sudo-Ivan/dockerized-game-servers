@@ -32,7 +32,7 @@
       "name": "Vs Version",
       "description": "Container environment VS_VERSION.",
       "env_variable": "VS_VERSION",
-      "default_value": "1.21.5",
+      "default_value": "1.22.6",
       "user_viewable": true,
       "user_editable": true,
       "rules": "required|string|max:512",

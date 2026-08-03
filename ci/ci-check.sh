@@ -140,28 +140,6 @@ if ! python3 dockerized/arma/arma-3/test_modlist.py; then
   fail=1
 fi
 
-echo "==> Arma 3 panel (Go)"
-if ! command -v go >/dev/null 2>&1; then
-  echo "go not installed, skipping panel checks" >&2
-else
-  (
-    cd dockerized/panel
-    go fmt ./...
-    go fix ./...
-    if ! go test ./...; then
-      fail=1
-    fi
-    if command -v gosec >/dev/null 2>&1 || [ -x "$(go env GOPATH)/bin/gosec" ]; then
-      GOSEC="$(command -v gosec 2>/dev/null || echo "$(go env GOPATH)/bin/gosec")"
-      if ! "$GOSEC" -quiet ./...; then
-        echo "gosec reported issues in arma-3 panel" >&2
-        fail=1
-      fi
-    else
-      echo "gosec not installed, skipping security scan" >&2
-    fi
-  )
-fi
 if ! sh -n ci/changed-paths.sh; then
   echo "shell syntax error: ci/changed-paths.sh" >&2
   fail=1

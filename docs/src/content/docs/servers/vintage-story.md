@@ -4,7 +4,7 @@ description: Vintage Story dedicated server downloaded from the official CDN.
 iconFit: contain
 ---
 
-On first start the container downloads the official Linux server package from [cdn.vintagestory.at](https://cdn.vintagestory.at/) and runs it with .NET 8. No Steam account is required. The server writes `serverconfig.json`, world saves, and mod folders under your data volume on first launch.
+On first start the container downloads the official Linux server package from [cdn.vintagestory.at](https://cdn.vintagestory.at/) and runs it with .NET 10. Vintage Story 1.22 and later require .NET 10. No Steam account is required. The server writes `serverconfig.json`, world saves, and mod folders under your data volume on first launch.
 
 :::note[Before you start]
 - Mount `dockerized/vintage-story/data` for `serverconfig.json`, `Saves/`, `Mods/`, and other persistent files
@@ -24,7 +24,7 @@ On first start the container downloads the official Linux server package from [c
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| VS_VERSION | 1.21.5 | Server version used in the download URL |
+| VS_VERSION | 1.22.6 | Server version used in the download URL |
 | VS_BRANCH | stable | Release branch in the download URL (`stable` or `unstable`) |
 | VS_DOWNLOAD_URL | https://cdn.vintagestory.at/gamefiles/${VS_BRANCH}/vs_server_linux-x64_${VS_VERSION}.tar.gz | Override the download URL directly. Ignores VS_VERSION and VS_BRANCH when set |
 | VS_FORCE_UPDATE | false | Force a reinstall even if the installed version already matches VS_VERSION |

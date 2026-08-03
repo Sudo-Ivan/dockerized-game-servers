@@ -410,7 +410,6 @@ Arma 3:
 ```bash
 docker run -d --name arma3 --restart unless-stopped \
   -p 2302-2306:2302-2306/udp \
-  -p 9283:9283/tcp \
   -v "$PWD/dockerized/arma/arma-3/server:/home/arma3/server" \
   -v "$PWD/dockerized/arma/arma-3/configs:/home/arma3/configs" \
   -v "$PWD/dockerized/arma/arma-3/profiles:/home/arma3/profiles" \
@@ -504,7 +503,7 @@ Downloads the official headless package from factorio.com (`FACTORIO_VERSION`, d
 
 ### Vintage Story
 
-Downloads the official Linux server package from cdn.vintagestory.at (`VS_VERSION`, default `1.21.5`, branch `stable`). Persistent world data mounts at `dockerized/vintage-story/data` (`serverconfig.json`, `Saves/`, `Mods/`). Game traffic uses TCP and UDP `42420`. Edit `serverconfig.json` after the first run. Set `VS_FORCE_UPDATE=true` or change `VS_VERSION` to reinstall server binaries.
+Downloads the official Linux server package from cdn.vintagestory.at (`VS_VERSION`, default `1.22.6`, branch `stable`) and runs it with .NET 10 (required for 1.22+). Persistent world data mounts at `dockerized/vintage-story/data` (`serverconfig.json`, `Saves/`, `Mods/`). Game traffic uses TCP and UDP `42420`. Edit `serverconfig.json` after the first run. Set `VS_FORCE_UPDATE=true` or change `VS_VERSION` to reinstall server binaries.
 
 ### 7 Days to Die
 
@@ -656,7 +655,7 @@ Uses [OpenMoHAA](https://github.com/openmoh/openmohaa) release binaries. **You m
 
 ### Arma 3
 
-Steam App 233780. Linux dedicated server via SteamCMD with workshop mod sync from an HTML preset. UDP 2302-2306 (game). TCP **9283** (web panel, default avoids homelab clashes with 8080). Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account that owns the server files. Config `dockerized/arma/arma-3/configs/server.cfg`, modlist `dockerized/arma/arma-3/server/modlist.html`. Open `http://<host>:9283` for missions, config, mod sync, RCON, and backups. See the [Arma 3](https://sudo-ivan.github.io/dockerized-game-servers/servers/arma-3/) docs page.
+Steam App 233780. Linux dedicated server via SteamCMD with workshop mod sync from an HTML preset. UDP 2302-2306 (game). Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account that owns the server files. Config `dockerized/arma/arma-3/configs/server.cfg`, modlist `dockerized/arma/arma-3/server/modlist.html`. See the [Arma 3](https://sudo-ivan.github.io/dockerized-game-servers/servers/arma-3/) docs page.
 
 ### Arma Reforger
 
