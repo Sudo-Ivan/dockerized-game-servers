@@ -31,6 +31,7 @@ emit "ground-branch" "dockerized/ground-branch/docker-compose.yml" "ground-branc
 emit "space-engineers" "dockerized/space-engineers/docker-compose.yml" "space-engineers" "data" "SE_FORCE_UPDATE" "process" "1"
 emit "core-keeper" "dockerized/core-keeper/docker-compose.yml" "core-keeper" "data" "CK_FORCE_UPDATE" "gameid" "1"
 emit "factorio" "dockerized/factorio/docker-compose.yml" "factorio" "data" "FACTORIO_FORCE_UPDATE" "process" "1"
+emit "vintage-story" "dockerized/vintage-story/docker-compose.yml" "vintage-story" "data" "VS_FORCE_UPDATE" "process" "1"
 emit "7-days-to-die" "dockerized/7-days-to-die/docker-compose.yml" "7-days-to-die" "data" "SEVENDTD_FORCE_UPDATE" "process" "1"
 emit "project-zomboid" "dockerized/project-zomboid/docker-compose.yml" "project-zomboid" "data" "PZ_FORCE_UPDATE" "process" "1"
 emit "terraria" "dockerized/terraria/docker-compose.yml" "terraria" "data" "TERRARIA_FORCE_UPDATE" "process" "1"

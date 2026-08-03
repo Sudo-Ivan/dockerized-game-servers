@@ -4,7 +4,7 @@
     "version": "PTDL_v2",
     "update_url": null
   },
-  "exported_at": "2026-08-02T20:24:09+00:00",
+  "exported_at": "2026-08-03T16:48:42+00:00",
   "name": "Hytale",
   "author": "sudo-ivan@users.noreply.github.com",
   "description": "Hytale using the dockerized-game-servers image. Docker image: deinfreu/hytale-server:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 5520/udp External image maintained outside this repository.",

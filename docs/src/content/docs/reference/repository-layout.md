@@ -21,6 +21,7 @@ dockerized/
   ground-branch/   Ground Branch
   core-keeper/     Core Keeper
   factorio/         Factorio
+  vintage-story/    Vintage Story
   7-days-to-die/    7 Days to Die
   project-zomboid/  Project Zomboid
   terraria/         Terraria

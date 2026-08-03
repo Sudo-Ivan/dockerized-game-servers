@@ -21,6 +21,7 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Satisfactory | `dockerized/satisfactory` | `satisfactory` |
 | Core Keeper | `dockerized/core-keeper` | `core-keeper` |
 | Factorio | `dockerized/factorio` | `factorio` |
+| Vintage Story | `dockerized/vintage-story` | `vintage-story` |
 | 7 Days to Die | `dockerized/7-days-to-die` | `7-days-to-die` |
 | Project Zomboid | `dockerized/project-zomboid` | `project-zomboid` |
 | Terraria | `dockerized/terraria` | `terraria` |
@@ -499,7 +500,11 @@ Backup, restore, update, and healthchecks: `./tools/gs` (see docs guides/ops). E
 
 ### Factorio
 
-Downloads the official headless package from dockerized/factorio.com (`FACTORIO_VERSION`, default `stable`). Creates `saves/<SAVE_NAME>.zip` on first start and writes `config/server-settings.json` if missing. Game traffic is UDP `34197`. Set `RCON_PASSWORD` to enable RCON on TCP `27015`. Edit settings under `dockerized/factorio/data/config/` after the first run.
+Downloads the official headless package from factorio.com (`FACTORIO_VERSION`, default `stable`). Creates `saves/<SAVE_NAME>.zip` on first start and writes `config/server-settings.json` if missing. Game traffic is UDP `34197`. Set `RCON_PASSWORD` to enable RCON on TCP `27015`. Edit settings under `dockerized/factorio/data/config/` after the first run.
+
+### Vintage Story
+
+Downloads the official Linux server package from cdn.vintagestory.at (`VS_VERSION`, default `1.21.5`, branch `stable`). Persistent world data mounts at `dockerized/vintage-story/data` (`serverconfig.json`, `Saves/`, `Mods/`). Game traffic uses TCP and UDP `42420`. Edit `serverconfig.json` after the first run. Set `VS_FORCE_UPDATE=true` or change `VS_VERSION` to reinstall server binaries.
 
 ### 7 Days to Die
 
@@ -679,6 +684,7 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `satisfactory` | Satisfactory dedicated (native Linux) |
 | `core-keeper` | Core Keeper dedicated |
 | `factorio` | Factorio dedicated |
+| `vintage-story` | Vintage Story dedicated |
 | `7-days-to-die` | 7 Days to Die dedicated |
 | `project-zomboid` | Project Zomboid dedicated |
 | `terraria` | Terraria dedicated |
@@ -784,6 +790,7 @@ dockerized/
   satisfactory/    Satisfactory
   core-keeper/     Core Keeper
   factorio/         Factorio
+  vintage-story/    Vintage Story
   7-days-to-die/    7 Days to Die
   project-zomboid/  Project Zomboid
   terraria/         Terraria

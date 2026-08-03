@@ -23,6 +23,7 @@ Image prefix: {{IMAGE_PREFIX}}
 | satisfactory | Satisfactory dedicated (native Linux) |
 | core-keeper | Core Keeper dedicated |
 | factorio | Factorio dedicated |
+| vintage-story | Vintage Story dedicated |
 | 7-days-to-die | 7 Days to Die dedicated |
 | project-zomboid | Project Zomboid dedicated |
 | terraria | Terraria dedicated |

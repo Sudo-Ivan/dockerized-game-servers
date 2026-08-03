@@ -78,10 +78,11 @@ const WIKI_TITLE_ALIASES = {
 const DIRECT_ICON_URLS = {
 	minecraft: 'https://minecraft.wiki/images/Grass_Block_JE7_BE6.png',
 	factorio: 'https://wiki.factorio.com/images/thumb/6/60/Factorio-logo.png/240px-Factorio-logo.png',
+	'vintage-story': 'https://wiki.vintagestory.at/images/Vintagestory-icon.png',
 }
 
 /** Icons that should use contain + square frame instead of Steam portrait crop. */
-const ICON_FIT_CONTAIN = new Set(['minecraft', 'factorio', 'openmohaa'])
+const ICON_FIT_CONTAIN = new Set(['minecraft', 'factorio', 'openmohaa', 'vintage-story'])
 
 /**
  * @param {string} text

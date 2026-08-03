@@ -18,6 +18,7 @@ Every runnable server is listed below with its compose folder and image name. Fi
 | Satisfactory | dockerized/satisfactory | satisfactory | [Guide](../servers/satisfactory/) |
 | Core Keeper | dockerized/core-keeper | core-keeper | [Guide](../servers/core-keeper/) |
 | Factorio | dockerized/factorio | factorio | [Guide](../servers/factorio/) |
+| Vintage Story | dockerized/vintage-story | vintage-story | [Guide](../servers/vintage-story/) |
 | 7 Days to Die | dockerized/7-days-to-die | 7-days-to-die | [Guide](../servers/7-days-to-die/) |
 | Project Zomboid | dockerized/project-zomboid | project-zomboid | [Guide](../servers/project-zomboid/) |
 | Terraria | dockerized/terraria | terraria | [Guide](../servers/terraria/) |

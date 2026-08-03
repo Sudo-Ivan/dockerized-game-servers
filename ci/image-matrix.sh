@@ -59,6 +59,7 @@ emit "arma-reforger" "dockerized/arma/reforger" "dockerized/arma/reforger/Docker
 emit "dayz" "dockerized/dayz" "dockerized/dayz/Dockerfile" "steam-base"
 
 emit "factorio" "dockerized/factorio" "dockerized/factorio/Dockerfile" "runtime-base"
+emit "vintage-story" "dockerized/vintage-story" "dockerized/vintage-story/Dockerfile" "runtime-base"
 emit "openmohaa" "dockerized/openmohaa" "dockerized/openmohaa/Dockerfile" "runtime-base"
 emit "bf1942" "dockerized/bf1942" "dockerized/bf1942/Dockerfile" "runtime-base"
 emit "bfv" "dockerized/bfv" "dockerized/bfv/Dockerfile" "runtime-base"
