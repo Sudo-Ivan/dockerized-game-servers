@@ -3,7 +3,7 @@ title: Enshrouded
 description: Enshrouded dedicated server (Windows binary via Wine).
 ---
 
-This image downloads the Enshrouded dedicated server through Steam and runs the Windows build under Wine. On first start it writes dockerized/enshrouded_server.json if missing and initializes a Wine prefix.
+This image downloads the Enshrouded dedicated server through Steam and runs the Windows build under Wine. On first start it writes enshrouded_server.json if missing and initializes a Wine prefix.
 
 :::note[Before you start]
 - Keep a data folder for the server install, saves, and Wine prefix
@@ -25,20 +25,20 @@ This image downloads the Enshrouded dedicated server through Steam and runs the 
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
 | ENSHROUDED_APP_ID | 2278520 | Steam app id for the dedicated server tool |
 | ENSHROUDED_FORCE_UPDATE | false | Reinstall the server on next start |
-| ENSHROUDED_SERVER_NAME | Enshrouded Server | Server name in dockerized/enshrouded_server.json |
-| ENSHROUDED_PASSWORD | (empty) | Join password in dockerized/enshrouded_server.json |
+| ENSHROUDED_SERVER_NAME | Enshrouded Server | Server name in enshrouded_server.json |
+| ENSHROUDED_PASSWORD | (empty) | Join password in enshrouded_server.json |
 | ENSHROUDED_GAME_PORT | 15636 | Game UDP port |
 | ENSHROUDED_QUERY_PORT | 15637 | Query UDP port |
-| ENSHROUDED_SLOT_COUNT | 16 | Player cap in dockerized/enshrouded_server.json |
-| ENSHROUDED_BIND_IP | 0.0.0.0 | Bind address in dockerized/enshrouded_server.json |
+| ENSHROUDED_SLOT_COUNT | 16 | Player cap in enshrouded_server.json |
+| ENSHROUDED_BIND_IP | 0.0.0.0 | Bind address in enshrouded_server.json |
 | ENSHROUDED_EXTRA_ARGS | (empty) | Extra flags appended to the launch command |
 
 ## Server settings
 
-dockerized/enshrouded_server.json is written once from the settings above, then left alone. Edit it on the host at:
+enshrouded_server.json is written once from the settings above, then left alone. Edit it on the host at:
 
 ```text
 dockerized/enshrouded/data/enshrouded_server.json
@@ -53,7 +53,7 @@ Your data folder mounts at /opt/enshrouded inside the container.
 | Path | Purpose |
 | --- | --- |
 | .wine/ | Wine prefix, created on first start |
-| dockerized/enshrouded_server.json | Server name, password, ports, and slot count |
+| enshrouded_server.json | Server name, password, ports, and slot count |
 | savegame/ | World saves, created by the game |
 | logs/ | Server logs, created by the game |
 
@@ -81,4 +81,4 @@ Set ENSHROUDED_FORCE_UPDATE to true to reinstall on the next start. You can also
 
 ## Health check
 
-The container reports healthy while the dockerized/enshrouded_server process is running. Startup gets a 900 second grace period.
+The container reports healthy while the enshrouded_server process is running. Startup gets a 900 second grace period.

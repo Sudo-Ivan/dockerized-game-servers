@@ -26,7 +26,7 @@ This image downloads the VEIN dedicated server through Steam and runs the Window
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
 | VEIN_APP_ID | 2131400 | Steam app id for the dedicated server tool |
 | VEIN_FORCE_UPDATE | false | Reinstall the server on next start |
 | VEIN_PORT | 7777 | Game UDP port, passed as -port= |

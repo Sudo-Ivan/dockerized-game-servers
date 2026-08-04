@@ -26,7 +26,7 @@ This image downloads the Icarus dedicated server through Steam and runs the Wind
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
 | ICARUS_APP_ID | 2089300 | Steam app id for the dedicated server tool |
 | ICARUS_STEAM_APP_ID | 1149460 | Icarus game app id, written to steam_appid.txt |
 | ICARUS_FORCE_UPDATE | false | Reinstall the server on next start |

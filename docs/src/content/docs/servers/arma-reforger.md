@@ -3,7 +3,7 @@ title: Arma Reforger
 description: Arma Reforger dedicated server via SteamCMD.
 ---
 
-This image installs the Arma Reforger dedicated server through SteamCMD and runs the native Linux binary. Anonymous Steam login usually works. If install fails, use a Steam account with the game.
+This image installs the Arma Reforger dedicated server through SteamCMD and runs the native Linux binary. Anonymous Steam login works for most installs. If SteamCMD fails, use a Steam account that owns the game.
 
 Official reference: [Arma Reforger server hosting](https://community.bistudio.com/wiki/Arma_Reforger:Server_Hosting) on the Bohemia Community Wiki.
 
@@ -26,7 +26,7 @@ Official reference: [Arma Reforger server hosting](https://community.bistudio.co
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login for the install step |
 | STEAM_PASSWORD | (empty) | Steam password, only needed if anonymous install fails |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code for the login step |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code for the login step |
 | STEAMCMD_WINDOWS_WORKAROUND | full | SteamCMD depot fetch mode (full, prime, or off). full pulls a Windows depot pass before the Linux depot |
 | ARMAR_APP_ID | 1874900 | SteamCMD app id. Set 1890870 for the experimental branch |
 | ARMAR_FORCE_UPDATE | false | Re-run SteamCMD install on next start |

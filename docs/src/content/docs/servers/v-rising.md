@@ -26,7 +26,7 @@ This image downloads the V Rising dedicated server through Steam and runs the Wi
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
 | VRISING_APP_ID | 1829350 | Steam app id for the dedicated server tool |
 | VRISING_STEAM_APP_ID | 1604030 | Game app id, written to steam_appid.txt |
 | VRISING_FORCE_UPDATE | false | Reinstall the server on next start |

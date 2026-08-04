@@ -32,7 +32,7 @@ On first start the container downloads the Palworld Linux dedicated server (Stea
 | PALWORLD_APP_ID | 2394010 | Steam app ID to install |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code |
 
 See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
 

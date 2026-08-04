@@ -26,7 +26,7 @@ This image downloads the Sons Of The Forest dedicated server through Steam and r
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required for this server |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
 | SOTF_APP_ID | 2465200 | Steam app id for the dedicated server tool |
 | SOTF_STEAM_APP_ID | 1326470 | Game app id, written to steam_appid.txt |
 | SOTF_FORCE_UPDATE | false | Reinstall the server on next start |

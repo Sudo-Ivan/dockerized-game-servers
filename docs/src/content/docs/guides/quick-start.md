@@ -82,23 +82,24 @@ These show up on many servers, but not all. Always check the game's own guide fo
 | PUID, PGID | Minecraft only | Match file ownership to a host user and group |
 
 :::note[Steam login]
-Anonymous Steam downloads work for most dedicated server tools. A few games (Arma 3 is the common case) need an account that owns the server files. Set STEAM_USERNAME and STEAM_PASSWORD, and STEAM_GUARD_CODE if Steam Guard asks for a dockerized/code. Anonymous logins can also fail to list a server publicly for some titles. In that case use real credentials.
+Anonymous Steam downloads work for most dedicated server tools. A few games (Arma 3 is the common case) need an account that owns the server files. Set STEAM_USERNAME and STEAM_PASSWORD, and STEAM_GUARD_CODE if Steam Guard asks for a code. Anonymous logins can also fail to list a server publicly for some titles. In that case use real credentials.
 :::
 
-## Networking: getting friends onto your server
+## Port forwarding
 
-Docker only opens ports on the machine it runs on. Your router still has to let traffic in from the internet. Two ways to do that:
+Docker publishes ports on the host. Traffic from the internet still has to reach that host through your router.
 
-- **Port forwarding** (best for a server you keep running): a rule on your router that sends traffic on a given port to your server's local IP. Reliable, and what most guides assume.
-- **UPnP**: your router opens the port when asked. Convenient, but not every router supports it well, and it is a weaker security boundary.
+Port forwarding is the reliable option for a server you keep running: a router rule that sends a given port to your machine's LAN IP. Most guides assume this setup.
 
-Give the machine running Docker a fixed local IP (static IP or a DHCP reservation in your router). Otherwise the forwarding rule can point at the wrong device after a reboot.
+UPnP asks the router to open a port automatically. Some routers handle it poorly, and it is a weaker security boundary than a fixed rule you chose.
 
-:::note[If it is not working]
-- **Same-network testing can lie to you.** Many home routers do not support NAT loopback, so visiting your own public IP from inside your network can fail even when it works for a friend elsewhere. Test from outside your network (mobile data works well) before assuming the setup is broken.
-- **CGNAT blocks port forwarding entirely.** If your ISP puts you behind Carrier-Grade NAT, forwarded ports never reach your router. Compare the WAN IP in your router admin page to your public IP from a site like whatismyip.com. If they differ, you are likely behind CGNAT and need a different approach (a VPS, a tunnel, or asking your ISP for a public IP).
-- **Check both TCP and UDP.** Most game servers need both. Forwarding one but not the other is a common miss. Check the port table on the server's guide.
-- **A host firewall can still block a forwarded port.** ufw, firewalld, and cloud provider security groups sit between the internet and the container even after the router is set up.
+Give the Docker host a fixed LAN IP (static assignment or a DHCP reservation). Otherwise the forwarding rule can point at the wrong device after a reboot.
+
+:::note[Connection troubleshooting]
+- Same-network testing can fail even when remote players connect fine. Many home routers lack NAT loopback, so your own public IP may not work from inside your network. Test from outside (mobile data off Wi-Fi is enough) before assuming the setup is broken.
+- CGNAT blocks port forwarding. Compare the WAN IP in your router admin to your public IP on a site like whatismyip.com. If they differ, you are likely behind carrier-grade NAT and need a VPS, a tunnel, or a public IP from your ISP.
+- Check both TCP and UDP. Most game servers need both protocols on the ports listed in the server's guide.
+- Host firewalls still block traffic after the router is configured. Check ufw, firewalld, and cloud security groups.
 :::
 
 ## Backup, restore, update, health checks

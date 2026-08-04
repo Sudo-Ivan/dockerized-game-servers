@@ -3,7 +3,7 @@ title: Starbound
 description: Starbound dedicated server via SteamCMD
 ---
 
-On first start the container downloads the Starbound dedicated server (Steam app 211820) into your data folder. It writes a default dockerized/starbound_server.config the first time that file is missing.
+On first start the container downloads the Starbound dedicated server (Steam app 211820) into your data folder. It writes a default starbound_server.config the first time that file is missing.
 
 :::note[Before you start]
 - Keep a data folder for the installed server, universe, and player data
@@ -17,7 +17,7 @@ On first start the container downloads the Starbound dedicated server (Steam app
 | --- | --- | --- |
 | 21025 | TCP | Game port (STARBOUND_PORT). Also used as steamPort in the generated config |
 
-rconPort 21026 is written into the generated config bound to 127.0.0.1 only, and it is not published by compose. Map it yourself and change rconBindAddress in dockerized/starbound_server.config if you want remote RCON.
+rconPort 21026 is written into the generated config bound to 127.0.0.1 only, and it is not published by compose. Map it yourself and change rconBindAddress in starbound_server.config if you want remote RCON.
 
 ## Settings
 
@@ -30,13 +30,13 @@ rconPort 21026 is written into the generated config bound to 127.0.0.1 only, and
 | STARBOUND_APP_ID | 211820 | Steam app ID to install |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code |
 
 See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
 
 ## First-start config
 
-The container only writes dockerized/starbound_server.config when the file does not already exist, using this template:
+The container only writes starbound_server.config when the file does not already exist, using this template:
 
 | Setting | Default value |
 | --- | --- |
@@ -54,7 +54,7 @@ STARBOUND_PORT and STARBOUND_BIND only affect this first write. After that, edit
 
 ## Data folder
 
-Your data folder mounts to /opt/starbound inside the container. It holds the installed server binary, dockerized/starbound_server.config, and everything under storage/ (universe, player, and world data) once Starbound creates it.
+Your data folder mounts to /opt/starbound inside the container. It holds the installed server binary, starbound_server.config, and everything under storage/ (universe, player, and world data) once Starbound creates it.
 
 ## Compose
 

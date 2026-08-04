@@ -27,7 +27,7 @@ Barotrauma uses UDP only for gameplay. Do not publish TCP on these ports.
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code |
 | BAROTRAUMA_APP_ID | 1026340 | Steam app ID to install |
 | BAROTRAUMA_FORCE_UPDATE | false | Re-download the server from Steam on next start |
 | BAROTRAUMA_EXTRA_ARGS | (empty) | Extra command-line flags added to the server launch |

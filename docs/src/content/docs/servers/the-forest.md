@@ -26,7 +26,7 @@ This image downloads and runs the native Linux dedicated server for The Forest t
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required for this server |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
 | FOREST_APP_ID | 556450 | Steam app id, shared by the server and the game |
 | FOREST_FORCE_UPDATE | false | Reinstall the server on next start |
 | FOREST_IP | 0.0.0.0 | Bind address (-serverip) |

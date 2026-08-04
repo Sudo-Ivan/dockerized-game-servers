@@ -13,6 +13,10 @@ const distRoot = path.join(docsDir, 'dist')
 const LINK_RE = /\]\(([^)]+)\)/g
 const SKIP_PREFIX = /^(https?:|mailto:|#)/
 
+// Broken when {{...}} tokens were replaced with dockerized/... by mistake.
+const CORRUPT_TOKEN_RE =
+	/dockerized\/(code>|code\b|empty|codec|anonymous|changeme|false|true|minecraft:|starbound_server|enshrouded_server|dayzOffline)/
+
 /**
  * @param {string} dir
  * @param {string[]} files
@@ -92,6 +96,9 @@ const errors = []
 
 for (const file of walkMd(contentRoot)) {
 	const text = readFileSync(file, 'utf8')
+	if (CORRUPT_TOKEN_RE.test(text)) {
+		errors.push(`${path.relative(contentRoot, file)}: corrupted token (dockerized/... where a template value or HTML tag was expected)`)
+	}
 	for (const match of text.matchAll(LINK_RE)) {
 		const href = match[1]
 		if (href.includes('{{')) continue

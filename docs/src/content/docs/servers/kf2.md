@@ -26,7 +26,7 @@ On first start the container downloads the Killing Floor 2 dedicated server thro
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
 | KF2_APP_ID | 232130 | Steam app id for the dedicated server download |
 | KF2_FORCE_UPDATE | false | Re-download and validate server files on next start |
 | STEAMCMD_WINDOWS_WORKAROUND | full | How SteamCMD fetches depots. full downloads a Windows pass first, then Linux. prime and off are lighter options |
@@ -63,7 +63,7 @@ The container reports healthy while the game server process is running. The KF2 
 
 ## Notes
 
-- The container starts as root, fixes ownership of the data folder, then runs the server as the dockerized/kf2 user (uid 1000).
+- The container starts as root, fixes ownership of the data folder, then runs the server as the kf2 user (uid 1000).
 - Steam client libraries are copied into the data folder on every start, even when KF2_FORCE_UPDATE is not set.
 - Compose sets a 4 GB memory limit and a 90 second stop grace period. The image sends SIGTERM on stop.
 

@@ -27,7 +27,7 @@ This image downloads the Sniper Elite 4 dedicated server through Steam and runs 
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
 | SE4_APP_ID | 568880 | Steam app id for the dedicated server tool |
 | SE4_STEAM_APP_ID | 312660 | Game app id, written to steam_appid.txt |
 | SE4_FORCE_UPDATE | false | Reinstall the server on next start |

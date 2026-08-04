@@ -30,7 +30,7 @@ On first start the container downloads the Eco dedicated server (Steam app 73959
 | ECO_APP_ID | 739590 | Steam app ID to install |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password, needed alongside a real STEAM_USERNAME |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code for the login step |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code for the login step |
 | STEAMCMD_WINDOWS_WORKAROUND | prime | SteamCMD platform-login workaround. Other values are full and off |
 
 See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.

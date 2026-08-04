@@ -32,7 +32,7 @@ Before every start the container also writes steam_appid.txt with the game's cli
 | SEVENDTD_APP_ID | 294420 | Steam app ID to install |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code |
 
 See [Quick start](/guides/quick-start/) if you need to log in with a real Steam account for the install step.
 

@@ -1,12 +1,12 @@
 ---
 title: Home
-description: Run a game server for you and your friends in one command, no manual installs.
+description: Docker images and compose files for dedicated game servers.
 template: splash
 editUrl: false
 lastUpdated: false
 hero:
   title: Dockerized Game Servers
-  tagline: Run a dedicated server for you and your friends in one command. Minecraft, Valheim, Palworld, DayZ, and 30+ more.
+  tagline: Compose files and GHCR images for 50+ dedicated servers, including Minecraft, Valheim, Palworld, and DayZ.
   actions:
     - text: Quick start
       link: /guides/quick-start/
@@ -16,17 +16,18 @@ hero:
       variant: minimal
 ---
 
-Want to host your own game server without fighting SteamCMD, missing libraries, or a wiki page from five years ago? Pick a game, copy one command, and you have a server running. Everything needed to download and run the actual game server software is already packaged up for you.
+Each game has a folder under `dockerized/` with a Dockerfile, compose file, and a `data/` volume for saves and config. Published images live on GHCR. Set `IMAGE_OWNER` to your fork if you publish your own builds.
 
-## Why this instead of doing it by hand
+## Compared to a manual install
 
-- **One command to start.** Every server uses the same docker compose or docker run pattern, so learning one game's setup gets you most of the way to every other one.
-- **You keep your data.** Worlds, saves, and configs live in a folder on your machine (usually ./data next to each server), so updating or restarting the container never wipes progress.
-- **Updates and backups without guesswork.** A single [ops tool](guides/ops/) can back up, restore, and update most servers with one command each.
-- **Runs anywhere Docker runs.** Your own PC, a home server, or a cheap VPS, no subscription and no vendor lock-in.
-- **Free and open.** Everything here is 0BSD licensed. Fork it, self-host it, publish your own copies.
+- Same compose layout for every game: `docker compose -f dockerized/<game>/docker-compose.yml up`
+- Saves and configs stay on disk in `./data`, or in game-specific paths (Arma 3 splits server, configs, and profiles)
+- `./tools/gs` backs up, restores, and updates most servers from the host
+- Runs on any machine with Docker Engine, including a VPS
 
-## Popular picks
+License is 0BSD. Fork it, self-host the docs, publish your own images.
+
+## Popular servers
 
 | Game | Guide |
 | --- | --- |
@@ -39,20 +40,20 @@ Want to host your own game server without fighting SteamCMD, missing libraries, 
 | Terraria | [Guide](servers/terraria/) |
 | Factorio | [Guide](servers/factorio/) |
 
-Those are just the familiar names. See [All servers](reference/servers/) for the full list, over 35 games and counting.
+[All servers](reference/servers/) lists every compose path and image name.
 
-## No terminal? No problem
+## Browser generators
 
-The [Tools](tools/) page has browser-based generators that build a server.properties, server.cfg, or a ready-to-paste docker run command for you. No command line knowledge required to get started.
+The [Tools](tools/) page builds `server.properties`, Arma 3 `server.cfg`, and docker run or compose snippets in the browser. Nothing is uploaded.
 
-## How it works, in three steps
+## Getting a server running
 
 1. Pick a game from [All servers](reference/servers/).
-2. Copy the docker compose command from that game's guide.
-3. Run it. Your friends connect using your address and the port shown on the same page.
+2. Copy the compose command from that game's guide.
+3. Run it. Friends connect to your public IP on the ports listed on the guide page.
 
 Full walkthrough: [Quick start](guides/quick-start/).
 
-## Curious how it is built
+## Images and CI
 
-Every image is small on purpose and shares a handful of common bases under `dockerized/bases/` (a Java runtime for Minecraft, SteamCMD for Steam-downloaded games, a slim Linux runtime for everything else) so they are easy to keep secure and up to date. That side of things lives in [Images](reference/images/) and [CI](reference/ci/) if you want to build your own copies or contribute.
+First-party images share bases under `dockerized/bases/`: `minecraft-base` (Java), `steam-base` (SteamCMD), and `runtime-base` (Debian slim for non-Steam binaries). See [Images](reference/images/) for GHCR names and [CI](reference/ci/) for build and publish workflows.

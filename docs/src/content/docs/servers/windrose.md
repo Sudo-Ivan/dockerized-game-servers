@@ -25,7 +25,7 @@ This image downloads the Windrose dedicated server through Steam and runs the Wi
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
 | WINDROSE_APP_ID | 4129620 | Steam app id for the dedicated server tool |
 | WINDROSE_FORCE_UPDATE | false | Reinstall the server on next start |
 | WINDROSE_SERVER_NAME | Windrose Server | Server name in ServerDescription.json |

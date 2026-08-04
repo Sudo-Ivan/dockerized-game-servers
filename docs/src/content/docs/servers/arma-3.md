@@ -3,7 +3,7 @@ title: Arma 3
 description: Arma 3 dedicated server with SteamCMD and workshop preset sync.
 ---
 
-This image installs the Arma 3 dedicated server through SteamCMD and can download workshop mods from an HTML preset at startup. You usually need a Steam account that owns the server DLC, not anonymous login.
+This image installs the Arma 3 dedicated server through SteamCMD and can download workshop mods from an HTML preset at startup. SteamCMD needs a Steam account that owns the server DLC. Anonymous login does not work.
 
 :::note[Before you start]
 - Keep separate folders for server files, configs, profiles, and cache (see Data folders below)
@@ -97,9 +97,11 @@ docker run -d --name arma3 --restart unless-stopped --init \
   {{IMAGE_PREFIX}}/arma-3:latest
 ```
 
+## Backup and updates
+
+`./tools/gs backup arma-3` archives server, configs, and profiles. The cache folder is skipped because it rebuilds on the next sync. `./tools/gs update arma-3` is not supported.
+
 ## See also
 
 - [All servers](/reference/servers/) for compose paths and image names
-- [Ops](/guides/ops/) for ./tools/gs backup and restore
-
-./tools/gs backup arma-3 backs up server, configs, and profiles. The cache folder is left out since it regenerates on the next sync. ./tools/gs update arma-3 is not available for this server. See [Ops](/guides/ops/) for what does work.
+- [Ops](/guides/ops/) for backup, restore, and which servers support update

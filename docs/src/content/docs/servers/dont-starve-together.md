@@ -27,7 +27,7 @@ On first start the container downloads the Don't Starve Together Linux dedicated
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code |
 | DST_APP_ID | 343050 | Steam app ID to install |
 | DST_FORCE_UPDATE | false | Re-download the server from Steam on next start |
 | DST_CLUSTER | Cluster_1 | Cluster folder name under klei/DoNotStarveTogether/ |

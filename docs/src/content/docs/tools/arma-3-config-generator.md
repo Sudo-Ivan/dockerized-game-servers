@@ -116,7 +116,7 @@ Have fun and follow the rules.</textarea>
 </label>
 
 <label class="a3cfg-field">
-<span>VoN dockerized/codec</span>
+<span>VoN codec</span>
 <select id="a3cfg-vonCodec">
 <option value="0">SPEEX</option>
 <option value="1" selected>OPUS</option>
@@ -124,7 +124,7 @@ Have fun and follow the rules.</textarea>
 </label>
 
 <label class="a3cfg-field">
-<span>VoN dockerized/codec quality <small>(1-20 OPUS, 1-10 SPEEX)</small></span>
+<span>VoN codec quality <small>(1-20 OPUS, 1-10 SPEEX)</small></span>
 <input type="number" id="a3cfg-vonCodecQuality" value="15" min="1" max="20" />
 </label>
 

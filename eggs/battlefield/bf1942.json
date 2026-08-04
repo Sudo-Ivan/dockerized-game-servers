@@ -4,7 +4,7 @@
     "version": "PTDL_v2",
     "update_url": null
   },
-  "exported_at": "2026-08-03T16:48:42+00:00",
+  "exported_at": "2026-08-04T01:53:12+00:00",
   "name": "Battlefield 1942",
   "author": "sudo-ivan@users.noreply.github.com",
   "description": "Battlefield 1942 using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/bf1942:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 14567/udp, 23000/tcp",

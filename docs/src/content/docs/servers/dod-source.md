@@ -8,7 +8,7 @@ On first start the container downloads the Day of Defeat: Source dedicated serve
 :::note[Before you start]
 - Open TCP port 27015, UDP port 27015, and UDP port 27005
 - Keep a data folder mounted at /opt/dod-source inside the container
-- Anonymous Steam login usually works. If the install fails, set STEAM_USERNAME and STEAM_PASSWORD for an account that owns Day of Defeat: Source. Add STEAM_GUARD_CODE if Steam asks for it
+- SteamCMD defaults to anonymous login. If download fails, set STEAM_USERNAME and STEAM_PASSWORD for an account that owns Day of Defeat: Source. Add STEAM_GUARD_CODE if Steam asks for it
 - Set DOD_GSLT if you want the server to show up in the public server browser
 :::
 
@@ -26,7 +26,7 @@ On first start the container downloads the Day of Defeat: Source dedicated serve
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
 | DOD_APP_ID | 232290 | Steam app id for the dedicated server download |
 | DOD_FORCE_UPDATE | false | Re-download and validate server files on next start |
 | STEAMCMD_WINDOWS_WORKAROUND | full | How SteamCMD fetches depots. full downloads a Windows pass first, then Linux. prime and off are lighter options |

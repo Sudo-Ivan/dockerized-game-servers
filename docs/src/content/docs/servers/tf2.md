@@ -9,7 +9,7 @@ On first start the container downloads the Team Fortress 2 dedicated server thro
 - Open TCP port 27015, UDP port 27015, and UDP port 27005
 - Keep a data folder mounted at /opt/tf2 inside the container
 - Give the container at least 4 GB of RAM
-- Anonymous Steam login usually works. If the install fails, set STEAM_USERNAME and STEAM_PASSWORD for an account that owns Team Fortress 2. Add STEAM_GUARD_CODE if Steam asks for it
+- SteamCMD defaults to anonymous login. If download fails, set STEAM_USERNAME and STEAM_PASSWORD for an account that owns Team Fortress 2. Add STEAM_GUARD_CODE if Steam asks for it
 - Set TF2_GSLT if you want the server to show up in the public server browser
 :::
 
@@ -27,7 +27,7 @@ On first start the container downloads the Team Fortress 2 dedicated server thro
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
 | TF2_APP_ID | 232250 | Steam app id for the dedicated server download |
 | TF2_FORCE_UPDATE | false | Re-download and validate server files on next start |
 | STEAMCMD_WINDOWS_WORKAROUND | full | How SteamCMD fetches depots. full downloads a Windows pass first, then Linux. prime and off are lighter options |

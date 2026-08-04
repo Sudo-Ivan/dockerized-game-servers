@@ -24,7 +24,7 @@ On first start the container downloads the Project Zomboid Linux dedicated serve
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not anonymous |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code for the login above |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code for the login above |
 | PZ_APP_ID | 380870 | Steam app ID for the dedicated server |
 | PZ_FORCE_UPDATE | false | Re-download the server from Steam on next start |
 | PZ_SERVER_NAME | servertest | Server profile name. Controls the .ini file and save folder |

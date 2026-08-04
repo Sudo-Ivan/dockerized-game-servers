@@ -9,7 +9,7 @@ On first start the container downloads the Counter-Strike 2 dedicated server thr
 - Open TCP port 27015, UDP port 27015, and UDP port 27020
 - Keep a data folder mounted at /opt/cs2 inside the container
 - Give the container at least 8 GB of RAM
-- Anonymous Steam login usually works. If the install fails, set STEAM_USERNAME and STEAM_PASSWORD. Add STEAM_GUARD_CODE if Steam asks for it
+- SteamCMD defaults to anonymous login. If download fails, set STEAM_USERNAME and STEAM_PASSWORD. Add STEAM_GUARD_CODE if Steam asks for it
 - Set CS2_GSLT if you want the server to show up in the public server browser
 :::
 
@@ -27,7 +27,7 @@ On first start the container downloads the Counter-Strike 2 dedicated server thr
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
 | CS2_APP_ID | 730 | Steam app id for the dedicated server download |
 | CS2_FORCE_UPDATE | false | Re-download and validate server files on next start |
 | CS2_PORT | 27015 | Game port |

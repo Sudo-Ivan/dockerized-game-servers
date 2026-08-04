@@ -39,7 +39,7 @@ For direct connect instead of SDR, set SERVER_PORT (and optionally SERVER_IP) an
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not anonymous |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code for the login above |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code for the login above |
 | CK_APP_ID | 1963720 | Steam app ID for the Core Keeper dedicated server |
 | CK_STEAMWORKS_APP_ID | 1007 | Steamworks Common Redistributables app ID, installed alongside the server |
 | CK_FORCE_UPDATE | false | Re-download both app IDs from Steam on next start |

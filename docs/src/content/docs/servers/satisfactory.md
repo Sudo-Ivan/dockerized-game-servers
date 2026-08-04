@@ -26,7 +26,7 @@ On first start the container downloads the Satisfactory Linux dedicated server (
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code |
 | SATISFACTORY_APP_ID | 1690800 | Steam app ID to install |
 | SATISFACTORY_FORCE_UPDATE | false | Re-download the server from Steam on next start |
 | SATISFACTORY_PORT | 7777 | Game TCP/UDP port, passed as -Port= |

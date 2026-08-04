@@ -201,6 +201,15 @@ docker run -d --name factorio --restart unless-stopped --init \
   ghcr.io/sudo-ivan/dockerized-game-servers/factorio:latest
 ```
 
+Vintage Story:
+
+```bash
+docker run -d --name vintage-story --restart unless-stopped --init \
+  -p 42420:42420/tcp -p 42420:42420/udp \
+  -v "$PWD/dockerized/vintage-story/data:/opt/vintage-story/data" \
+  ghcr.io/sudo-ivan/dockerized-game-servers/vintage-story:latest
+```
+
 7 Days to Die:
 
 ```bash
@@ -408,7 +417,7 @@ docker run -d --name openmohaa --restart unless-stopped --init \
 Arma 3:
 
 ```bash
-docker run -d --name arma3 --restart unless-stopped \
+docker run -d --name arma3 --restart unless-stopped --init \
   -p 2302-2306:2302-2306/udp \
   -v "$PWD/dockerized/arma/arma-3/server:/home/arma3/server" \
   -v "$PWD/dockerized/arma/arma-3/configs:/home/arma3/configs" \
@@ -583,7 +592,7 @@ Steam App 739590. **Requires `ECO_USER_TOKEN`** from the Eco client. UDP 3000 an
 
 ### Enshrouded
 
-Steam App 2278520 (Windows server via Wine). UDP 15636 (game) and 15637 (query). `dockerized/enshrouded_server.json` is generated in `dockerized/enshrouded/data/` on first start. Allocate at least 8 GB RAM. Updates: `ENSHROUDED_FORCE_UPDATE=true`.
+Steam App 2278520 (Windows server via Wine). UDP 15636 (game) and 15637 (query). `enshrouded_server.json` is generated in `dockerized/enshrouded/data/` on first start. Allocate at least 8 GB RAM. Updates: `ENSHROUDED_FORCE_UPDATE=true`.
 
 ### Palworld
 
@@ -591,7 +600,7 @@ Steam App 2394010. Saves and `PalWorldSettings.ini` under `dockerized/palworld/d
 
 ### Starbound
 
-Steam App 211820. Writes `dockerized/starbound_server.config` on first start if missing. Default TCP 21025.
+Steam App 211820. Writes `starbound_server.config` on first start if missing. Default TCP 21025.
 
 ### Longvinter
 

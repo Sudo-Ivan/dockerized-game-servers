@@ -37,7 +37,7 @@ The Wine prefix is baked into the image at build time, not stored in any mounted
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
 | SE_APP_ID | 298740 | Steam app id for the dedicated server tool |
 | SE_GAME_APP_ID | 244850 | Space Engineers game app id, written to steam_appid.txt |
 | SE_FORCE_UPDATE | false | Reinstall the server on next start |

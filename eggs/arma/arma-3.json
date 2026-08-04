@@ -4,10 +4,10 @@
     "version": "PTDL_v2",
     "update_url": null
   },
-  "exported_at": "2026-08-03T16:48:42+00:00",
+  "exported_at": "2026-08-04T01:53:12+00:00",
   "name": "Arma 3",
   "author": "sudo-ivan@users.noreply.github.com",
-  "description": "Arma 3 using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/arma-3:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 2302/udp, 2303/udp, 2304/udp, 2305/udp, 2306/udp, 9283/tcp Place modlist.html in server/modlist.html under the server data directory for workshop mod sync. Web panel on TCP 9283 (missions, config, mod sync, RCON). Set PANEL_PASSWORD when exposing the panel.",
+  "description": "Arma 3 using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/arma-3:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 2302/udp, 2303/udp, 2304/udp, 2305/udp, 2306/udp Place modlist.html in server/modlist.html under the server data directory for workshop mod sync.",
   "features": null,
   "docker_images": {
     "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/arma-3:latest"
@@ -89,123 +89,23 @@
       "field_type": "text"
     },
     {
-      "name": "Panel Game",
-      "description": "Container environment PANEL_GAME.",
-      "env_variable": "PANEL_GAME",
-      "default_value": "arma3",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": "required|string|max:512",
-      "field_type": "text"
-    },
-    {
-      "name": "Panel Port",
-      "description": "Container environment PANEL_PORT.",
-      "env_variable": "PANEL_PORT",
-      "default_value": "9283",
+      "name": "Arma Port",
+      "description": "Container environment ARMA_PORT.",
+      "env_variable": "ARMA_PORT",
+      "default_value": "2302",
       "user_viewable": true,
       "user_editable": true,
       "rules": "nullable|integer|between:0,65535",
       "field_type": "text"
     },
     {
-      "name": "Panel Addr",
-      "description": "Container environment PANEL_ADDR.",
-      "env_variable": "PANEL_ADDR",
-      "default_value": ":9283",
+      "name": "Arma World",
+      "description": "Container environment ARMA_WORLD.",
+      "env_variable": "ARMA_WORLD",
+      "default_value": "empty",
       "user_viewable": true,
       "user_editable": true,
       "rules": "required|string|max:512",
-      "field_type": "text"
-    },
-    {
-      "name": "Panel Password",
-      "description": "Container environment PANEL_PASSWORD.",
-      "env_variable": "PANEL_PASSWORD",
-      "default_value": "",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": "nullable|string|max:512",
-      "field_type": "text"
-    },
-    {
-      "name": "Panel Session Secret",
-      "description": "Container environment PANEL_SESSION_SECRET.",
-      "env_variable": "PANEL_SESSION_SECRET",
-      "default_value": "",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": "nullable|string|max:512",
-      "field_type": "text"
-    },
-    {
-      "name": "Panel Allowed Ips",
-      "description": "Container environment PANEL_ALLOWED_IPS.",
-      "env_variable": "PANEL_ALLOWED_IPS",
-      "default_value": "",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": "nullable|string|max:512",
-      "field_type": "text"
-    },
-    {
-      "name": "Panel Login Max Attempts",
-      "description": "Container environment PANEL_LOGIN_MAX_ATTEMPTS.",
-      "env_variable": "PANEL_LOGIN_MAX_ATTEMPTS",
-      "default_value": "5",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": "nullable|integer|between:0,65535",
-      "field_type": "text"
-    },
-    {
-      "name": "Panel Login Lockout",
-      "description": "Container environment PANEL_LOGIN_LOCKOUT.",
-      "env_variable": "PANEL_LOGIN_LOCKOUT",
-      "default_value": "900",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": "nullable|integer|between:0,65535",
-      "field_type": "text"
-    },
-    {
-      "name": "Panel Scheduled Restart",
-      "description": "Container environment PANEL_SCHEDULED_RESTART.",
-      "env_variable": "PANEL_SCHEDULED_RESTART",
-      "default_value": "",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": "nullable|string|max:512",
-      "field_type": "text"
-    },
-    {
-      "name": "Panel Scheduled Restart Warn",
-      "description": "Container environment PANEL_SCHEDULED_RESTART_WARN.",
-      "env_variable": "PANEL_SCHEDULED_RESTART_WARN",
-      "default_value": "15,5,1",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": "required|string|max:512",
-      "field_type": "text"
-    },
-    {
-      "name": "Panel Webhook Url",
-      "description": "Container environment PANEL_WEBHOOK_URL.",
-      "env_variable": "PANEL_WEBHOOK_URL",
-      "default_value": "",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": "nullable|string|max:512",
-      "field_type": "text"
-    },
-    {
-      "name": "Panel Auto Start",
-      "description": "Container environment PANEL_AUTO_START.",
-      "env_variable": "PANEL_AUTO_START",
-      "default_value": "true",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": "nullable|boolean",
       "field_type": "text"
     },
     {

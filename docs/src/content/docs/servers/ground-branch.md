@@ -25,7 +25,7 @@ This image downloads the Ground Branch dedicated server through Steam and runs t
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used to download the server |
 | STEAM_PASSWORD | (empty) | Steam password, required when using a real account |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code if prompted during login |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code if prompted during login |
 | GB_APP_ID | 476400 | Steam app id for the dedicated server tool |
 | GB_STEAM_APP_ID | 16900 | Ground Branch game app id, written to steam_appid.txt on every start |
 | GB_FORCE_UPDATE | false | Reinstall the server on next start |

@@ -26,7 +26,7 @@ Official reference: [DayZ: Hosting a Linux Server](https://community.bohemia.net
 | --- | --- | --- |
 | STEAM_USERNAME | (empty, required) | Steam account that owns DayZ |
 | STEAM_PASSWORD | (empty, required) | Password for STEAM_USERNAME |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code for the login step |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code for the login step |
 | STEAMCMD_WINDOWS_WORKAROUND | off | SteamCMD depot fetch mode (full, prime, or off) |
 | DAYZ_APP_ID | 223350 | SteamCMD app id for the dedicated server |
 | DAYZ_FORCE_UPDATE | false | Re-run SteamCMD for the server depot |
@@ -131,7 +131,7 @@ After first install, configure BattlEye under dockerized/dayz/data/battleye/. Se
 
 ## Persistence and missions
 
-Default generated config uses dockerized/dayzOffline.chernarusplus. Other maps use different mission templates under mpmissions/. Back up profiles/ and any custom mission folders before major updates.
+Default generated config uses dayzOffline.chernarusplus. Other maps use different mission templates under mpmissions/. Back up profiles/ and any custom mission folders before major updates.
 
 ## Compose
 

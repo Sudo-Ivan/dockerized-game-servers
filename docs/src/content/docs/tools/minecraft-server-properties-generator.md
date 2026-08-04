@@ -27,10 +27,10 @@ Everything runs in your browser. Nothing is sent to a server.
 <label class="mcprops-field">
 <span>Level type</span>
 <select id="mcprops-level-type">
-<option value="dockerized/minecraft:normal" selected>Normal</option>
-<option value="dockerized/minecraft:flat">Flat</option>
-<option value="dockerized/minecraft:large_biomes">Large biomes</option>
-<option value="dockerized/minecraft:amplified">Amplified</option>
+<option value="minecraft:normal" selected>Normal</option>
+<option value="minecraft:flat">Flat</option>
+<option value="minecraft:large_biomes">Large biomes</option>
+<option value="minecraft:amplified">Amplified</option>
 </select>
 </label>
 

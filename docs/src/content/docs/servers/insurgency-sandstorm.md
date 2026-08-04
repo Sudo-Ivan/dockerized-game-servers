@@ -25,7 +25,7 @@ On first start the container downloads the Linux dedicated server (Steam app 581
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam account used to download server files |
 | STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME when not using anonymous login |
-| STEAM_GUARD_CODE | (empty) | One-time Steam Guard dockerized/code if Steam challenges the login |
+| STEAM_GUARD_CODE | (empty) | One-time Steam Guard code if Steam challenges the login |
 | STEAMCMD_WINDOWS_WORKAROUND | prime | How SteamCMD fetches depots. full, prime, and off control how much is downloaded |
 | INS_SANDSTORM_APP_ID | 581330 | Steam app id for the dedicated server download |
 | INS_SANDSTORM_FORCE_UPDATE | false | Re-download and validate server files on next start |
@@ -43,13 +43,13 @@ Set tokens in docker-compose.yml, a .env file, or with -e on docker run. The con
 
 ## GSLT and GameStats token
 
-**GSLT (Game Server Login Token)**
+### GSLT (Game Server Login Token)
 
 1. Sign in with your Steam account at [Steam game server account management](https://steamcommunity.com/dev/managegameservers).
 2. Create a token for Insurgency: Sandstorm (app id 581320).
 3. Set INS_SANDSTORM_GSLT to that token. The server passes -GSLTToken on startup.
 
-**GameStats token**
+### GameStats token
 
 1. Connect with Steam at [Sandstorm GameStats](https://gamestats.sandstorm.game/).
 2. Copy your GameStats token.

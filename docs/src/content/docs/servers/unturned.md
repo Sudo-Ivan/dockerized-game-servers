@@ -28,7 +28,7 @@ Unturned uses UDP only for gameplay. Do not publish TCP on these ports.
 | --- | --- | --- |
 | STEAM_USERNAME | anonymous | Steam login used during the install step |
 | STEAM_PASSWORD | (empty) | Steam password |
-| STEAM_GUARD_CODE | (empty) | Steam Guard dockerized/code |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code |
 | UNTURNED_APP_ID | 1110390 | SteamCMD app ID for the dedicated server depot |
 | UNTURNED_FORCE_UPDATE | false | Re-download the server from Steam on next start |
 | UNTURNED_SERVER_NAME | UnturnedServer | Internet server slot name, passed as +InternetServer/name |

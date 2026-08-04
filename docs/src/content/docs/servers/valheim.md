@@ -20,23 +20,23 @@ Common options for vanilla and Plus unless noted:
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| STEAM_USERNAME | dockerized/anonymous | Steam login for install and updates |
-| STEAM_PASSWORD | dockerized/empty | Password for STEAM_USERNAME, unused when anonymous |
-| STEAM_GUARD_CODE | dockerized/empty | Steam Guard dockerized/code, unused when anonymous |
+| STEAM_USERNAME | anonymous | Steam login for install and updates |
+| STEAM_PASSWORD | (empty) | Password for STEAM_USERNAME, unused when anonymous |
+| STEAM_GUARD_CODE | (empty) | Steam Guard code, unused when anonymous |
 | SERVER_NAME | Valheim Server (Valheim Plus Server for Plus) | Public server name |
 | SERVER_PORT | 2456 | Game port (publish UDP 2456-2458) |
 | WORLD_NAME | Dedicated | Save name under the data folder |
-| SERVER_PASS | dockerized/changeme in compose (secret in the image alone) | Join password. Set a real value. |
+| SERVER_PASS | changeme in compose (secret in the image alone) | Join password. Set a real value. |
 | SERVER_PUBLIC | 1 | List on the public server browser |
-| SERVER_LOGINTOKEN | dockerized/empty | Optional [Steam Game Server Login Token](https://steamcommunity.com/dev/managegameservers). Adds crossplay when set. |
-| VALHEIM_FORCE_UPDATE | dockerized/false | Set true to force a Steam reinstall. Same flag ./tools/gs update valheim sets. |
+| SERVER_LOGINTOKEN | (empty) | Optional [Steam Game Server Login Token](https://steamcommunity.com/dev/managegameservers). Adds crossplay when set. |
+| VALHEIM_FORCE_UPDATE | false | Set true to force a Steam reinstall. Same flag ./tools/gs update valheim sets. |
 
 Valheim Plus only:
 
 | Setting | Default | What it does |
 | --- | --- | --- |
 | VALHEIM_PLUS_VERSION | 0.9.17.1 | ValheimPlus release to install |
-| VALHEIM_PLUS_FORCE_INSTALL | dockerized/false | Reinstall Plus even if the version marker matches. Used by ./tools/gs update valheim-plus with VALHEIM_FORCE_UPDATE. |
+| VALHEIM_PLUS_FORCE_INSTALL | false | Reinstall Plus even if the version marker matches. Used by ./tools/gs update valheim-plus with VALHEIM_FORCE_UPDATE. |
 | VALHEIM_PLUS_URL | GitHub release URL for VALHEIM_PLUS_VERSION | Override the Plus archive download URL |
 
 World and config files live under dockerized/valheim/<variant>/data/ on the host after first start.
