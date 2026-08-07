@@ -29,8 +29,6 @@ COPY --chmod=755 healthcheck.sh /healthcheck.sh
 
 WORKDIR ${VS_ROOT}
 
-USER vintagestory
-
 EXPOSE 42420/tcp 42420/udp
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
