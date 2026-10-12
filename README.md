@@ -43,6 +43,8 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Call of Duty 4 | `dockerized/cod4` | `cod4` |
 | Quake 3: Arena | `dockerized/quake3` | `quake3` |
 | Return to Castle Wolfenstein | `dockerized/rtcw` | `rtcw` |
+| RTCW Cooperative | `dockerized/rtcwcoop` | `rtcwcoop` |
+| Pumpkin (Minecraft, Rust) | `dockerized/pumpkin` | `pumpkin` |
 | ET: Legacy | `dockerized/etl` | `etl` |
 | Eco | `dockerized/eco` | `eco` |
 | Enshrouded | `dockerized/enshrouded` | `enshrouded` |
@@ -589,6 +591,14 @@ LinuxGSM Q3 dedicated archive. Default UDP 27960, map `q3dm17`. Data under `dock
 
 LinuxGSM [ioRTCW](http://linuxgsm.download/ReturnToCastleWolfenstein/) server archive. Default UDP 27960, map `mp_beach`. Data under `dockerized/rtcw/data`.
 
+### RTCW Cooperative
+
+[RTCWCoop](https://github.com/rtcwcoop/rtcwcoop) 1.0.2 dedicated server for the co-op single player campaign, built from the ioRTCW archive, the iortcw 1.41 patch data, and the id wolf-linux installer. **You must copy `main/sp_pak1.pk3` from your own RTCW install** into `dockerized/rtcwcoop/data/main/` before the server will start. Default UDP 27960, campaign start map `escape1`, max 8 players. Data under `dockerized/rtcwcoop/data`.
+
+### Pumpkin
+
+[Pumpkin](https://github.com/Pumpkin-MC/Pumpkin) dedicated server (Rust Minecraft server, Java and Bedrock) from upstream release binaries. Default TCP 25565 (Java), UDP 19132/19133 (Bedrock). World and `pumpkin.toml` under `dockerized/pumpkin/data`.
+
 ### ET: Legacy
 
 [GameServerManagers etlserver-build](https://github.com/GameServerManagers/etlserver-build) bundle (32-bit `etlded`). Default UDP 27960 (game) and 27961 (status). Map `oasis`, gametype `4` (objective). Set `ETL_FORCE_UPDATE=true` to re-fetch the bundle into the volume. Data under `dockerized/etl/data`.
@@ -721,6 +731,8 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `cod4` | Call of Duty 4 dedicated (CoD4x / LinuxGSM files) |
 | `quake3` | Quake 3: Arena dedicated (LinuxGSM files) |
 | `rtcw` | Return to Castle Wolfenstein dedicated (ioRTCW / LinuxGSM files) |
+| `rtcwcoop` | RTCWCoop cooperative campaign dedicated (BYO sp_pak1.pk3) |
+| `pumpkin` | Pumpkin dedicated (Rust Minecraft server, upstream binary) |
 | `etl` | ET: Legacy dedicated (etlserver-build) |
 | `eco` | Eco dedicated (Steam) |
 | `enshrouded` | Enshrouded dedicated (Wine) |
@@ -835,6 +847,8 @@ dockerized/
   gmod/            Garry's Mod
   delta-force-bhd/ Delta Force: Black Hawk Down (Wine, BYO game files)
   openmohaa/       OpenMoHAA
+  rtcwcoop/        RTCW cooperative campaign
+  pumpkin/         Pumpkin (Rust Minecraft server)
   arma/arma-3/     Arma 3
   arma/reforger/   Arma Reforger
   dayz/            DayZ

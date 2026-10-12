@@ -1,0 +1,79 @@
+ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/runtime-base:latest
+FROM ${BASE_IMAGE} AS fetch
+
+# ioRTCW archive carries the redistributable RTCW 1.41 data (main/pak0.pk3 and
+# the mp_* point release packs) shared with the rtcw image.
+RUN LGSM_URL="http://linuxgsm.download/ReturnToCastleWolfenstein/iortcw-1.51c-x86_64-server-linux-20190507.tar.xz" \
+    LGSM_MD5="df6ff664d37dd0d22787848bdb3cac5f" \
+    bash -c 'set -eu; . /usr/local/bin/linuxgsm-tar-install.sh; lgsm_tar_install "${LGSM_URL}" "${LGSM_MD5}" /opt/rtcwcoop' \
+  && rm -f /opt/rtcwcoop/iowolfded.x86_64 /opt/rtcwcoop/iortcw.x86_64 \
+  && chmod -R a+rX /opt/rtcwcoop
+
+# RTCWCoop dedicated binary and the coopmain mod directory.
+RUN bash -c 'set -eu; \
+  . /usr/local/bin/http-download.sh; \
+  http_download_file \
+    "https://github.com/rtcwcoop/rtcwcoop/releases/download/1.0.2/rtcwcoop-1.0.2-linux-x86_64.zip" \
+    /tmp/coop.zip; \
+  echo "07bacb0e06b6a87815cb9e095b672c5e  /tmp/coop.zip" | md5sum -c -; \
+  unzip -o -q /tmp/coop.zip \
+    "rtcwcoop-1.0.2-linux-x86_64/rtcwcoopded.x86_64" \
+    "rtcwcoop-1.0.2-linux-x86_64/coopmain/*" \
+    -d /tmp/coop; \
+  cp -a /tmp/coop/rtcwcoop-1.0.2-linux-x86_64/rtcwcoopded.x86_64 /opt/rtcwcoop/; \
+  cp -a /tmp/coop/rtcwcoop-1.0.2-linux-x86_64/coopmain /opt/rtcwcoop/; \
+  rm -rf /tmp/coop /tmp/coop.zip'
+
+# 1.41 point release single player packs (sp_pak3, sp_pak4) from the iortcw
+# patch data.
+RUN bash -c 'set -eu; \
+  . /usr/local/bin/http-download.sh; \
+  http_download_file \
+    "https://github.com/iortcw/iortcw/releases/download/1.51c/patch-data-141.zip" \
+    /tmp/patch.zip; \
+  echo "291a37caa9d65d0b81f767918b76fa56  /tmp/patch.zip" | md5sum -c -; \
+  unzip -o -q /tmp/patch.zip "main/sp_pak3.pk3" "main/sp_pak4.pk3" -d /tmp/patch; \
+  cp -a /tmp/patch/main/sp_pak3.pk3 /tmp/patch/main/sp_pak4.pk3 /opt/rtcwcoop/main/; \
+  rm -rf /tmp/patch /tmp/patch.zip'
+
+# sp_pak2.pk3 ships in the id wolf-linux-1.41b makeself installer.
+RUN bash -c 'set -eu; \
+  . /usr/local/bin/http-download.sh; \
+  http_download_file \
+    "https://ftpmirror2.infania.net/pub/idsoftware/wolf/linux/wolf-linux-1.41b.x86.run" \
+    /tmp/wolf.run; \
+  echo "2aa37968aff19d665ed6c001773b2de3  /tmp/wolf.run" | md5sum -c -; \
+  sh /tmp/wolf.run --noexec --target /tmp/wolf >/dev/null; \
+  cp -a /tmp/wolf/main/sp_pak2.pk3 /opt/rtcwcoop/main/; \
+  rm -rf /tmp/wolf /tmp/wolf.run'
+
+ARG BASE_IMAGE=ghcr.io/sudo-ivan/dockerized-game-servers/runtime-base:latest
+FROM ${BASE_IMAGE}
+
+LABEL org.opencontainers.image.title="rtcwcoop" \
+      org.opencontainers.image.description="Return to Castle Wolfenstein cooperative campaign dedicated server (RTCWCoop)" \
+      org.opencontainers.image.licenses="ISC"
+
+RUN useradd -m -u 1000 rtcwcoop \
+  && mkdir -p /opt/rtcwcoop \
+  && chown -R rtcwcoop:rtcwcoop /opt/rtcwcoop
+
+COPY --from=fetch --chown=rtcwcoop:rtcwcoop /opt/rtcwcoop /usr/share/rtcwcoop-seed
+
+ENV RTCWCOOP_DIR="/opt/rtcwcoop" \
+    RTCWCOOP_SEED_DIR="/usr/share/rtcwcoop-seed"
+
+COPY --chmod=755 container-entrypoint.sh /container-entrypoint.sh
+COPY --chown=rtcwcoop:rtcwcoop --chmod=755 entrypoint.sh /home/rtcwcoop/entrypoint.sh
+COPY --chmod=755 healthcheck.sh /healthcheck.sh
+
+WORKDIR ${RTCWCOOP_DIR}
+
+EXPOSE 27960/udp
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 \
+  CMD ["/healthcheck.sh"]
+
+STOPSIGNAL SIGTERM
+
+ENTRYPOINT ["/container-entrypoint.sh"]

@@ -69,6 +69,8 @@ emit "codwaw" "dockerized/codwaw" "dockerized/codwaw/Containerfile" "runtime-bas
 emit "cod4" "dockerized/cod4" "dockerized/cod4/Containerfile" "runtime-base"
 emit "quake3" "dockerized/quake3" "dockerized/quake3/Containerfile" "runtime-base"
 emit "rtcw" "dockerized/rtcw" "dockerized/rtcw/Containerfile" "runtime-base"
+emit "rtcwcoop" "dockerized/rtcwcoop" "dockerized/rtcwcoop/Containerfile" "runtime-base"
+emit "pumpkin" "dockerized/pumpkin" "dockerized/pumpkin/Containerfile" "runtime-base"
 emit "etl" "dockerized/etl" "dockerized/etl/Containerfile" "runtime-base"
 emit "supertuxkart" "dockerized/supertuxkart" "dockerized/supertuxkart/Containerfile" "runtime-base"
 emit "eco" "dockerized/eco" "dockerized/eco/Containerfile" "steam-base"
