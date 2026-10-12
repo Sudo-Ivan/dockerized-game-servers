@@ -67,6 +67,7 @@ emit "cs2" "dockerized/cs2/compose.yml" "cs2" "data" "CS2_FORCE_UPDATE" "process
 emit "dod-source" "dockerized/dod-source/compose.yml" "dod-source" "data" "DOD_FORCE_UPDATE" "process" "1"
 emit "gmod" "dockerized/gmod/compose.yml" "gmod" "data" "GMOD_FORCE_UPDATE" "process" "1"
 emit "delta-force-bhd" "dockerized/delta-force-bhd/compose.yml" "delta-force-bhd" "data" "-" "process" "1"
+emit "joint-operations" "dockerized/joint-operations/compose.yml" "joint-operations" "data" "-" "process" "1"
 emit "dont-starve-together" "dockerized/dont-starve-together/compose.yml" "dont-starve-together" "data" "DST_FORCE_UPDATE" "process" "1"
 emit "v-rising" "dockerized/v-rising/compose.yml" "v-rising" "data" "VRISING_FORCE_UPDATE" "process" "1"
 emit "enshrouded" "dockerized/enshrouded/compose.yml" "enshrouded" "data" "ENSHROUDED_FORCE_UPDATE" "process" "1"

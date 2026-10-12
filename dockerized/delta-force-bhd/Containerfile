@@ -26,7 +26,7 @@ RUN if ! grep -q '^\[xlibre\]' /etc/pacman.conf; then \
 
 ENV BHD_DIR="/opt/dfbhd" \
     WINEPREFIX="/opt/dfbhd/.wine" \
-    WINEARCH="win32" \
+    WINEARCH="win64" \
     WINEDEBUG="-all"
 
 COPY --chmod=755 container-entrypoint.sh /container-entrypoint.sh

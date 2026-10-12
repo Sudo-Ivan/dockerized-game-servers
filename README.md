@@ -62,6 +62,7 @@ Images publish to GHCR as `ghcr.io/sudo-ivan/dockerized-game-servers/<image>:<ta
 | Don't Starve Together | `dockerized/dont-starve-together` | `dont-starve-together` |
 | Garry's Mod | `dockerized/gmod` | `gmod` |
 | Delta Force: Black Hawk Down | `dockerized/delta-force-bhd` | `delta-force-bhd` |
+| Joint Operations: Typhoon Rising | `dockerized/joint-operations` | `joint-operations` |
 | OpenMoHAA | `dockerized/openmohaa` | `openmohaa` |
 | Arma 3 | `dockerized/arma/arma-3` | `arma-3` |
 | Arma Reforger | `dockerized/arma/reforger` | `arma-reforger` |
@@ -667,6 +668,10 @@ Steam App 4020. Source `srcds_run` with `-game garrysmod`. Default map `gm_flatg
 
 No SteamCMD dedicated server. **You must copy owned Windows game files** (`dfbhd.exe` and data) into `dockerized/delta-force-bhd/data/` before the server can run. Runs via Wine. Default UDP 3568. Community multiplayer may need external NovaHQ heartbeat tools.
 
+### Joint Operations: Typhoon Rising
+
+NovaLogic never shipped a headless dedicated server. **You must copy owned Windows game files** (`jointops.exe` and data, patch `1.7.5.7`) into `dockerized/joint-operations/data/`. The container runs `jointops.exe /w /serveonly` under Wine and Xvfb, the documented server flags. UDP ports `7597`, `32768`, `49152`, `64206`. NovaWorld is gone, so public listing needs a community replacement like NovaHQ. LAN hosting works without it. Configure the host through `game.cfg` and the remote admin tool.
+
 ### Stardew Valley
 
 Uses [JunimoServer](https://github.com/stardew-valley-dedicated-server/server) (`sdvd/server` on Docker Hub), not a first-party image from this repo. Requires Steam credentials that own Stardew Valley. Two-service compose: `server` plus `steam-auth`. First-time `podman compose run --rm -it steam-auth setup` for Steam Guard and game download. Farm saves under `dockerized/stardew-valley/data/saves`, settings in `data/settings/server-settings.json`. Optional Discord bot: `podman compose --profile discord up -d`.
@@ -750,6 +755,7 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `dont-starve-together` | Don't Starve Together dedicated (native Linux) |
 | `gmod` | Garry's Mod dedicated |
 | `delta-force-bhd` | Delta Force: Black Hawk Down (Wine, BYO game files) |
+| `joint-operations` | Joint Operations: Typhoon Rising host (Wine, BYO game files) |
 | `openmohaa` | OpenMoHAA (BYO MOHAA assets) |
 | `arma-3` | Arma 3 dedicated |
 | `arma-reforger` | Arma Reforger dedicated |
@@ -846,6 +852,7 @@ dockerized/
   dont-starve-together/ Don't Starve Together
   gmod/            Garry's Mod
   delta-force-bhd/ Delta Force: Black Hawk Down (Wine, BYO game files)
+  joint-operations/ Joint Operations: Typhoon Rising (Wine, BYO game files)
   openmohaa/       OpenMoHAA
   rtcwcoop/        RTCW cooperative campaign
   pumpkin/         Pumpkin (Rust Minecraft server)

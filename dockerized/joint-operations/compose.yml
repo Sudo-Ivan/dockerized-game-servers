@@ -1,0 +1,40 @@
+services:
+  joint-operations:
+    image: ghcr.io/${IMAGE_OWNER}/joint-operations:latest
+    build:
+      context: .
+      dockerfile: Containerfile
+      args:
+        BASE_IMAGE: ghcr.io/${IMAGE_OWNER}/steam-base:latest
+    pull_policy: missing
+    container_name: joint-operations
+    restart: unless-stopped
+    stop_grace_period: 60s
+    init: true
+    ports:
+      - "7597:7597/udp"
+      - "32768:32768/udp"
+      - "49152:49152/udp"
+      - "64206:64206/udp"
+    volumes:
+      - ./data:/opt/jointops
+    environment:
+      JO_SERVEONLY: "true"
+      JO_EXTRA_ARGS: ""
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 300s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETUID
+      - SETGID
+    mem_limit: 2048M
