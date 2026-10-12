@@ -110,7 +110,15 @@ set -- "$@" "${CONTEXT}"
 if [ "${PUSH}" = "true" ]; then
   for ref in ${TAGS}; do
     echo "Pushing ${ref}"
-    podman push --retry 3 --retry-delay 5s "${ref}"
+    attempt=1
+    while ! podman push "${ref}"; do
+      attempt=$((attempt + 1))
+      if [ "${attempt}" -gt 3 ]; then
+        echo "Push failed after 3 attempts: ${ref}" >&2
+        exit 1
+      fi
+      sleep 5
+    done
   done
   echo "Pulling ${IMAGE} for local verification and scan"
   podman pull "${IMAGE}"
