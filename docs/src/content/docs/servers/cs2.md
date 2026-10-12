@@ -43,7 +43,7 @@ The server always starts in dedicated mode, bound to all interfaces, with LAN mo
 ## GSLT
 
 1. Sign in at [Steam game server account management](https://steamcommunity.com/dev/managegameservers) and create a token for game id 730.
-2. Set CS2_GSLT to that token in compose, a .env file, or with -e on docker run.
+2. Set CS2_GSLT to that token in compose, a .env file, or with -e on podman run.
 
 ## Data folder
 
@@ -58,13 +58,13 @@ Your data folder mounts to /opt/cs2 inside the container.
 ## Compose
 
 ```bash
-docker compose -f dockerized/cs2/docker-compose.yml up -d
+podman compose -f dockerized/cs2/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name cs2 --restart unless-stopped --init \
+podman run -d --name cs2 --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27020:27020/udp \
   -v "$PWD/dockerized/cs2/data:/opt/cs2" \
   -e CS2_GSLT="your-gslt" \

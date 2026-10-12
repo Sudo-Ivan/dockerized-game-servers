@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - ".github/workflows/ci.yml"
-      - ".github/workflows/docker-image.yml"
+      - ".github/workflows/container-image.yml"
       - "ci/**"
       - "tools/**"
       - "dockerized/**"
@@ -14,7 +14,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/ci.yml"
-      - ".github/workflows/docker-image.yml"
+      - ".github/workflows/container-image.yml"
       - "ci/**"
       - "tools/**"
       - "dockerized/**"
@@ -38,7 +38,7 @@ jobs:
     permissions:
       contents: read
     outputs:
-      docker: ${{ steps.filter.outputs.docker }}
+      images: ${{ steps.filter.outputs.images }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -46,21 +46,21 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Detect docker verify paths
+      - name: Detect image verify paths
         id: filter
         run: |
           chmod +x ci/changed-paths.sh
-          if ./ci/changed-paths.sh docker-verify \
+          if ./ci/changed-paths.sh image-verify \
             "${{ github.event.pull_request.base.sha }}" \
             "${{ github.event.pull_request.head.sha }}"; then
-            echo "docker=true" >> "${GITHUB_OUTPUT}"
+            echo "images=true" >> "${GITHUB_OUTPUT}"
           else
-            echo "docker=false" >> "${GITHUB_OUTPUT}"
+            echo "images=false" >> "${GITHUB_OUTPUT}"
           fi
 
   matrix:
     name: prepare matrix
-    if: github.event_name == 'pull_request' && needs.changes.outputs.docker == 'true'
+    if: github.event_name == 'pull_request' && needs.changes.outputs.images == 'true'
     needs: changes
     runs-on: ubuntu-latest
     permissions:
@@ -119,7 +119,7 @@ jobs:
           ./ci/ci-check.sh
 
   trivy-config:
-    name: trivy / dockerfiles
+    name: trivy / containerfiles
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -129,14 +129,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Scan Dockerfiles with pinned Trivy CLI
+      - name: Scan Containerfiles with pinned Trivy CLI
         run: |
           chmod +x ci/install-trivy.sh ci/trivy-config.sh
           ./ci/trivy-config.sh
 
   verify-bases:
     name: verify / ${{ matrix.name }}
-    if: github.event_name == 'pull_request' && needs.changes.outputs.docker == 'true'
+    if: github.event_name == 'pull_request' && needs.changes.outputs.images == 'true'
     needs:
       - changes
       - matrix
@@ -146,7 +146,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.matrix.outputs.bases) }}
-    uses: ./.github/workflows/docker-image.yml
+    uses: ./.github/workflows/container-image.yml
     with:
       name: ${{ matrix.name }}
       push: false

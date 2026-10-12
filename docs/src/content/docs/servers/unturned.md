@@ -53,13 +53,13 @@ Your data folder mounts to /opt/unturned inside the container.
 ## Compose
 
 ```bash
-docker compose -f dockerized/unturned/docker-compose.yml up -d
+podman compose -f dockerized/unturned/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name unturned --restart unless-stopped --init \
+podman run -d --name unturned --restart unless-stopped --init \
   -p 27015:27015/udp -p 27016:27016/udp \
   -v "$PWD/dockerized/unturned/data:/opt/unturned" \
   -e UNTURNED_SERVER_NAME="MyUnturnedServer" \

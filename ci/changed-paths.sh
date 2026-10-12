@@ -4,7 +4,7 @@
 #
 # Categories:
 #   workflow   files that should trigger the ci workflow
-#   docker-verify files that should trigger PR base image builds
+#   image-verify files that should trigger PR base image builds
 
 set -eu
 
@@ -15,13 +15,12 @@ head_ref="${3:?head ref required}"
 match_workflow() {
   file="$1"
   case "${file}" in
-    .github/workflows/ci.yml|.github/workflows/docker-image.yml) return 0 ;;
+    .github/workflows/ci.yml|.github/workflows/container-image.yml) return 0 ;;
     ci/*) return 0 ;;
     tools/*) return 0 ;;
     dockerized/*) return 0 ;;
-    */docker-compose.yml) return 0 ;;
-    */Dockerfile) return 0 ;;
     */compose.yml) return 0 ;;
+    */Containerfile) return 0 ;;
   esac
   case "${file}" in
     *.sh) return 0 ;;
@@ -29,10 +28,10 @@ match_workflow() {
   return 1
 }
 
-match_docker_verify() {
+match_image_verify() {
   file="$1"
   case "${file}" in
-    .github/workflows/docker-image.yml|.github/workflows/ci.yml) return 0 ;;
+    .github/workflows/container-image.yml|.github/workflows/ci.yml) return 0 ;;
     dockerized/*) return 0 ;;
     ci/build-image.sh|ci/build-one-image.sh|ci/image-matrix.sh|ci/github-matrix.py) return 0 ;;
   esac
@@ -42,7 +41,7 @@ match_docker_verify() {
 match_file() {
   case "${category}" in
     workflow) match_workflow "$1" ;;
-    docker-verify) match_docker_verify "$1" ;;
+    image-verify) match_image_verify "$1" ;;
     *) echo "unknown category: ${category}" >&2; exit 2 ;;
   esac
 }

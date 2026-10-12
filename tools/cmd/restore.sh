@@ -22,9 +22,9 @@ gs_cmd_restore() {
   compose_abs="${GS_ROOT}/${compose_dir}"
 
   if [ "${GS_TEST_MODE:-0}" != "1" ]; then
-    gs_require_cmd docker
+    gs_require_cmd podman
     gs_log "Stopping ${GS_CONTAINER}"
-    docker compose -f "${GS_ROOT}/${GS_COMPOSE}" stop
+    podman compose -f "${GS_ROOT}/${GS_COMPOSE}" stop
   fi
 
   old_ifs="${IFS}"
@@ -42,7 +42,7 @@ gs_cmd_restore() {
 
   if [ "${GS_TEST_MODE:-0}" != "1" ]; then
     gs_log "Starting ${GS_CONTAINER}"
-    docker compose -f "${GS_ROOT}/${GS_COMPOSE}" start
+    podman compose -f "${GS_ROOT}/${GS_COMPOSE}" start
   fi
 
   gs_log "Restore complete for ${GS_ID}"

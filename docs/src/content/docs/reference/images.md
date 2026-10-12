@@ -70,7 +70,7 @@ Image prefix: {{IMAGE_PREFIX}}
 Example pull:
 
 ```bash
-docker pull {{IMAGE_PREFIX}}/minecraft-fabric:latest
+podman pull {{IMAGE_PREFIX}}/minecraft-fabric:latest
 ```
 
 If the repository is public, set each GHCR package to public visibility after the first publish so pulls work without logging in.

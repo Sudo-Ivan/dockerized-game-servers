@@ -50,7 +50,7 @@ Unlike the other Call of Duty guides here, the generated config does not set g_a
 
 ## Updates
 
-There is no one-command update for this server. Use [backup and restore](../guides/ops/) to protect your data. To pick up a newer game archive, change the build settings in the Dockerfile and rebuild the image.
+There is no one-command update for this server. Use [backup and restore](../guides/ops/) to protect your data. To pick up a newer game archive, change the build settings in the Containerfile and rebuild the image.
 
 ## Health check
 
@@ -59,13 +59,13 @@ The container reports healthy while the CoD4x server process is running. Startup
 ## Compose
 
 ```bash
-docker compose -f dockerized/cod4/docker-compose.yml up -d
+podman compose -f dockerized/cod4/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name cod4 --restart unless-stopped --init \
+podman run -d --name cod4 --restart unless-stopped --init \
   -p 28960:28960/udp \
   -v "$PWD/dockerized/cod4/data:/opt/cod4" \
   -e COD4_PORT=28960 \

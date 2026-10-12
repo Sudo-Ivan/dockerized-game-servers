@@ -31,17 +31,17 @@ def read_rows() -> list[tuple[str, str, str, str]]:
 
 def matrix_for(kind: str) -> dict[str, list[dict[str, str]]]:
     include: list[dict[str, str]] = []
-    for name, context, dockerfile, base in read_rows():
+    for name, context, containerfile, base in read_rows():
         if kind == "bases" and not base:
             include.append(
-                {"name": name, "context": context, "dockerfile": dockerfile}
+                {"name": name, "context": context, "containerfile": containerfile}
             )
         elif kind == "images" and base:
             include.append(
                 {
                     "name": name,
                     "context": context,
-                    "dockerfile": dockerfile,
+                    "containerfile": containerfile,
                     "base": base,
                 }
             )

@@ -69,13 +69,13 @@ The container reports healthy while The Forest server process is running. Startu
 ## Compose
 
 ```bash
-docker compose -f dockerized/the-forest/docker-compose.yml up -d
+podman compose -f dockerized/the-forest/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name the-forest --restart unless-stopped --init \
+podman run -d --name the-forest --restart unless-stopped --init \
   -p 8766:8766/tcp -p 8766:8766/udp \
   -p 27015:27015/tcp -p 27015:27015/udp \
   -p 27016:27016/tcp -p 27016:27016/udp \

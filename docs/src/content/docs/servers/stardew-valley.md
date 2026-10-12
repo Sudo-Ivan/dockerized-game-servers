@@ -1,6 +1,6 @@
 ---
 title: Stardew Valley
-description: Always-on farm via JunimoServer (external Docker images).
+description: Always-on farm via JunimoServer (external images).
 ---
 
 This stack runs an always-on Stardew Valley farm using [JunimoServer](https://github.com/stardew-valley-dedicated-server/server) images (sdvd/server, sdvd/steam-service). It runs the game headless with SMAPI, optional VNC admin, HTTP API, backups, and mod support. You need a Steam account that owns Stardew Valley to download game files.
@@ -37,9 +37,9 @@ All paths are under dockerized/stardew-valley/data/ on the host:
 cd dockerized/stardew-valley
 cp .env.example .env
 # Edit .env: STEAM_USERNAME, STEAM_PASSWORD, SDVD_VNC_PASSWORD
-docker compose run --rm -it steam-auth setup
-docker compose up -d
-docker compose logs -f server
+podman compose run --rm -it steam-auth setup
+podman compose up -d
+podman compose logs -f server
 ```
 
 steam-auth setup handles Steam Guard and the initial game download into data/game.
@@ -64,12 +64,12 @@ Prefix SDVD_ avoids clashes with other compose stacks. Steam credentials use STE
 
 Host port overrides (container ports stay fixed): SDVD_VNC_PORT, SDVD_API_PORT, SDVD_GAME_PORT, SDVD_QUERY_PORT. SDVD_STEAM_AUTH_PORT (default 3001) is the internal server-to-steam-auth link and is not published.
 
-See dockerized/stardew-valley/.env.example for Steam login and common overrides. The discord-bot service takes its own vars directly in docker-compose.yml.
+See dockerized/stardew-valley/.env.example for Steam login and common overrides. The discord-bot service takes its own vars directly in compose.yml.
 
 ## Discord bot (optional)
 
 ```bash
-docker compose --profile discord up -d
+podman compose --profile discord up -d
 ```
 
 Set SDVD_DISCORD_BOT_TOKEN in .env. Requires SDVD_API_KEY if the server API is keyed. Additional optional vars: SDVD_DISCORD_UPDATE_INTERVAL_MS (default 30000), SDVD_DISCORD_BOT_NICKNAME, SDVD_DISCORD_CHAT_CHANNEL_ID, SDVD_DISCORD_STATUS_CHANNEL_ID, SDVD_DISCORD_STATUS_REFRESH_RATE.
@@ -79,9 +79,9 @@ Set SDVD_DISCORD_BOT_TOKEN in .env. Requires SDVD_API_KEY if the server API is k
 ./tools/gs update stardew-valley is not available. Pull newer images instead:
 
 ```bash
-docker compose pull
-docker compose down
-docker compose up -d
+podman compose pull
+podman compose down
+podman compose up -d
 ```
 
 ./tools/gs backup stardew-valley and restore do work. See [Ops](/guides/ops/).

@@ -98,13 +98,13 @@ The container sends a UDP status query to the game port and checks for a valid r
 ## Compose
 
 ```bash
-docker compose -f dockerized/openmohaa/docker-compose.yml up -d
+podman compose -f dockerized/openmohaa/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name openmohaa --restart unless-stopped --init \
+podman run -d --name openmohaa --restart unless-stopped --init \
   -p 12203:12203/udp -p 12300:12300/udp \
   -v "$PWD/dockerized/openmohaa/data:/usr/local/share/mohaa" \
   {{IMAGE_PREFIX}}/openmohaa:latest

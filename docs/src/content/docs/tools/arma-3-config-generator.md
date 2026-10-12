@@ -445,7 +445,7 @@ Have fun and follow the rules.</textarea>
 3. Start the server:
 
 ```bash
-docker compose -f dockerized/arma/arma-3/docker-compose.yml up -d
+podman compose -f dockerized/arma/arma-3/compose.yml up -d
 ```
 
 CDLC, EXTRA_MODS, and workshop presets are set outside server.cfg. See the [Arma 3 guide](../servers/arma-3/) for mods and config path details.

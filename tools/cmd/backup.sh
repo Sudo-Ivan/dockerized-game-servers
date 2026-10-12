@@ -37,9 +37,9 @@ gs_cmd_backup() {
   archive="${out_root}/${GS_ID}/${stamp}.tar.gz"
 
   if [ "${GS_TEST_MODE:-0}" != "1" ]; then
-    gs_require_cmd docker
+    gs_require_cmd podman
     gs_log "Stopping ${GS_CONTAINER}"
-    docker compose -f "${GS_ROOT}/${GS_COMPOSE}" stop
+    podman compose -f "${GS_ROOT}/${GS_COMPOSE}" stop
   fi
 
   gs_log "Creating ${archive}"
@@ -47,7 +47,7 @@ gs_cmd_backup() {
 
   if [ "${GS_TEST_MODE:-0}" != "1" ]; then
     gs_log "Starting ${GS_CONTAINER}"
-    docker compose -f "${GS_ROOT}/${GS_COMPOSE}" start
+    podman compose -f "${GS_ROOT}/${GS_COMPOSE}" start
   fi
 
   gs_log "Backup written: ${archive}"

@@ -75,7 +75,6 @@ env:
   REGISTRY: ghcr.io
   IMAGE_OWNER: ${{ github.repository }}
   GITHUB_REPOSITORY: ${{ github.repository }}
-  PLATFORM: linux/amd64
   PUSH: ${{ inputs.push && 'true' || 'false' }}
 
 jobs:
@@ -114,16 +113,11 @@ jobs:
             --tag "${INPUT_TAG}" \
             --github-output "${GITHUB_OUTPUT}"
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
-
       - name: Log in to GHCR
         if: env.PUSH == 'true'
-        uses: docker/login-action@abd2ef45e78c5afb21d64d4ca52ee8550d9572c7 # v4.5.1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io \
+            -u "${{ github.actor }}" --password-stdin
 
       - name: Write Temurin build args
         env:
@@ -146,7 +140,7 @@ jobs:
           ./ci/build-image.sh \
             minecraft-base \
             dockerized/bases/minecraft \
-            dockerized/bases/minecraft/Dockerfile
+            dockerized/bases/minecraft/Containerfile
 
       - name: Write game build args
         env:
@@ -164,26 +158,26 @@ jobs:
                 echo "FABRIC_LOADER_VERSION=${FABRIC_LOADER_VERSION}"
                 echo "FABRIC_INSTALLER_VERSION=${FABRIC_INSTALLER_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=dockerized/minecraft/fabric/Dockerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=dockerized/minecraft/fabric/Containerfile" >> "${GITHUB_ENV}"
               ;;
             vanilla)
               {
                 echo "VANILLA_VERSION=${MINECRAFT_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=dockerized/minecraft/vanilla/Dockerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=dockerized/minecraft/vanilla/Containerfile" >> "${GITHUB_ENV}"
               ;;
             forge)
               {
                 echo "FORGE_MINECRAFT_VERSION=${MINECRAFT_VERSION}"
                 echo "FORGE_VERSION=${FORGE_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=dockerized/minecraft/forge/Dockerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=dockerized/minecraft/forge/Containerfile" >> "${GITHUB_ENV}"
               ;;
             neoforge)
               {
                 echo "NEOFORGE_VERSION=${NEOFORGE_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=dockerized/minecraft/neoforge/Dockerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=dockerized/minecraft/neoforge/Containerfile" >> "${GITHUB_ENV}"
               ;;
             *)
               echo "unknown flavor: ${FLAVOR}" >&2

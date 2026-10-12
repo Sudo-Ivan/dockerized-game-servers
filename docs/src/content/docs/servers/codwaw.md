@@ -51,7 +51,7 @@ Punkbuster is disabled (sv_punkbuster 0) and com_hunkMegs is fixed at 128.
 
 ## Updates
 
-There is no one-command update for this server. Use [backup and restore](../guides/ops/) to protect your data. To pick up a newer game archive, change the build settings in the Dockerfile and rebuild the image.
+There is no one-command update for this server. Use [backup and restore](../guides/ops/) to protect your data. To pick up a newer game archive, change the build settings in the Containerfile and rebuild the image.
 
 ## Health check
 
@@ -60,13 +60,13 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f dockerized/codwaw/docker-compose.yml up -d
+podman compose -f dockerized/codwaw/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name codwaw --restart unless-stopped --init \
+podman run -d --name codwaw --restart unless-stopped --init \
   -p 28960:28960/udp \
   -v "$PWD/dockerized/codwaw/data:/opt/codwaw" \
   -e CODWAW_PORT=28960 \

@@ -65,13 +65,13 @@ The container reports healthy while the Ground Branch server process is running.
 ## Compose
 
 ```bash
-docker compose -f dockerized/ground-branch/docker-compose.yml up -d
+podman compose -f dockerized/ground-branch/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name ground-branch --restart unless-stopped --init \
+podman run -d --name ground-branch --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp \
   -v "$PWD/dockerized/ground-branch/data:/opt/groundbranch" \
   -e GB_MAP=GB-Woodland \

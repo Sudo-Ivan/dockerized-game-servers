@@ -3,7 +3,7 @@ title: Hytale
 description: Hytale dedicated server via the external deinfreu/hytale-server image, not built by this repository.
 ---
 
-This stack runs a Hytale dedicated server using the third-party deinfreu/hytale-server image. There is no Dockerfile or server binary built in this repository. The compose file pulls the upstream image as-is.
+This stack runs a Hytale dedicated server using the third-party deinfreu/hytale-server image. There is no Containerfile or server binary built in this repository. The compose file pulls the upstream image as-is.
 
 :::note[Before you start]
 - Keep a data folder for the server
@@ -20,7 +20,7 @@ This stack runs a Hytale dedicated server using the third-party deinfreu/hytale-
 
 ## Settings
 
-These are the variables wired in dockerized/hytale/docker-compose.yml. The upstream image may support more. Check its [Docker Hub page](https://hub.docker.com/r/deinfreu/hytale-server) for anything not listed here.
+These are the variables wired in dockerized/hytale/compose.yml. The upstream image may support more. Check its [Docker Hub page](https://hub.docker.com/r/deinfreu/hytale-server) for anything not listed here.
 
 | Setting | Default | What it does |
 | --- | --- | --- |
@@ -39,8 +39,8 @@ Mount dockerized/hytale/data at /home/container. The internal file layout is con
 ./tools/gs update hytale is not available. Pull a newer tag and recreate the container instead:
 
 ```bash
-docker compose -f dockerized/hytale/docker-compose.yml pull
-docker compose -f dockerized/hytale/docker-compose.yml up -d
+podman compose -f dockerized/hytale/compose.yml pull
+podman compose -f dockerized/hytale/compose.yml up -d
 ```
 
 ./tools/gs backup hytale and restore do work since the catalog lists a data volume. See [Ops](/guides/ops/).
@@ -48,15 +48,15 @@ docker compose -f dockerized/hytale/docker-compose.yml up -d
 ## Compose
 
 ```bash
-docker compose -f dockerized/hytale/docker-compose.yml up -d
+podman compose -f dockerized/hytale/compose.yml up -d
 ```
 
-The compose file also sets tty and stdin_open so you can attach an interactive console with docker attach hytale-server. Detach with Ctrl-p Ctrl-q (do not use Ctrl-c, which would stop the server).
+The compose file also sets tty and stdin_open so you can attach an interactive console with podman attach hytale-server. Detach with Ctrl-p Ctrl-q (do not use Ctrl-c, which would stop the server).
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name hytale-server --restart unless-stopped --init \
+podman run -d --name hytale-server --restart unless-stopped --init \
   -p 5520:5520/udp \
   -v "$PWD/dockerized/hytale/data:/home/container" \
   -v /etc/machine-id:/etc/machine-id:ro \

@@ -13,7 +13,7 @@
     "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/kf2:latest"
   },
   "file_denylist": [],
-  "startup": "/bin/bash -c 'export KF2_DIR=/home/container; exec /docker-entrypoint.sh'",
+  "startup": "/bin/bash -c 'export KF2_DIR=/home/container; exec /container-entrypoint.sh'",
   "config": {
     "files": "{}",
     "startup": "{\"done\": \"Starting\"}",

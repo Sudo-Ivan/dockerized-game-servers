@@ -58,13 +58,13 @@ If SteamCMD installs files under a nested steamapps/common folder, the container
 ## Compose
 
 ```bash
-docker compose -f dockerized/windrose/docker-compose.yml up -d
+podman compose -f dockerized/windrose/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name windrose --restart unless-stopped --init \
+podman run -d --name windrose --restart unless-stopped --init \
   -p 7777:7777/tcp -p 7777:7777/udp \
   -v "$PWD/dockerized/windrose/data:/opt/windrose" \
   -e WINDROSE_SERVER_NAME="My Windrose Server" \

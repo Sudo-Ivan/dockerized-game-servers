@@ -70,13 +70,13 @@ The container reports healthy while the Sons Of The Forest server process is run
 ## Compose
 
 ```bash
-docker compose -f dockerized/sons-of-the-forest/docker-compose.yml up -d
+podman compose -f dockerized/sons-of-the-forest/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name sons-of-the-forest --restart unless-stopped --init \
+podman run -d --name sons-of-the-forest --restart unless-stopped --init \
   -p 8766:8766/udp -p 27016:27016/udp -p 9700:9700/udp \
   -v "$PWD/dockerized/sons-of-the-forest/data:/opt/sotf" \
   -e SOTF_SERVER_NAME="My SOTF Server" \

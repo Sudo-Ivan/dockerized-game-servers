@@ -35,7 +35,7 @@ Valheim Plus only:
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| VALHEIM_PLUS_VERSION | 0.9.17.1 | ValheimPlus release to install |
+| VALHEIM_PLUS_VERSION | 0.10.2.0 | ValheimPlus release to install |
 | VALHEIM_PLUS_FORCE_INSTALL | false | Reinstall Plus even if the version marker matches. Used by ./tools/gs update valheim-plus with VALHEIM_FORCE_UPDATE. |
 | VALHEIM_PLUS_URL | GitHub release URL for VALHEIM_PLUS_VERSION | Override the Plus archive download URL |
 
@@ -48,17 +48,17 @@ Both images check that the valheim_server process is running. There is no port p
 ## Compose
 
 ```bash
-docker compose -f dockerized/valheim/vanilla/docker-compose.yml up -d
+podman compose -f dockerized/valheim/vanilla/compose.yml up -d
 ```
 
-Use dockerized/valheim/plus/docker-compose.yml for Valheim Plus.
+Use dockerized/valheim/plus/compose.yml for Valheim Plus.
 
-## Docker run
+## podman run
 
 Valheim:
 
 ```bash
-docker run -d --name valheim --restart unless-stopped --init \
+podman run -d --name valheim --restart unless-stopped --init \
   -p 2456-2458:2456-2458/udp \
   -v "$PWD/dockerized/valheim/vanilla/data:/opt/valheim" \
   -e SERVER_PASS=changeme \
@@ -68,7 +68,7 @@ docker run -d --name valheim --restart unless-stopped --init \
 Valheim Plus:
 
 ```bash
-docker run -d --name valheim-plus --restart unless-stopped --init \
+podman run -d --name valheim-plus --restart unless-stopped --init \
   -p 2456-2458:2456-2458/udp \
   -v "$PWD/dockerized/valheim/plus/data:/opt/valheim" \
   -e SERVER_PASS=changeme \

@@ -1,14 +1,15 @@
 #!/bin/sh
-# Build and optionally push a container image with buildx.
-# Usage: build-image.sh <name> <context> <dockerfile> [base_image]
+# Build and optionally push a container image with podman.
+# Usage: build-image.sh <name> <context> <containerfile> [base_image]
 #
 # Optional env:
 #   BUILD_ARGS_FILE  file with KEY=VALUE lines passed as --build-arg
 #   EXTRA_TAGS       space-separated extra image tags (full refs or bare tags)
 #   OCI_LICENSES     override license label (default ISC)
+#   PODMAN_PULL      podman build --pull policy (default missing)
 #
-# PUSH=true uses buildx (GH cache + push). PUSH=false uses docker build so
-# locally loaded bases are visible to later FROM stages.
+# PUSH=true pushes every tag with podman push after the build. PUSH=false
+# builds locally only so locally loaded bases are visible to later FROM stages.
 #
 # OCI provenance labels are owner-agnostic (resolved via repo-meta.sh).
 
@@ -16,7 +17,7 @@ set -eu
 
 IMAGE_NAME="${1:?name required}"
 CONTEXT="${2:?context required}"
-DOCKERFILE="${3:?dockerfile required}"
+CONTAINERFILE="${3:?containerfile required}"
 BASE_IMAGE="${4:-}"
 
 ROOT="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
@@ -28,7 +29,7 @@ NAME="${IMAGE_NAME}"
 REGISTRY="${REGISTRY:-ghcr.io}"
 TAG="${TAG:-latest}"
 PUSH="${PUSH:-false}"
-PLATFORM="${PLATFORM:-linux/amd64}"
+PLATFORM="${PLATFORM:-}"
 
 IMAGE="${REGISTRY}/${IMAGE_OWNER}/${NAME}:${TAG}"
 SHA_TAG="${REGISTRY}/${IMAGE_OWNER}/${NAME}:sha-${GITHUB_SHA:-local}"
@@ -38,40 +39,31 @@ OCI_LICENSES="${OCI_LICENSES:-ISC}"
 
 echo "Building ${IMAGE}"
 echo "  context=${CONTEXT}"
-echo "  dockerfile=${DOCKERFILE}"
-echo "  platform=${PLATFORM}"
+echo "  containerfile=${CONTAINERFILE}"
+echo "  platform=${PLATFORM:-native}"
 echo "  push=${PUSH}"
 echo "  source=${GITHUB_URL}"
 
-if [ "${PUSH}" = "true" ]; then
-  set -- \
-    docker buildx build \
-    --platform "${PLATFORM}" \
-    --file "${DOCKERFILE}" \
-    --tag "${IMAGE}" \
-    --tag "${SHA_TAG}" \
-    --label "org.opencontainers.image.source=${GITHUB_URL}" \
-    --label "org.opencontainers.image.url=${GITHUB_URL}" \
-    --label "org.opencontainers.image.revision=${OCI_REVISION}" \
-    --label "org.opencontainers.image.created=${OCI_CREATED}" \
-    --label "org.opencontainers.image.title=${NAME}" \
-    --label "org.opencontainers.image.licenses=${OCI_LICENSES}" \
-    --cache-from "type=gha,scope=${NAME}" \
-    --cache-to "type=gha,mode=max,scope=${NAME}" \
-    --push
-else
-  set -- \
-    docker build \
-    --platform "${PLATFORM}" \
-    --file "${DOCKERFILE}" \
-    --tag "${IMAGE}" \
-    --tag "${SHA_TAG}" \
-    --label "org.opencontainers.image.source=${GITHUB_URL}" \
-    --label "org.opencontainers.image.url=${GITHUB_URL}" \
-    --label "org.opencontainers.image.revision=${OCI_REVISION}" \
-    --label "org.opencontainers.image.created=${OCI_CREATED}" \
-    --label "org.opencontainers.image.title=${NAME}" \
-    --label "org.opencontainers.image.licenses=${OCI_LICENSES}"
+TAGS="${IMAGE} ${SHA_TAG}"
+
+set -- \
+  podman build \
+  "--pull=${PODMAN_PULL:-missing}" \
+  --format docker \
+  --file "${CONTAINERFILE}" \
+  --tag "${IMAGE}" \
+  --tag "${SHA_TAG}" \
+  --label "org.opencontainers.image.source=${GITHUB_URL}" \
+  --label "org.opencontainers.image.url=${GITHUB_URL}" \
+  --label "org.opencontainers.image.revision=${OCI_REVISION}" \
+  --label "org.opencontainers.image.created=${OCI_CREATED}" \
+  --label "org.opencontainers.image.title=${NAME}" \
+  --label "org.opencontainers.image.licenses=${OCI_LICENSES}"
+
+# An explicit --platform makes podman treat local base images as suspect and
+# re-pull them. Only pass it for non-native cross builds.
+if [ -n "${PLATFORM}" ]; then
+  set -- "$@" --platform "${PLATFORM}"
 fi
 
 if [ -n "${BASE_IMAGE}" ]; then
@@ -99,11 +91,14 @@ if [ -n "${EXTRA_TAGS:-}" ]; then
     case "${extra}" in
       */*:*|*:* )
         set -- "$@" --tag "${extra}"
+        TAGS="${TAGS} ${extra}"
         echo "  tag ${extra}"
         ;;
       *)
-        set -- "$@" --tag "${REGISTRY}/${IMAGE_OWNER}/${NAME}:${extra}"
-        echo "  tag ${REGISTRY}/${IMAGE_OWNER}/${NAME}:${extra}"
+        extra_ref="${REGISTRY}/${IMAGE_OWNER}/${NAME}:${extra}"
+        set -- "$@" --tag "${extra_ref}"
+        TAGS="${TAGS} ${extra_ref}"
+        echo "  tag ${extra_ref}"
         ;;
     esac
   done
@@ -113,8 +108,12 @@ set -- "$@" "${CONTEXT}"
 "$@"
 
 if [ "${PUSH}" = "true" ]; then
+  for ref in ${TAGS}; do
+    echo "Pushing ${ref}"
+    podman push --retry 3 --retry-delay 5s "${ref}"
+  done
   echo "Pulling ${IMAGE} for local verification and scan"
-  docker pull "${IMAGE}"
+  podman pull "${IMAGE}"
 fi
 
 echo "Done: ${IMAGE}"

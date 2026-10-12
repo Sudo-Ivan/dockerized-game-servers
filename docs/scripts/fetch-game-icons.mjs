@@ -137,7 +137,7 @@ function rootsForSlug(slug, catalog) {
 		const match =
 			entry.id === slug ||
 			entry.id.startsWith(`${slug}-`) ||
-			entry.compose === `${slug}/docker-compose.yml` ||
+			entry.compose === `${slug}/compose.yml` ||
 			entry.compose.startsWith(`${slug}/`) ||
 			entry.compose.includes(`/${slug}/`)
 		if (match) roots.add(composeDir)
@@ -175,9 +175,9 @@ function walkFiles(dir, files = []) {
 			continue
 		}
 		if (
-			name.name === 'docker-compose.yml' ||
+			name.name === 'compose.yml' ||
 			name.name === 'entrypoint.sh' ||
-			name.name === 'docker-entrypoint.sh'
+			name.name === 'container-entrypoint.sh'
 		) {
 			files.push(full)
 		}

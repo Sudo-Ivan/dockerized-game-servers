@@ -13,7 +13,7 @@
     "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/sons-of-the-forest:latest"
   },
   "file_denylist": [],
-  "startup": "/bin/bash -c 'export SOTF_DIR=/home/container; exec /docker-entrypoint.sh'",
+  "startup": "/bin/bash -c 'export SOTF_DIR=/home/container; exec /container-entrypoint.sh'",
   "config": {
     "files": "{}",
     "startup": "{\"done\": \"Starting\"}",

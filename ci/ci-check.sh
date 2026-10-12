@@ -39,8 +39,8 @@ echo "==> Checking compose files"
     echo "missing compose: ${compose} (${id})" >&2
     exit 1
   fi
-  if command -v docker >/dev/null 2>&1; then
-    if ! docker compose -f "${compose}" config >/dev/null; then
+  if command -v podman >/dev/null 2>&1; then
+    if ! podman compose -f "${compose}" config >/dev/null; then
       echo "compose invalid: ${compose} (${id})" >&2
       exit 1
     fi
@@ -52,14 +52,14 @@ chmod +x ci/check-minecraft-defaults.sh
 ./ci/check-minecraft-defaults.sh || fail=1
 
 echo "==> Minecraft scaffold compose"
-if command -v docker >/dev/null 2>&1; then
+if command -v podman >/dev/null 2>&1; then
   for scaffold in \
-    dockerized/minecraft/fabric/docker-compose.scaffold.yml \
-    dockerized/minecraft/vanilla/docker-compose.scaffold.yml \
-    dockerized/minecraft/forge/docker-compose.scaffold.yml \
-    dockerized/minecraft/neoforge/docker-compose.scaffold.yml
+    dockerized/minecraft/fabric/compose.scaffold.yml \
+    dockerized/minecraft/vanilla/compose.scaffold.yml \
+    dockerized/minecraft/forge/compose.scaffold.yml \
+    dockerized/minecraft/neoforge/compose.scaffold.yml
   do
-    if ! docker compose -f "${scaffold}" --env-file dockerized/minecraft/defaults.env config >/dev/null; then
+    if ! podman compose -f "${scaffold}" --env-file dockerized/minecraft/defaults.env config >/dev/null; then
       echo "compose invalid: ${scaffold}" >&2
       fail=1
     fi
@@ -96,7 +96,7 @@ while IFS= read -r root; do
   [ -n "${root}" ] || continue
   [ -d "${root}" ] || continue
   find "${root}" \( -path '*/data/*' -o -path '*/node_modules/*' \) -prune -o -type f \( \
-    -name '*.sh' -o -name 'entrypoint.sh' -o -name 'docker-entrypoint.sh' -o -name 'runtime.sh' \
+    -name '*.sh' -o -name 'entrypoint.sh' -o -name 'container-entrypoint.sh' -o -name 'runtime.sh' \
   \) -print >>"${tmp}" 2>/dev/null || true
 done <"${roots_tmp}"
 rm -f "${roots_tmp}"

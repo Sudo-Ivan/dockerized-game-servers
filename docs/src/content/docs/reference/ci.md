@@ -7,9 +7,9 @@ This page describes the automated checks and image builds that run on GitHub. Yo
 
 ## Workflows
 
-**ci** runs on pushes and pull requests when CI-related files change (see `.github/workflows/ci.yml`). You can also start it manually. It runs repository checks (`ci/ci-check.sh`), scans Dockerfiles with Trivy for MEDIUM, HIGH, and CRITICAL issues, and on pull requests with Docker-related diffs it builds shared base images locally to verify they compile. Those verify builds are not pushed to the registry.
+**ci** runs on pushes and pull requests when CI-related files change (see `.github/workflows/ci.yml`). You can also start it manually. It runs repository checks (`ci/ci-check.sh`), scans Containerfiles with Trivy for MEDIUM, HIGH, and CRITICAL issues, and on pull requests with image-related diffs it builds shared base images locally to verify they compile. Those verify builds are not pushed to the registry.
 
-**build** runs weekly (Sunday 06:00 UTC), when Dockerfiles, base images, or CI scripts change on master or main, and on manual trigger. The job list comes from `ci/image-matrix.sh` (`ci/github-matrix.py`). It builds and pushes images to GHCR through the reusable `docker-image` workflow, then scans them with Trivy. A CRITICAL finding fails the job.
+**build** runs weekly (Sunday 06:00 UTC), when Containerfiles, base images, or CI scripts change on master or main, and on manual trigger. The job list comes from `ci/image-matrix.sh` (`ci/github-matrix.py`). It builds and pushes images to GHCR through the reusable `container-image` workflow, then scans them with Trivy. A CRITICAL finding fails the job.
 
 **build-minecraft** is manual only. Pick Fabric, Vanilla, Forge, or NeoForge and a Minecraft version. Java is resolved from Mojang's javaVersion. Temurin Alpine JRE is pinned from Adoptium. Fabric loader and installer, and Forge promos, auto-fill when left blank. NeoForge resolves from Maven when omitted. The workflow publishes `minecraft-base`:javaN and `minecraft-flavor`:tag.
 
@@ -28,11 +28,11 @@ This page describes the automated checks and image builds that run on GitHub. Yo
 
 ## Example tags
 
-After a versioned Fabric build for 26.2:
+After a versioned Fabric build for 26.3:
 
 ```text
 __IMAGE_PREFIX__/minecraft-base:java25
-__IMAGE_PREFIX__/minecraft-fabric:26.2
+__IMAGE_PREFIX__/minecraft-fabric:26.3
 ```
 
 ## Local resolve preview
@@ -40,7 +40,7 @@ __IMAGE_PREFIX__/minecraft-fabric:26.2
 Preview what a Minecraft build would resolve to before triggering the workflow:
 
 ```bash
-./ci/resolve-minecraft-build.sh --flavor fabric --minecraft-version 26.2
+./ci/resolve-minecraft-build.sh --flavor fabric --minecraft-version 26.3
 ./ci/resolve-minecraft-build.sh --flavor vanilla --minecraft-version 1.20.4
 ./ci/resolve-minecraft-build.sh --flavor forge --minecraft-version 1.21.8 --forge-channel latest
 ```

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure dockerized/minecraft/defaults.env matches Dockerfile ARG and entrypoint fallbacks.
+# Ensure dockerized/minecraft/defaults.env matches Containerfile ARG and entrypoint fallbacks.
 
 set -eu
 
@@ -28,22 +28,22 @@ expect() {
   fi
 }
 
-expect VANILLA_VERSION "${VANILLA_VERSION}" dockerized/minecraft/vanilla/Dockerfile 'ARG VANILLA_VERSION='"${VANILLA_VERSION}"
+expect VANILLA_VERSION "${VANILLA_VERSION}" dockerized/minecraft/vanilla/Containerfile 'ARG VANILLA_VERSION='"${VANILLA_VERSION}"
 expect VANILLA_VERSION "${VANILLA_VERSION}" dockerized/minecraft/vanilla/entrypoint.sh 'VANILLA_VERSION:='"${VANILLA_VERSION}"
 
-expect FABRIC_MINECRAFT_VERSION "${FABRIC_MINECRAFT_VERSION}" dockerized/minecraft/fabric/Dockerfile 'ARG FABRIC_MINECRAFT_VERSION='"${FABRIC_MINECRAFT_VERSION}"
-expect FABRIC_LOADER_VERSION "${FABRIC_LOADER_VERSION}" dockerized/minecraft/fabric/Dockerfile 'ARG FABRIC_LOADER_VERSION='"${FABRIC_LOADER_VERSION}"
-expect FABRIC_INSTALLER_VERSION "${FABRIC_INSTALLER_VERSION}" dockerized/minecraft/fabric/Dockerfile 'ARG FABRIC_INSTALLER_VERSION='"${FABRIC_INSTALLER_VERSION}"
+expect FABRIC_MINECRAFT_VERSION "${FABRIC_MINECRAFT_VERSION}" dockerized/minecraft/fabric/Containerfile 'ARG FABRIC_MINECRAFT_VERSION='"${FABRIC_MINECRAFT_VERSION}"
+expect FABRIC_LOADER_VERSION "${FABRIC_LOADER_VERSION}" dockerized/minecraft/fabric/Containerfile 'ARG FABRIC_LOADER_VERSION='"${FABRIC_LOADER_VERSION}"
+expect FABRIC_INSTALLER_VERSION "${FABRIC_INSTALLER_VERSION}" dockerized/minecraft/fabric/Containerfile 'ARG FABRIC_INSTALLER_VERSION='"${FABRIC_INSTALLER_VERSION}"
 expect FABRIC_MINECRAFT_VERSION "${FABRIC_MINECRAFT_VERSION}" dockerized/minecraft/fabric/entrypoint.sh 'FABRIC_MINECRAFT_VERSION:='"${FABRIC_MINECRAFT_VERSION}"
 expect FABRIC_LOADER_VERSION "${FABRIC_LOADER_VERSION}" dockerized/minecraft/fabric/entrypoint.sh 'FABRIC_LOADER_VERSION:='"${FABRIC_LOADER_VERSION}"
 expect FABRIC_INSTALLER_VERSION "${FABRIC_INSTALLER_VERSION}" dockerized/minecraft/fabric/entrypoint.sh 'FABRIC_INSTALLER_VERSION:='"${FABRIC_INSTALLER_VERSION}"
 
-expect FORGE_MINECRAFT_VERSION "${FORGE_MINECRAFT_VERSION}" dockerized/minecraft/forge/Dockerfile 'ARG FORGE_MINECRAFT_VERSION='"${FORGE_MINECRAFT_VERSION}"
-expect FORGE_VERSION "${FORGE_VERSION}" dockerized/minecraft/forge/Dockerfile 'ARG FORGE_VERSION='"${FORGE_VERSION}"
+expect FORGE_MINECRAFT_VERSION "${FORGE_MINECRAFT_VERSION}" dockerized/minecraft/forge/Containerfile 'ARG FORGE_MINECRAFT_VERSION='"${FORGE_MINECRAFT_VERSION}"
+expect FORGE_VERSION "${FORGE_VERSION}" dockerized/minecraft/forge/Containerfile 'ARG FORGE_VERSION='"${FORGE_VERSION}"
 expect FORGE_MINECRAFT_VERSION "${FORGE_MINECRAFT_VERSION}" dockerized/minecraft/forge/entrypoint.sh 'FORGE_MINECRAFT_VERSION:='"${FORGE_MINECRAFT_VERSION}"
 expect FORGE_VERSION "${FORGE_VERSION}" dockerized/minecraft/forge/entrypoint.sh 'FORGE_VERSION:='"${FORGE_VERSION}"
 
-expect NEOFORGE_VERSION "${NEOFORGE_VERSION}" dockerized/minecraft/neoforge/Dockerfile 'ARG NEOFORGE_VERSION='"${NEOFORGE_VERSION}"
+expect NEOFORGE_VERSION "${NEOFORGE_VERSION}" dockerized/minecraft/neoforge/Containerfile 'ARG NEOFORGE_VERSION='"${NEOFORGE_VERSION}"
 expect NEOFORGE_VERSION "${NEOFORGE_VERSION}" dockerized/minecraft/neoforge/entrypoint.sh 'NEOFORGE_VERSION:='"${NEOFORGE_VERSION}"
 
 exit "${fail}"

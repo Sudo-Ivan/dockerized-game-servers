@@ -27,8 +27,8 @@ fail=0
 cleanup_one() {
   compose="$1"
   container="$2"
-  docker compose -f "${compose}" down --remove-orphans >/dev/null 2>&1 || true
-  docker rm -f "${container}" >/dev/null 2>&1 || true
+  podman compose -f "${compose}" down --remove-orphans >/dev/null 2>&1 || true
+  podman rm -f "${container}" >/dev/null 2>&1 || true
 }
 
 in_smoke_only() {
@@ -48,15 +48,15 @@ wait_success() {
   deadline=$(( started_at + SMOKE_TIMEOUT_SEC ))
 
   while [ "$(date +%s)" -lt "${deadline}" ]; do
-    status="$(docker inspect -f '{{.State.Status}}' "${container}" 2>/dev/null || echo missing)"
+    status="$(podman inspect -f '{{.State.Status}}' "${container}" 2>/dev/null || echo missing)"
     if [ "${status}" = "exited" ] || [ "${status}" = "dead" ] || [ "${status}" = "missing" ]; then
-      code="$(docker inspect -f '{{.State.ExitCode}}' "${container}" 2>/dev/null || echo 1)"
+      code="$(podman inspect -f '{{.State.ExitCode}}' "${container}" 2>/dev/null || echo 1)"
       echo "container stopped (status=${status} exit=${code})" >&2
-      docker compose -f "${compose}" logs --tail 100 >&2 || true
+      podman compose -f "${compose}" logs --tail 100 >&2 || true
       return 1
     fi
 
-    health_status="$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "${container}" 2>/dev/null || echo none)"
+    health_status="$(podman inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "${container}" 2>/dev/null || echo none)"
     case "${health_status}" in
       healthy)
         echo "healthy"
@@ -64,22 +64,22 @@ wait_success() {
         ;;
       unhealthy)
         echo "unhealthy" >&2
-        docker compose -f "${compose}" logs --tail 100 >&2 || true
+        podman compose -f "${compose}" logs --tail 100 >&2 || true
         return 1
         ;;
     esac
 
     case "${health}" in
       tcp)
-        if docker logs "${container}" 2>&1 | grep -Eq 'Done \(|For help, type|You need to agree to the EULA|Server started'; then
+        if podman logs "${container}" 2>&1 | grep -Eq 'Done \(|For help, type|You need to agree to the EULA|Server started'; then
           echo "log-ready"
           return 0
         fi
         ;;
       process|gameid)
-        if docker logs "${container}" 2>&1 | grep -Eqi 'server is up and ready for players|server ready|Status: server ready|Hosting world|Game Server version|Dedicated server running|Hosting at|Factorio.*Server|Listening on|SteamGameServer_Init|World generation finished|omohaaded|Anonymous Steam login cannot download|SERVER STARTED|7 Days to Die|Terraria Server|StartGame done|Gameserver Steam|VAC secure mode|Palworld|Starbound|Space Engineers|Insurgency|Sandstorm|Counter-Strike|Killing Floor|Icarus|Hitch warning|cod_lnxded|cod2_lnxded|codwaw_lnxded|cod4x|q3ded|iowolfded|etlded|bf1942|bfvietnam|Eco Server|ArmaReforger|DayZServer|BACKEND|RPL listen|Satisfactory|Enshrouded|VRising|Windrose|Vein|dontstarve_dedicated'; then
+        if podman logs "${container}" 2>&1 | grep -Eqi 'server is up and ready for players|server ready|Status: server ready|Hosting world|Game Server version|Dedicated server running|Hosting at|Factorio.*Server|Listening on|SteamGameServer_Init|World generation finished|omohaaded|Anonymous Steam login cannot download|SERVER STARTED|7 Days to Die|Terraria Server|StartGame done|Gameserver Steam|VAC secure mode|Palworld|Starbound|Space Engineers|Insurgency|Sandstorm|Counter-Strike|Killing Floor|Icarus|Hitch warning|cod_lnxded|cod2_lnxded|codwaw_lnxded|cod4x|q3ded|iowolfded|etlded|bf1942|bfvietnam|Eco Server|ArmaReforger|DayZServer|BACKEND|RPL listen|Satisfactory|Enshrouded|VRising|Windrose|Vein|dontstarve_dedicated'; then
           # Arma missing owned server is a clear expected failure path.
-          if docker logs "${container}" 2>&1 | grep -q 'Anonymous Steam login cannot download'; then
+          if podman logs "${container}" 2>&1 | grep -q 'Anonymous Steam login cannot download'; then
             echo "arma-needs-steam-login" >&2
             return 1
           fi
@@ -98,8 +98,8 @@ wait_success() {
   done
 
   echo "timeout after ${SMOKE_TIMEOUT_SEC}s" >&2
-  docker inspect -f 'status={{.State.Status}} health={{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "${container}" >&2 || true
-  docker compose -f "${compose}" logs --tail 100 >&2 || true
+  podman inspect -f 'status={{.State.Status}} health={{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "${container}" >&2 || true
+  podman compose -f "${compose}" logs --tail 100 >&2 || true
   return 1
 }
 
@@ -137,7 +137,7 @@ while IFS= read -r line || [ -n "${line}" ]; do
   cleanup_one "${compose}" "${container}"
 
   err="$(mktemp)"
-  if ! docker compose -f "${compose}" up -d --pull never --no-build 2>"${err}"; then
+  if ! podman compose -f "${compose}" up -d --pull never --no-build 2>"${err}"; then
     echo "FAIL ${id}: compose up failed" | tee -a "${REPORT}"
     cat "${err}" >&2 || true
     rm -f "${err}"

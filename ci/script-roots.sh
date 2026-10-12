@@ -14,8 +14,8 @@ printf '%s\n' ci tools dockerized/bases
   dirname "${compose}"
 done
 
-./ci/image-matrix.sh | while IFS="$(printf '\t')" read -r name context dockerfile _base; do
+./ci/image-matrix.sh | while IFS="$(printf '\t')" read -r name context containerfile _base; do
   [ -n "${name}" ] || continue
   printf '%s\n' "${context}"
-  dirname "${dockerfile}"
+  dirname "${containerfile}"
 done

@@ -47,13 +47,13 @@ Your data folder mounts to /opt/barotrauma inside the container. It holds the in
 ## Compose
 
 ```bash
-docker compose -f dockerized/barotrauma/docker-compose.yml up -d
+podman compose -f dockerized/barotrauma/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name barotrauma --restart unless-stopped --init \
+podman run -d --name barotrauma --restart unless-stopped --init \
   -p 27015:27015/udp -p 27016:27016/udp \
   -v "$PWD/dockerized/barotrauma/data:/opt/barotrauma" \
   {{IMAGE_PREFIX}}/barotrauma:latest

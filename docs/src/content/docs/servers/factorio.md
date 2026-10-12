@@ -68,13 +68,13 @@ The container reports healthy while the Factorio server is running. Startup gets
 
 ```bash
 export RCON_PASSWORD=changeme
-docker compose -f dockerized/factorio/docker-compose.yml up -d
+podman compose -f dockerized/factorio/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name factorio --restart unless-stopped --init \
+podman run -d --name factorio --restart unless-stopped --init \
   -p 34197:34197/udp -p 27015:27015/tcp \
   -v "$PWD/dockerized/factorio/data:/opt/factorio" \
   -e RCON_PASSWORD=changeme \

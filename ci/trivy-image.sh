@@ -17,11 +17,26 @@ chmod +x "${ROOT}/ci/install-trivy.sh"
 export PATH="${HOME}/.local/bin:${PATH}"
 
 echo "==> Trivy image scan: ${IMAGE_REF}"
-if ! docker image inspect "${IMAGE_REF}" >/dev/null 2>&1; then
+if ! podman image inspect "${IMAGE_REF}" >/dev/null 2>&1; then
   echo "Local image missing, pulling ${IMAGE_REF}"
-  docker pull "${IMAGE_REF}"
+  podman pull "${IMAGE_REF}"
 fi
+
+# Trivy reads podman through the user API socket. Bring it up when absent
+# (CI runners have no user session bus).
+PODMAN_SOCK_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/podman"
+PODMAN_SOCK="${PODMAN_SOCK_DIR}/podman.sock"
+if [ ! -S "${PODMAN_SOCK}" ]; then
+  systemctl --user start podman.socket 2>/dev/null \
+    || { mkdir -p "${PODMAN_SOCK_DIR}"; (podman system service --time=300 "unix://${PODMAN_SOCK}" >/dev/null 2>&1 &); }
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    [ -S "${PODMAN_SOCK}" ] && break
+    sleep 1
+  done
+fi
+
 trivy image \
+  --image-src podman \
   --config dockerized/trivy.yaml \
   --ignorefile dockerized/.trivyignore \
   --scanners vuln,secret,misconfig \

@@ -4,9 +4,9 @@ set -eu
 # shellcheck disable=SC1091
 . /runtime.sh
 
-: "${FABRIC_MINECRAFT_VERSION:=26.2}"
-: "${FABRIC_LOADER_VERSION:=0.19.3}"
-: "${FABRIC_INSTALLER_VERSION:=1.1.1}"
+: "${FABRIC_MINECRAFT_VERSION:=26.3}"
+: "${FABRIC_LOADER_VERSION:=0.19.5}"
+: "${FABRIC_INSTALLER_VERSION:=1.1.2}"
 : "${FABRIC_FORCE_DOWNLOAD:=false}"
 : "${EULA:=false}"
 

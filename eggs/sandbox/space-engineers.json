@@ -13,7 +13,7 @@
     "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/space-engineers:latest"
   },
   "file_denylist": [],
-  "startup": "/bin/bash -c 'export SE_ROOT=/home/container SE_DEDICATED_DIR=/home/container/dedicated SE_INSTANCES_DIR=/home/container/instances SE_PLUGINS_DIR=/home/container/plugins; exec /docker-entrypoint.sh'",
+  "startup": "/bin/bash -c 'export SE_ROOT=/home/container SE_DEDICATED_DIR=/home/container/dedicated SE_INSTANCES_DIR=/home/container/instances SE_PLUGINS_DIR=/home/container/plugins; exec /container-entrypoint.sh'",
   "config": {
     "files": "{}",
     "startup": "{\"done\": \"Starting\"}",

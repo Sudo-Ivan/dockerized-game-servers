@@ -477,12 +477,12 @@ def docker_entrypoint_startup(game_id: str) -> str:
             "ln -sfn /home/container/$d /home/arma3/$d; "
             "done; "
             "export ARMA_DIR=/home/arma3/server; "
-            "exec /docker-entrypoint.sh"
+            "exec /container-entrypoint.sh"
         )
         return f"/bin/bash -c '{body}'"
     if exports:
-        return f"/bin/bash -c '{exports}; exec /docker-entrypoint.sh'"
-    return "/docker-entrypoint.sh"
+        return f"/bin/bash -c '{exports}; exec /container-entrypoint.sh'"
+    return "/container-entrypoint.sh"
 
 
 def hytale_startup() -> str:
@@ -522,7 +522,7 @@ def pick_startup(game_id: str, first_party: bool) -> str:
         return azerothcore_startup()
     if first_party == "1":
         return docker_entrypoint_startup(game_id)
-    return "/docker-entrypoint.sh"
+    return "/container-entrypoint.sh"
 
 
 def pick_stop(game_id: str) -> str:

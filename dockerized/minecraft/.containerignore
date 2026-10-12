@@ -1,0 +1,10 @@
+**/data
+**/.gitignore
+**/.gitkeep
+**/compose.yml
+**/*.md
+**/.env
+**/*.env
+**/*~
+**/*.swp
+**/.DS_Store

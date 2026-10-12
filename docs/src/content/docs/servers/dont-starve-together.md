@@ -57,13 +57,13 @@ Your data folder mounts to /opt/dst inside the container. It holds the installed
 ## Compose
 
 ```bash
-docker compose -f dockerized/dont-starve-together/docker-compose.yml up -d
+podman compose -f dockerized/dont-starve-together/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name dont-starve-together --restart unless-stopped --init \
+podman run -d --name dont-starve-together --restart unless-stopped --init \
   -p 10999:10999/udp -p 11000:11000/udp -p 27016:27016/udp \
   -v "$PWD/dockerized/dont-starve-together/data:/opt/dst" \
   -e DST_CLUSTER_TOKEN="your-klei-cluster-token" \

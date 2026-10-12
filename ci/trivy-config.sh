@@ -1,5 +1,5 @@
 #!/bin/sh
-# Scan Dockerfiles with a pinned Trivy CLI (misconfig only).
+# Scan Containerfiles with a pinned Trivy CLI (misconfig only).
 
 set -eu
 
@@ -10,7 +10,7 @@ chmod +x "${ROOT}/ci/install-trivy.sh"
 "${ROOT}/ci/install-trivy.sh"
 export PATH="${HOME}/.local/bin:${PATH}"
 
-echo "==> Trivy Dockerfile config scan"
+echo "==> Trivy Containerfile config scan"
 trivy config \
   --config dockerized/trivy.yaml \
   --ignorefile dockerized/.trivyignore \

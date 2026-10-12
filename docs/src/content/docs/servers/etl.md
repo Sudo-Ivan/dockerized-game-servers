@@ -67,13 +67,13 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f dockerized/etl/docker-compose.yml up -d
+podman compose -f dockerized/etl/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name etl --restart unless-stopped --init \
+podman run -d --name etl --restart unless-stopped --init \
   -p 27960:27960/udp -p 27961:27961/udp \
   -v "$PWD/dockerized/etl/data:/opt/etl" \
   -e ETL_PORT=27960 \

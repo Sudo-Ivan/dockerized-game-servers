@@ -15,20 +15,20 @@ By default the server uses Steam Datagram Relay (SDR) for networking and needs n
 
 ## Networking modes
 
-In SDR mode (the default), leave SERVER_IP and SERVER_PORT empty. Steam relays the connection and clients connect using the Game ID rather than an IP and port. When the session is ready, docker logs prints a colored Game ID line followed by:
+In SDR mode (the default), leave SERVER_IP and SERVER_PORT empty. Steam relays the connection and clients connect using the Game ID rather than an IP and port. When the session is ready, podman logs prints a colored Game ID line followed by:
 
 ```text
 Status: server is up and ready for players!
 ```
 
 ```bash
-docker logs core-keeper
+podman logs core-keeper
 ```
 
 If the container restarted before you copied the ID, read the file directly:
 
 ```bash
-docker exec -it core-keeper cat /opt/corekeeper/server/GameID.txt
+podman exec -it core-keeper cat /opt/corekeeper/server/GameID.txt
 ```
 
 For direct connect instead of SDR, set SERVER_PORT (and optionally SERVER_IP) and publish UDP ports 27015 and 27016 on the host. The included compose file keeps its ports block commented out for this reason.
@@ -82,13 +82,13 @@ The container reports healthy when the Core Keeper server is running and GameID.
 ## Compose
 
 ```bash
-docker compose -f dockerized/core-keeper/docker-compose.yml up -d
+podman compose -f dockerized/core-keeper/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name core-keeper --restart unless-stopped --init \
+podman run -d --name core-keeper --restart unless-stopped --init \
   -v "$PWD/dockerized/core-keeper/data:/opt/corekeeper" \
   -e WORLD_NAME="Core Keeper Server" \
   -e MAX_PLAYERS=10 \

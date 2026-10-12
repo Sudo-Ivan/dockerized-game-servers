@@ -15,18 +15,18 @@ echo "==> HEALTHCHECK presence for first-party servers"
 
   compose_dir="$(dirname "${compose}")"
   health_script="${compose_dir}/healthcheck.sh"
-  dockerfile="${compose_dir}/Dockerfile"
+  containerfile="${compose_dir}/Containerfile"
 
   if [ ! -f "${health_script}" ]; then
     echo "missing healthcheck.sh for ${id}: ${health_script}" >&2
     exit 1
   fi
-  if [ ! -f "${dockerfile}" ]; then
-    echo "missing Dockerfile for ${id}: ${dockerfile}" >&2
+  if [ ! -f "${containerfile}" ]; then
+    echo "missing Containerfile for ${id}: ${containerfile}" >&2
     exit 1
   fi
-  if ! grep -q 'HEALTHCHECK' "${dockerfile}"; then
-    echo "missing HEALTHCHECK in ${dockerfile}" >&2
+  if ! grep -q 'HEALTHCHECK' "${containerfile}"; then
+    echo "missing HEALTHCHECK in ${containerfile}" >&2
     exit 1
   fi
   if ! grep -q 'healthcheck:' "${compose}"; then

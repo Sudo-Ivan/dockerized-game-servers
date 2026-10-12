@@ -67,13 +67,13 @@ The container reports healthy while the Vintage Story server process is running.
 ## Compose
 
 ```bash
-docker compose -f dockerized/vintage-story/docker-compose.yml up -d
+podman compose -f dockerized/vintage-story/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name vintage-story --restart unless-stopped --init \
+podman run -d --name vintage-story --restart unless-stopped --init \
   -p 42420:42420/tcp -p 42420:42420/udp \
   -v "$PWD/dockerized/vintage-story/data:/opt/vintage-story/data" \
   {{IMAGE_PREFIX}}/vintage-story:latest

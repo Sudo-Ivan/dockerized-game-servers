@@ -43,7 +43,7 @@ The server always starts with the Day of Defeat game mode, console access, remot
 ## GSLT
 
 1. Sign in at [Steam game server account management](https://steamcommunity.com/dev/managegameservers) and create a token for game id 300.
-2. Set DOD_GSLT to that token in compose, a .env file, or with -e on docker run.
+2. Set DOD_GSLT to that token in compose, a .env file, or with -e on podman run.
 
 ## Data folder
 
@@ -61,13 +61,13 @@ Your data folder mounts to /opt/dod-source inside the container.
 ## Compose
 
 ```bash
-docker compose -f dockerized/dod-source/docker-compose.yml up -d
+podman compose -f dockerized/dod-source/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name dod-source --restart unless-stopped --init \
+podman run -d --name dod-source --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
   -v "$PWD/dockerized/dod-source/data:/opt/dod-source" \
   -e DOD_GSLT="your-gslt" \

@@ -13,7 +13,7 @@
     "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/satisfactory:latest"
   },
   "file_denylist": [],
-  "startup": "/bin/bash -c 'export SATISFACTORY_DIR=/home/container; exec /docker-entrypoint.sh'",
+  "startup": "/bin/bash -c 'export SATISFACTORY_DIR=/home/container; exec /container-entrypoint.sh'",
   "config": {
     "files": "{}",
     "startup": "{\"done\": \"Starting\"}",

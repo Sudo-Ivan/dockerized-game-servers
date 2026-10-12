@@ -32,7 +32,7 @@ On first start the container downloads the Project Zomboid Linux dedicated serve
 | PZ_NO_STEAM | false | Adds -nosteam for GOG installs or non-Steam clients |
 | PZ_EXTRA_ARGS | (empty) | Extra launch arguments, space-separated |
 
-The included docker-compose.yml reads STEAM_USERNAME, STEAM_PASSWORD, STEAM_GUARD_CODE, PZ_FORCE_UPDATE, and PZ_ADMIN_PASSWORD from your shell or a .env file. PZ_SERVER_NAME, PZ_NO_STEAM, and PZ_EXTRA_ARGS are fixed in that file. Edit dockerized/project-zomboid/docker-compose.yml to change them, or use docker run -e instead.
+The included compose.yml reads STEAM_USERNAME, STEAM_PASSWORD, STEAM_GUARD_CODE, PZ_FORCE_UPDATE, and PZ_ADMIN_PASSWORD from your shell or a .env file. PZ_SERVER_NAME, PZ_NO_STEAM, and PZ_EXTRA_ARGS are fixed in that file. Edit dockerized/project-zomboid/compose.yml to change them, or use podman run -e instead.
 
 ## Data folder and file layout
 
@@ -57,13 +57,13 @@ The container reports healthy while the Project Zomboid server is running. Start
 
 ```bash
 export PZ_ADMIN_PASSWORD=changeme
-docker compose -f dockerized/project-zomboid/docker-compose.yml up -d
+podman compose -f dockerized/project-zomboid/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name project-zomboid --restart unless-stopped --init \
+podman run -d --name project-zomboid --restart unless-stopped --init \
   -p 16261:16261/udp -p 16262:16262/udp \
   -v "$PWD/dockerized/project-zomboid/data:/opt/zomboid" \
   -e STEAM_USERNAME=anonymous \

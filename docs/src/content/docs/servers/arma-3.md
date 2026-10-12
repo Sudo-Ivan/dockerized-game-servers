@@ -79,13 +79,13 @@ Point template and mission classes at missions you install under the server dire
 ```bash
 export STEAM_USERNAME=youruser
 export STEAM_PASSWORD=yourpass
-docker compose -f dockerized/arma/arma-3/docker-compose.yml up -d
+podman compose -f dockerized/arma/arma-3/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name arma3 --restart unless-stopped --init \
+podman run -d --name arma3 --restart unless-stopped --init \
   -p 2302-2306:2302-2306/udp \
   -v "$PWD/dockerized/arma/arma-3/server:/home/arma3/server" \
   -v "$PWD/dockerized/arma/arma-3/configs:/home/arma3/configs" \

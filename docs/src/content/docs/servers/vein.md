@@ -48,13 +48,13 @@ The container does not write a config file. All settings above are launch argume
 ## Compose
 
 ```bash
-docker compose -f dockerized/vein/docker-compose.yml up -d
+podman compose -f dockerized/vein/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name vein --restart unless-stopped --init \
+podman run -d --name vein --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp \
   -v "$PWD/dockerized/vein/data:/opt/vein" \
   -e VEIN_MAX_PLAYERS=16 \

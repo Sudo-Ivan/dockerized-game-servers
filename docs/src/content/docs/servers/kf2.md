@@ -70,13 +70,13 @@ The container reports healthy while the game server process is running. The KF2 
 ## Compose
 
 ```bash
-docker compose -f dockerized/kf2/docker-compose.yml up -d
+podman compose -f dockerized/kf2/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name kf2 --restart unless-stopped --init \
+podman run -d --name kf2 --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp -p 8080:8080/tcp -p 20560:20560/udp \
   -v "$PWD/dockerized/kf2/data:/opt/kf2" \
   {{IMAGE_PREFIX}}/kf2:latest

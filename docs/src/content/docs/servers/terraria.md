@@ -50,13 +50,13 @@ Your data folder mounts to /opt/terraria inside the container. It holds the inst
 ## Compose
 
 ```bash
-docker compose -f dockerized/terraria/docker-compose.yml up -d
+podman compose -f dockerized/terraria/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name terraria --restart unless-stopped --init \
+podman run -d --name terraria --restart unless-stopped --init \
   -p 7777:7777/tcp \
   -v "$PWD/dockerized/terraria/data:/opt/terraria" \
   {{IMAGE_PREFIX}}/terraria:latest

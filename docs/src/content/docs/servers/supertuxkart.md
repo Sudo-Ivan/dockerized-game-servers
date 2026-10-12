@@ -54,7 +54,7 @@ The container sets HOME so all player data lands inside the data folder. File ow
 
 ## Updates
 
-The game version is fixed at image build time. To upgrade, rebuild the image with a newer STK_VERSION and matching source checksum in the Dockerfile. There is no runtime updater.
+The game version is fixed at image build time. To upgrade, rebuild the image with a newer STK_VERSION and matching source checksum in the Containerfile. There is no runtime updater.
 
 ## Health check
 
@@ -63,13 +63,13 @@ The container reports healthy while the SuperTuxKart server process is running. 
 ## Compose
 
 ```bash
-docker compose -f dockerized/supertuxkart/docker-compose.yml up -d
+podman compose -f dockerized/supertuxkart/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name supertuxkart --restart unless-stopped --init \
+podman run -d --name supertuxkart --restart unless-stopped --init \
   -p 2759:2759/udp \
   -v "$PWD/dockerized/supertuxkart/data:/opt/supertuxkart/data" \
   -e STK_SERVER_NAME="My Kart Server" \

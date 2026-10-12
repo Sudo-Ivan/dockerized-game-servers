@@ -49,7 +49,7 @@ The copied tree also includes a Punkbuster folder from the ioRTCW release. Punkb
 
 ## Updates
 
-There is no one-command update for this server. Use [backup and restore](../guides/ops/) to protect your data. To pick up a newer game archive, change the build settings in the Dockerfile and rebuild the image.
+There is no one-command update for this server. Use [backup and restore](../guides/ops/) to protect your data. To pick up a newer game archive, change the build settings in the Containerfile and rebuild the image.
 
 ## Health check
 
@@ -58,13 +58,13 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f dockerized/rtcw/docker-compose.yml up -d
+podman compose -f dockerized/rtcw/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name rtcw --restart unless-stopped --init \
+podman run -d --name rtcw --restart unless-stopped --init \
   -p 27960:27960/udp \
   -v "$PWD/dockerized/rtcw/data:/opt/rtcw" \
   -e RTCW_PORT=27960 \

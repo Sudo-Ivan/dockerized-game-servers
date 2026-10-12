@@ -3,7 +3,7 @@ title: Repository layout
 description: Top-level directories in this repository.
 ---
 
-When you clone this repo, game server Dockerfiles, compose files, and data volumes live under `dockerized/`. Shared repo infrastructure (`ci/`, `tools/`, `docs/`) stays at the repository root. Other non-dockerized content may appear at the root over time as the monorepo grows.
+When you clone this repo, game server Containerfiles, compose files, and data volumes live under `dockerized/`. Shared repo infrastructure (`ci/`, `tools/`, `docs/`) stays at the repository root. Other non-dockerized content may appear at the root over time as the monorepo grows.
 
 For day-to-day hosting you mostly touch one game folder under `dockerized/` (compose file and data volumes) and optionally the `tools/` scripts for backup and updates.
 
@@ -13,8 +13,8 @@ tools/           host ops CLI (gs backup restore update)
 docs/            Starlight site (this documentation)
 eggs/            Pterodactyl egg JSON (optional)
 dockerized/
-  bases/           shared Docker bases (minecraft, steam, runtime)
-  trivy.yaml       Trivy scan config for Dockerfiles
+  bases/           shared container bases (minecraft, steam, runtime)
+  trivy.yaml       Trivy scan config for Containerfiles
   minecraft/       Fabric, Vanilla, Forge, NeoForge
   valheim/         Vanilla and Plus
   ground-branch/   Ground Branch

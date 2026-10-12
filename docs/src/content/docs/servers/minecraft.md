@@ -25,18 +25,18 @@ The included compose files pin versions in [dockerized/minecraft/defaults.env]({
 
 | Flavor | Settings | Current default |
 | --- | --- | --- |
-| Vanilla | VANILLA_VERSION | 26.2 |
-| Fabric | FABRIC_MINECRAFT_VERSION, FABRIC_LOADER_VERSION, FABRIC_INSTALLER_VERSION | 26.2, 0.19.3, 1.1.1 |
-| Forge | FORGE_MINECRAFT_VERSION, FORGE_VERSION | 26.2, 65.0.9 |
-| NeoForge | NEOFORGE_VERSION | 26.2.0.35-beta |
+| Vanilla | VANILLA_VERSION | 26.3 |
+| Fabric | FABRIC_MINECRAFT_VERSION, FABRIC_LOADER_VERSION, FABRIC_INSTALLER_VERSION | 26.3, 0.19.5, 1.1.2 |
+| Forge | FORGE_MINECRAFT_VERSION, FORGE_VERSION | 26.3, 66.0.10 |
+| NeoForge | NEOFORGE_VERSION | 26.3.0.76 |
 
-Vanilla looks up the version from Mojang's release list (the same version id Fabric uses, for example 26.2). [NeoForge](https://neoforged.net/) uses one Maven version string (for example 26.2.0.35-beta for Minecraft 26.2). Pick a release from the [NeoForged installer files](https://neoforged.net/) or run ci/resolve-minecraft-build.sh with flavor neoforge and your target Minecraft version.
+Vanilla looks up the version from Mojang's release list (the same version id Fabric uses, for example 26.3). [NeoForge](https://neoforged.net/) uses one Maven version string (for example 26.3.0.76 for Minecraft 26.3). Pick a release from the [NeoForged installer files](https://neoforged.net/) or run ci/resolve-minecraft-build.sh with flavor neoforge and your target Minecraft version.
 
 After you change game files, set the matching force flag so the container re-downloads on next start: VANILLA_FORCE_DOWNLOAD, FABRIC_FORCE_DOWNLOAD, FORGE_FORCE_INSTALL, or NEOFORGE_FORCE_INSTALL. The ./tools/gs update command sets these for a one-shot recreate. See [Ops](/guides/ops/).
 
 ## Memory
 
-Each image sets a default heap size and a memory limit in compose. To change heap size, override JVM_FLAGS in the compose environment block or pass it with docker run -e.
+Each image sets a default heap size and a memory limit in compose. To change heap size, override JVM_FLAGS in the compose environment block or pass it with podman run -e.
 
 | Flavor | Default heap | Compose memory limit |
 | --- | --- | --- |
@@ -86,79 +86,79 @@ Client-only mods do not belong on the dedicated server. Use server or universal 
 ## Compose (pinned defaults)
 
 ```bash
-docker compose -f dockerized/minecraft/fabric/docker-compose.yml up
+podman compose -f dockerized/minecraft/fabric/compose.yml up
 ```
 
 Replace fabric with vanilla, forge, or neoforge as needed.
 
 ## Compose (pick your own version)
 
-Use docker-compose.scaffold.yml when you want versions in a local .env file instead of only the repo defaults.
+Use compose.scaffold.yml when you want versions in a local .env file instead of only the repo defaults.
 
 ```bash
 cd dockerized/minecraft/fabric
 cp .env.example .env
 # edit .env, then:
-docker compose -f docker-compose.scaffold.yml up
+podman compose -f compose.scaffold.yml up
 ```
 
 Scaffold compose loads dockerized/minecraft/defaults.env, an optional .env in the flavor folder, and explicit environment entries so your overrides win. You can also pass the defaults file on the command line:
 
 ```bash
-docker compose -f dockerized/minecraft/vanilla/docker-compose.scaffold.yml \
+podman compose -f dockerized/minecraft/vanilla/compose.scaffold.yml \
   --env-file dockerized/minecraft/defaults.env up
 ```
 
 The same pattern works under dockerized/minecraft/vanilla, dockerized/minecraft/forge, and dockerized/minecraft/neoforge with their .env.example files.
 
-## Docker run
+## podman run
 
 Pass version settings with -e (image defaults apply when omitted). Set EULA=true and mount your data folder.
 
 Fabric:
 
 ```bash
-docker run -d --name fabric --restart unless-stopped --init \
+podman run -d --name fabric --restart unless-stopped --init \
   -p 25565:25565/tcp \
   -v "$PWD/dockerized/minecraft/fabric/data:/data" \
   -e EULA=true \
-  -e FABRIC_MINECRAFT_VERSION=26.2 \
-  -e FABRIC_LOADER_VERSION=0.19.3 \
-  -e FABRIC_INSTALLER_VERSION=1.1.1 \
+  -e FABRIC_MINECRAFT_VERSION=26.3 \
+  -e FABRIC_LOADER_VERSION=0.19.5 \
+  -e FABRIC_INSTALLER_VERSION=1.1.2 \
   {{IMAGE_PREFIX}}/minecraft-fabric:latest
 ```
 
 Vanilla:
 
 ```bash
-docker run -d --name vanilla --restart unless-stopped --init \
+podman run -d --name vanilla --restart unless-stopped --init \
   -p 25565:25565/tcp \
   -v "$PWD/dockerized/minecraft/vanilla/data:/data" \
   -e EULA=true \
-  -e VANILLA_VERSION=26.2 \
+  -e VANILLA_VERSION=26.3 \
   {{IMAGE_PREFIX}}/minecraft-vanilla:latest
 ```
 
 Forge:
 
 ```bash
-docker run -d --name forge --restart unless-stopped --init \
+podman run -d --name forge --restart unless-stopped --init \
   -p 25565:25565/tcp \
   -v "$PWD/dockerized/minecraft/forge/data:/data" \
   -e EULA=true \
-  -e FORGE_MINECRAFT_VERSION=26.2 \
-  -e FORGE_VERSION=65.0.9 \
+  -e FORGE_MINECRAFT_VERSION=26.3 \
+  -e FORGE_VERSION=66.0.10 \
   {{IMAGE_PREFIX}}/minecraft-forge:latest
 ```
 
 NeoForge:
 
 ```bash
-docker run -d --name neoforge --restart unless-stopped --init \
+podman run -d --name neoforge --restart unless-stopped --init \
   -p 25565:25565/tcp \
   -v "$PWD/dockerized/minecraft/neoforge/data:/data" \
   -e EULA=true \
-  -e NEOFORGE_VERSION=26.2.0.35-beta \
+  -e NEOFORGE_VERSION=26.3.0.76 \
   {{IMAGE_PREFIX}}/minecraft-neoforge:latest
 ```
 

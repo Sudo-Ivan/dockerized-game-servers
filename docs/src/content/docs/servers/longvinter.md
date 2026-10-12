@@ -54,13 +54,13 @@ Your data folder mounts to /opt/longvinter inside the container. It holds the in
 ## Compose
 
 ```bash
-docker compose -f dockerized/longvinter/docker-compose.yml up -d
+podman compose -f dockerized/longvinter/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name longvinter --restart unless-stopped --init \
+podman run -d --name longvinter --restart unless-stopped --init \
   -p 7777:7777/udp \
   -v "$PWD/dockerized/longvinter/data:/opt/longvinter" \
   {{IMAGE_PREFIX}}/longvinter:latest

@@ -78,7 +78,7 @@ export function getSoftwareApplicationJsonLd(opts) {
 		url: opts.docsUrl,
 		image: opts.logoUrl,
 		applicationCategory: 'DeveloperApplication',
-		operatingSystem: 'Linux, Docker',
+		operatingSystem: 'Linux, Podman',
 		license: 'https://opensource.org/licenses/0BSD',
 		codeRepository: opts.githubUrl,
 		downloadUrl: opts.downloadUrl,

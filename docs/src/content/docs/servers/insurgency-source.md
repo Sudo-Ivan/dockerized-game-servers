@@ -70,13 +70,13 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f dockerized/insurgency-source/docker-compose.yml up -d
+podman compose -f dockerized/insurgency-source/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name insurgency-source --restart unless-stopped --init \
+podman run -d --name insurgency-source --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27016:27016/udp \
   -v "$PWD/dockerized/insurgency-source/data:/opt/insurgency-source" \
   -e STEAM_USERNAME="your_steam_user" \

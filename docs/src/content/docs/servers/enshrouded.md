@@ -62,13 +62,13 @@ If SteamCMD installs files under a nested steamapps/common folder, the container
 ## Compose
 
 ```bash
-docker compose -f dockerized/enshrouded/docker-compose.yml up -d
+podman compose -f dockerized/enshrouded/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name enshrouded --restart unless-stopped --init \
+podman run -d --name enshrouded --restart unless-stopped --init \
   -p 15636:15636/udp -p 15637:15637/udp \
   -v "$PWD/dockerized/enshrouded/data:/opt/enshrouded" \
   -e ENSHROUDED_SERVER_NAME="My Enshrouded Server" \

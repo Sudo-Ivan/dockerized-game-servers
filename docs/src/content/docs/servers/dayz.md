@@ -47,7 +47,7 @@ DayZ mods come from the Steam Workshop for the DayZ client (App ID 221100). The 
 
 ### 1. Download mods with SteamCMD
 
-Run on the host (or docker compose exec with Steam credentials) with install dir set to your server data folder:
+Run on the host (or podman compose exec with Steam credentials) with install dir set to your server data folder:
 
 ```bash
 ./steamcmd.sh +force_install_dir /path/to/dayz/data \
@@ -136,13 +136,13 @@ Default generated config uses dayzOffline.chernarusplus. Other maps use differen
 ## Compose
 
 ```bash
-docker compose -f dockerized/dayz/docker-compose.yml up -d
+podman compose -f dockerized/dayz/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name dayz --restart unless-stopped --init \
+podman run -d --name dayz --restart unless-stopped --init \
   -p 2302:2302/udp -p 2303:2303/udp -p 2304:2304/udp \
   -p 2305:2305/udp -p 2306:2306/udp \
   -v "$PWD/dockerized/dayz/data:/opt/dayz" \

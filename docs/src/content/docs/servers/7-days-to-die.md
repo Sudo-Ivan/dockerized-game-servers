@@ -63,13 +63,13 @@ Your data folder mounts to /opt/7dtd inside the container. It holds the installe
 ## Compose
 
 ```bash
-docker compose -f dockerized/7-days-to-die/docker-compose.yml up -d
+podman compose -f dockerized/7-days-to-die/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name 7-days-to-die --restart unless-stopped --init \
+podman run -d --name 7-days-to-die --restart unless-stopped --init \
   -p 26900:26900/tcp -p 26900:26900/udp \
   -p 26901-26903:26901-26903/udp \
   -v "$PWD/dockerized/7-days-to-die/data:/opt/7dtd" \

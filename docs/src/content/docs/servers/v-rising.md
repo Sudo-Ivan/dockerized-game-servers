@@ -63,13 +63,13 @@ If SteamCMD installs files under a nested steamapps/common folder, the container
 ## Compose
 
 ```bash
-docker compose -f dockerized/v-rising/docker-compose.yml up -d
+podman compose -f dockerized/v-rising/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name v-rising --restart unless-stopped --init \
+podman run -d --name v-rising --restart unless-stopped --init \
   -p 9876:9876/udp -p 9877:9877/udp -p 9877:9877/tcp \
   -v "$PWD/dockerized/v-rising/data:/opt/vrising" \
   -e VRISING_SERVER_NAME="My V Rising Server" \

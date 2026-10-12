@@ -56,7 +56,7 @@ def resolve_temurin(major: int) -> tuple[str, str, str]:
     package = assets[0]["binary"]["package"]
     link = package["link"]
     parts = link.rstrip("/").split("/")
-    # Keep unencoded for Actions outputs. Dockerfile encodes '+' for the GitHub path.
+    # Keep unencoded for Actions outputs. Containerfile encodes '+' for the GitHub path.
     release_tag = urllib.parse.unquote(parts[-2])
     filename = parts[-1]
     marker = "hotspot_"

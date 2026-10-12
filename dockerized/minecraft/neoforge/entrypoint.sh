@@ -4,7 +4,7 @@ set -eu
 # shellcheck disable=SC1091
 . /runtime.sh
 
-: "${NEOFORGE_VERSION:=26.2.0.35-beta}"
+: "${NEOFORGE_VERSION:=26.3.0.76}"
 : "${NEOFORGE_INSTALLER_URL:=}"
 : "${NEOFORGE_FORCE_INSTALL:=false}"
 : "${NEOFORGE_INSTALL_DIR:=/data}"

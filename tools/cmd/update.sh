@@ -53,19 +53,19 @@ gs_cmd_update() {
   done
 
   if [ "${GS_DRY_RUN:-0}" = "1" ] || [ "${GS_TEST_MODE:-0}" = "1" ]; then
-    gs_log "DRY RUN update ${GS_ID}: ${export_args}docker compose -f ${GS_COMPOSE} up -d --force-recreate"
+    gs_log "DRY RUN update ${GS_ID}: ${export_args}podman compose -f ${GS_COMPOSE} up -d --force-recreate"
     return 0
   fi
 
-  gs_require_cmd docker
+  gs_require_cmd podman
   gs_log "Updating ${GS_ID} (${export_args})"
-  docker compose -f "${GS_ROOT}/${GS_COMPOSE}" up -d --force-recreate
+  podman compose -f "${GS_ROOT}/${GS_COMPOSE}" up -d --force-recreate
 
-  # Wait briefly for healthy when Docker reports health
+  # Wait briefly for healthy when the engine reports health
   tries=0
   max_tries=60
   while [ "${tries}" -lt "${max_tries}" ]; do
-    status="$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "${GS_CONTAINER}" 2>/dev/null || true)"
+    status="$(podman inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "${GS_CONTAINER}" 2>/dev/null || true)"
     case "${status}" in
       healthy|running)
         if [ "${status}" = "healthy" ] || [ "${tries}" -ge 5 ]; then
@@ -87,7 +87,7 @@ gs_cmd_update() {
   done
 
   # No HEALTHCHECK images still count as success if running
-  status="$(docker inspect --format '{{.State.Status}}' "${GS_CONTAINER}" 2>/dev/null || true)"
+  status="$(podman inspect --format '{{.State.Status}}' "${GS_CONTAINER}" 2>/dev/null || true)"
   [ "${status}" = "running" ] || gs_die "update timed out waiting for ${GS_CONTAINER} (status=${status})"
   gs_log "Container ${GS_CONTAINER} is running"
 }

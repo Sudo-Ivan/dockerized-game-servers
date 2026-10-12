@@ -48,15 +48,15 @@ When mapping non-default host ports (for example 3060:3000), use the host port i
 ## Compose
 
 ```bash
-docker compose -f dockerized/eco/docker-compose.yml up -d
+podman compose -f dockerized/eco/compose.yml up -d
 ```
 
-The included dockerized/eco/docker-compose.yml sets STEAM_USERNAME and STEAM_PASSWORD to literal values (anonymous and empty), not variable substitution. If Eco needs a real Steam account to install, pass -e STEAM_USERNAME=... -e STEAM_PASSWORD=... with docker run instead, or edit those two lines in the compose file. ECO_FORCE_UPDATE and ECO_USER_TOKEN do use variable substitution, so you can set those from your shell or a .env file next to the compose file.
+The included dockerized/eco/compose.yml sets STEAM_USERNAME and STEAM_PASSWORD to literal values (anonymous and empty), not variable substitution. If Eco needs a real Steam account to install, pass -e STEAM_USERNAME=... -e STEAM_PASSWORD=... with podman run instead, or edit those two lines in the compose file. ECO_FORCE_UPDATE and ECO_USER_TOKEN do use variable substitution, so you can set those from your shell or a .env file next to the compose file.
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name eco --restart unless-stopped --init \
+podman run -d --name eco --restart unless-stopped --init \
   -p 3000:3000/udp -p 3001:3001/udp \
   -v "$PWD/dockerized/eco/data:/opt/eco" \
   -e ECO_USER_TOKEN="your-token-here" \

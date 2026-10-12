@@ -44,7 +44,7 @@ The server always starts with the Team Fortress 2 game mode, console access, rem
 ## GSLT
 
 1. Sign in at [Steam game server account management](https://steamcommunity.com/dev/managegameservers) and create a token for game id 440.
-2. Set TF2_GSLT to that token in compose, a .env file, or with -e on docker run.
+2. Set TF2_GSLT to that token in compose, a .env file, or with -e on podman run.
 
 ## Data folder
 
@@ -62,13 +62,13 @@ Your data folder mounts to /opt/tf2 inside the container.
 ## Compose
 
 ```bash
-docker compose -f dockerized/tf2/docker-compose.yml up -d
+podman compose -f dockerized/tf2/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name tf2 --restart unless-stopped --init \
+podman run -d --name tf2 --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
   -v "$PWD/dockerized/tf2/data:/opt/tf2" \
   -e TF2_GSLT="your-gslt" \

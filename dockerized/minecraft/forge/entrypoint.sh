@@ -4,8 +4,8 @@ set -eu
 # shellcheck disable=SC1091
 . /runtime.sh
 
-: "${FORGE_MINECRAFT_VERSION:=26.2}"
-: "${FORGE_VERSION:=65.0.9}"
+: "${FORGE_MINECRAFT_VERSION:=26.3}"
+: "${FORGE_VERSION:=66.0.10}"
 : "${FORGE_INSTALLER_URL:=}"
 : "${FORGE_FORCE_INSTALL:=false}"
 : "${FORGE_INSTALL_DIR:=/data}"

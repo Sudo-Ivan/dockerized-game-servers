@@ -63,13 +63,13 @@ The container reports healthy while the Icarus server process is running. Startu
 ## Compose
 
 ```bash
-docker compose -f dockerized/icarus/docker-compose.yml up -d
+podman compose -f dockerized/icarus/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name icarus --restart unless-stopped --init \
+podman run -d --name icarus --restart unless-stopped --init \
   -p 17777:17777/udp -p 27015:27015/udp \
   -v "$PWD/dockerized/icarus/data:/opt/icarus" \
   -e ICARUS_SESSION_NAME="My Prospect" \

@@ -13,7 +13,7 @@
     "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/project-zomboid:latest"
   },
   "file_denylist": [],
-  "startup": "/bin/bash -c 'export PZ_INSTALL_DIR=/home/container/server; exec /docker-entrypoint.sh'",
+  "startup": "/bin/bash -c 'export PZ_INSTALL_DIR=/home/container/server; exec /container-entrypoint.sh'",
   "config": {
     "files": "{}",
     "startup": "{\"done\": \"Starting\"}",

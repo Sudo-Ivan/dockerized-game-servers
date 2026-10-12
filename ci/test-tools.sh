@@ -35,7 +35,7 @@ cat >"${stub_root}/ci/server-catalog.sh" <<'EOF'
 #!/bin/sh
 set -eu
 printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
-  "fake" "fake-game/docker-compose.yml" "fake" "data" "FAKE_FORCE_UPDATE" "process" "1"
+  "fake" "fake-game/compose.yml" "fake" "data" "FAKE_FORCE_UPDATE" "process" "1"
 EOF
 chmod +x "${stub_root}/ci/server-catalog.sh" "${stub_root}/ci/repo-meta.sh"
 printf 'hello\n' >"${stub_root}/fake-game/data/world.txt"

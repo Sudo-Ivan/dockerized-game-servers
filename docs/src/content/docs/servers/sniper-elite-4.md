@@ -81,13 +81,13 @@ The container reports healthy while the Sniper Elite 4 server process is running
 ## Compose
 
 ```bash
-docker compose -f dockerized/sniper-elite-4/docker-compose.yml up -d
+podman compose -f dockerized/sniper-elite-4/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name sniper-elite-4 --restart unless-stopped --init \
+podman run -d --name sniper-elite-4 --restart unless-stopped --init \
   -p 27000:27000/udp -p 27005:27005/udp -p 27010:27010/tcp -p 27015:27015/udp \
   -v "$PWD/dockerized/sniper-elite-4/data:/opt/se4" \
   -e SE4_SERVER_NAME="My SE4 Server" \

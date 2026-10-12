@@ -50,7 +50,7 @@ Punkbuster is disabled (sv_punkbuster 0) because Punkbuster master servers for t
 
 ## Updates
 
-There is no one-command update for this server. Use [backup and restore](../guides/ops/) to protect your data. To pick up a newer game archive, change the build settings in the Dockerfile and rebuild the image.
+There is no one-command update for this server. Use [backup and restore](../guides/ops/) to protect your data. To pick up a newer game archive, change the build settings in the Containerfile and rebuild the image.
 
 ## Health check
 
@@ -59,13 +59,13 @@ The container reports healthy while the game server process is running. Startup 
 ## Compose
 
 ```bash
-docker compose -f dockerized/cod/docker-compose.yml up -d
+podman compose -f dockerized/cod/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name cod --restart unless-stopped --init \
+podman run -d --name cod --restart unless-stopped --init \
   -p 28960:28960/udp \
   -v "$PWD/dockerized/cod/data:/opt/cod" \
   -e COD_PORT=28960 \

@@ -1,6 +1,6 @@
 ---
 title: AzerothCore
-description: World of Warcraft 3.3.5a private server via pre-built acore/* Docker images.
+description: World of Warcraft 3.3.5a private server via pre-built acore/* container images.
 ---
 
 This stack runs an [AzerothCore](https://github.com/azerothcore/azerothcore-wotlk) World of Warcraft 3.3.5a (Wrath of the Lich King) private server using pre-built images from [Docker Hub (acore/*)](https://hub.docker.com/u/acore). It pulls server binaries, imports databases on first start, and populates map data automatically. You still need a compatible game client to play. See [client setup](https://www.azerothcore.org/wiki/client-setup).
@@ -41,8 +41,8 @@ All paths are under dockerized/azerothcore/data/ on the host:
 cd dockerized/azerothcore
 cp .env.example .env
 # edit .env if you want a stronger ACORE_DB_ROOT_PASSWORD
-docker compose up -d
-docker compose logs -f azerothcore-worldserver
+podman compose up -d
+podman compose logs -f azerothcore-worldserver
 ```
 
 One-shot init containers must finish before auth and world start. Watch logs until the worldserver is ready.
@@ -50,7 +50,7 @@ One-shot init containers must finish before auth and world start. Watch logs unt
 Create a game account in the worldserver console:
 
 ```bash
-docker attach azerothcore-worldserver
+podman attach azerothcore-worldserver
 ```
 
 At the AC> prompt:
@@ -81,7 +81,7 @@ See dockerized/azerothcore/.env.example for commented overrides.
 ## Optional phpMyAdmin
 
 ```bash
-docker compose --profile admin up -d
+podman compose --profile admin up -d
 ```
 
 Open http://127.0.0.1:8080 (or your ACORE_PHPMYADMIN_PORT). Host: azerothcore-database, user: root, password: your ACORE_DB_ROOT_PASSWORD.
@@ -91,8 +91,8 @@ Open http://127.0.0.1:8080 (or your ACORE_PHPMYADMIN_PORT). Host: azerothcore-da
 To edit worldserver.conf or authserver.conf on the host:
 
 ```bash
-docker compose cp azerothcore-worldserver:/azerothcore/env/dist/etc/worldserver.conf data/etc/
-docker compose cp azerothcore-authserver:/azerothcore/env/dist/etc/authserver.conf data/etc/
+podman compose cp azerothcore-worldserver:/azerothcore/env/dist/etc/worldserver.conf data/etc/
+podman compose cp azerothcore-authserver:/azerothcore/env/dist/etc/authserver.conf data/etc/
 ```
 
 Edit files under data/etc/, then restart auth and world. Upstream dist files: [worldserver.conf.dist](https://github.com/azerothcore/azerothcore-wotlk/blob/master/src/server/apps/worldserver/worldserver.conf.dist), [authserver.conf.dist](https://github.com/azerothcore/azerothcore-wotlk/blob/master/src/server/apps/authserver/authserver.conf.dist).
@@ -107,10 +107,10 @@ Drop Eluna scripts into data/scripts/lua/. The worldserver image ships with Elun
 
 ```bash
 cd dockerized/azerothcore
-docker compose down
-docker compose pull
-docker compose rm -s -v -f azerothcore-client-data
-docker compose up -d
+podman compose down
+podman compose pull
+podman compose rm -s -v -f azerothcore-client-data
+podman compose up -d
 ```
 
 Recreating azerothcore-client-data refreshes bundled map data from the image. Skip that step if you use custom extracted client data.
@@ -120,7 +120,7 @@ Recreating azerothcore-client-data refreshes bundled map data from the image. Sk
 ## Compose from repo root
 
 ```bash
-docker compose -f dockerized/azerothcore/docker-compose.yml up -d
+podman compose -f dockerized/azerothcore/compose.yml up -d
 ```
 
 ## See also

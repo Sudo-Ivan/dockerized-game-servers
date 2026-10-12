@@ -1,11 +1,11 @@
 ---
 title: Quick start
-description: Run a game server with Docker Compose or docker run.
+description: Run a game server with podman compose or podman run.
 ---
 
 ## What you need
 
-- Docker Engine with the Compose plugin (docker compose, not the older docker-compose command)
+- Podman with a compose provider for `podman compose` (podman-compose, or docker-compose on the Podman socket)
 - A copy of this repository, because compose files and data folders live here
 - Extra CPU and RAM for Wine-based games (Ground Branch, Space Engineers, Icarus, Sons Of The Forest, Sniper Elite 4). Those run a Windows build under Wine and are heavier than native Linux servers
 
@@ -26,25 +26,25 @@ If you only build and run locally and never pull from GitHub Container Registry,
 ## 3. Run with Compose
 
 ```bash
-docker compose -f dockerized/minecraft/fabric/docker-compose.yml up
+podman compose -f dockerized/minecraft/fabric/compose.yml up
 ```
 
-Swap the path for any other server, for example dockerized/valheim/vanilla/docker-compose.yml or dockerized/core-keeper/docker-compose.yml.
+Swap the path for any other server, for example dockerized/valheim/vanilla/compose.yml or dockerized/core-keeper/compose.yml.
 
 To build the image on your machine instead of pulling:
 
 ```bash
-docker compose -f dockerized/minecraft/fabric/docker-compose.yml up --build
+podman compose -f dockerized/minecraft/fabric/compose.yml up --build
 ```
 
 Every compose file names a published image and also includes a build section for local builds. With pull_policy set to missing, Compose uses an image already on disk before it tries to pull. Add --pull always to force a fresh pull.
 
-## 4. Run with docker run instead
+## 4. Run with podman run instead
 
-Compose is easier because it keeps ports, folders, health checks, and memory limits in one place. A plain docker run works too. Each server guide has a copy-paste example. The general shape:
+Compose is easier because it keeps ports, folders, health checks, and memory limits in one place. A plain podman run works too. Each server guide has a copy-paste example. The general shape:
 
 ```bash
-docker run -d --name <container> --restart unless-stopped --init \
+podman run -d --name <container> --restart unless-stopped --init \
   -p <port>:<port>/<proto> \
   -v "$PWD/<server>/data:/<data-path>" \
   -e <ENV_VAR>=<value> \
@@ -56,14 +56,14 @@ Image prefix: {{IMAGE_PREFIX}}
 For example, Minecraft Fabric with no mods needs only the EULA flag:
 
 ```bash
-docker run -d --name fabric --restart unless-stopped --init \
+podman run -d --name fabric --restart unless-stopped --init \
   -p 25565:25565/tcp \
   -v "$PWD/dockerized/minecraft/fabric/data:/data" \
   -e EULA=true \
   {{IMAGE_PREFIX}}/minecraft-fabric:latest
 ```
 
-Match -p host:container/proto to the ports on the server's guide. Use both TCP and UDP where the game needs both. Keep --init when you switch to docker run. It cleans up child processes from wrapper scripts.
+Match -p host:container/proto to the ports on the server's guide. Use both TCP and UDP where the game needs both. Keep --init when you switch to podman run. It cleans up child processes from wrapper scripts.
 
 ## Persistent data
 
@@ -87,13 +87,13 @@ Anonymous Steam downloads work for most dedicated server tools. A few games (Arm
 
 ## Port forwarding
 
-Docker publishes ports on the host. Traffic from the internet still has to reach that host through your router.
+Podman publishes ports on the host. Traffic from the internet still has to reach that host through your router.
 
 Port forwarding is the reliable option for a server you keep running: a router rule that sends a given port to your machine's LAN IP. Most guides assume this setup.
 
 UPnP asks the router to open a port automatically. Some routers handle it poorly, and it is a weaker security boundary than a fixed rule you chose.
 
-Give the Docker host a fixed LAN IP (static assignment or a DHCP reservation). Otherwise the forwarding rule can point at the wrong device after a reboot.
+Give the container host a fixed LAN IP (static assignment or a DHCP reservation). Otherwise the forwarding rule can point at the wrong device after a reboot.
 
 :::note[Connection troubleshooting]
 - Same-network testing can fail even when remote players connect fine. Many home routers lack NAT loopback, so your own public IP may not work from inside your network. Test from outside (mobile data off Wi-Fi is enough) before assuming the setup is broken.
@@ -104,7 +104,7 @@ Give the Docker host a fixed LAN IP (static assignment or a DHCP reservation). O
 
 ## Backup, restore, update, health checks
 
-Covered on the [Ops](./ops/) page: ./tools/gs backup, restore, update, and how health checks show up in docker inspect.
+Covered on the [Ops](./ops/) page: ./tools/gs backup, restore, update, and how health checks show up in podman inspect.
 
 ## Next steps
 

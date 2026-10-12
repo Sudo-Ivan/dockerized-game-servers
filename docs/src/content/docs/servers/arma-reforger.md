@@ -103,13 +103,13 @@ The generated config is minimal. For RCON, add an rcon block to ServerConfig.jso
 ## Compose
 
 ```bash
-docker compose -f dockerized/arma/reforger/docker-compose.yml up -d
+podman compose -f dockerized/arma/reforger/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name arma-reforger --restart unless-stopped --init \
+podman run -d --name arma-reforger --restart unless-stopped --init \
   -p 2001:2001/udp -p 17777:17777/udp \
   -v "$PWD/dockerized/arma/reforger/data:/opt/arma-reforger" \
   -e STEAMCMD_WINDOWS_WORKAROUND=full \

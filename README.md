@@ -1,6 +1,6 @@
 # dockerized-game-servers
 
-Dockerized dedicated game servers with small images and compose files. All Docker images, compose stacks, and server data directories live under `dockerized/`. Shared repo tooling (`ci/`, `tools/`, `docs/`) stays at the repository root. Other non-dockerized content may be added at the root later as this monorepo grows.
+Dedicated game servers as OCI container images with compose files, built and run with Podman. All Containerfiles, compose stacks, and server data directories live under `dockerized/`. Shared repo tooling (`ci/`, `tools/`, `docs/`) stays at the repository root. Other non-dockerized content may be added at the root later as this monorepo grows.
 
 Docs publish to GitHub Pages for this repository (see Actions / Pages).
 
@@ -76,37 +76,44 @@ Shared bases (under `dockerized/bases/`):
 
 ## Quick start
 
+Requirements: Podman (rootless is fine) and a compose provider for `podman compose` (`podman-compose`, or `docker-compose` talking to the Podman socket). For the rootless API socket used by `docker-compose` and other Docker-compatible tools:
+
+```bash
+systemctl --user enable --now podman.socket
+export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/podman/podman.sock"
+```
+
 ### Compose
 
 Published images use `IMAGE_OWNER=sudo-ivan/dockerized-game-servers`. For a fork with its own GHCR packages, set `IMAGE_OWNER` in `.env` (see `.env.example`).
 
 ```bash
-docker compose -f dockerized/minecraft/fabric/docker-compose.yml up
+podman compose -f dockerized/minecraft/fabric/compose.yml up
 ```
 
 To pin the upstream registry explicitly:
 
 ```bash
 export IMAGE_OWNER=sudo-ivan/dockerized-game-servers
-docker compose -f dockerized/minecraft/fabric/docker-compose.yml up
+podman compose -f dockerized/minecraft/fabric/compose.yml up
 ```
 
 Build locally:
 
 ```bash
-docker compose -f dockerized/minecraft/fabric/docker-compose.yml up --build
+podman compose -f dockerized/minecraft/fabric/compose.yml up --build
 ```
 
 Compose files reference `ghcr.io/${IMAGE_OWNER}/...` and keep build contexts for local rebuilds. `pull_policy: missing` uses a local image when present, otherwise pulls.
 
-### Docker run
+### podman run
 
 Image prefix: `ghcr.io/sudo-ivan/dockerized-game-servers` (replace `sudo-ivan/dockerized-game-servers` in the examples if you use another registry namespace).
 
 Minecraft Fabric:
 
 ```bash
-docker run -d --name fabric --restart unless-stopped --init \
+podman run -d --name fabric --restart unless-stopped --init \
   -p 25565:25565/tcp \
   -v "$PWD/dockerized/minecraft/fabric/data:/data" \
   -e EULA=true \
@@ -116,7 +123,7 @@ docker run -d --name fabric --restart unless-stopped --init \
 Minecraft Vanilla:
 
 ```bash
-docker run -d --name vanilla --restart unless-stopped --init \
+podman run -d --name vanilla --restart unless-stopped --init \
   -p 25565:25565/tcp \
   -v "$PWD/dockerized/minecraft/vanilla/data:/data" \
   -e EULA=true \
@@ -126,7 +133,7 @@ docker run -d --name vanilla --restart unless-stopped --init \
 Minecraft Forge:
 
 ```bash
-docker run -d --name forge --restart unless-stopped --init \
+podman run -d --name forge --restart unless-stopped --init \
   -p 25565:25565/tcp \
   -v "$PWD/dockerized/minecraft/forge/data:/data" \
   -e EULA=true \
@@ -136,7 +143,7 @@ docker run -d --name forge --restart unless-stopped --init \
 Valheim:
 
 ```bash
-docker run -d --name valheim --restart unless-stopped --init \
+podman run -d --name valheim --restart unless-stopped --init \
   -p 2456-2458:2456-2458/udp \
   -v "$PWD/dockerized/valheim/vanilla/data:/opt/valheim" \
   -e SERVER_PASS=changeme \
@@ -146,7 +153,7 @@ docker run -d --name valheim --restart unless-stopped --init \
 Valheim Plus:
 
 ```bash
-docker run -d --name valheim-plus --restart unless-stopped --init \
+podman run -d --name valheim-plus --restart unless-stopped --init \
   -p 2456-2458:2456-2458/udp \
   -v "$PWD/dockerized/valheim/plus/data:/opt/valheim" \
   -e SERVER_PASS=changeme \
@@ -156,7 +163,7 @@ docker run -d --name valheim-plus --restart unless-stopped --init \
 Ground Branch:
 
 ```bash
-docker run -d --name ground-branch --restart unless-stopped --init \
+podman run -d --name ground-branch --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp \
   -v "$PWD/dockerized/ground-branch/data:/opt/groundbranch" \
   ghcr.io/sudo-ivan/dockerized-game-servers/ground-branch:latest
@@ -165,7 +172,7 @@ docker run -d --name ground-branch --restart unless-stopped --init \
 Space Engineers:
 
 ```bash
-docker run -d --name space-engineers --restart unless-stopped --init \
+podman run -d --name space-engineers --restart unless-stopped --init \
   -p 27016:27016/udp \
   -v "$PWD/dockerized/space-engineers/data/dedicated:/opt/spaceengineers/dedicated" \
   -v "$PWD/dockerized/space-engineers/data/instances:/opt/spaceengineers/instances" \
@@ -177,7 +184,7 @@ docker run -d --name space-engineers --restart unless-stopped --init \
 Satisfactory:
 
 ```bash
-docker run -d --name satisfactory --restart unless-stopped --init \
+podman run -d --name satisfactory --restart unless-stopped --init \
   -p 7777:7777/tcp -p 7777:7777/udp -p 8888:8888/tcp \
   -v "$PWD/dockerized/satisfactory/data:/opt/satisfactory" \
   ghcr.io/sudo-ivan/dockerized-game-servers/satisfactory:latest
@@ -186,7 +193,7 @@ docker run -d --name satisfactory --restart unless-stopped --init \
 Core Keeper (SDR, no ports):
 
 ```bash
-docker run -d --name core-keeper --restart unless-stopped --init \
+podman run -d --name core-keeper --restart unless-stopped --init \
   -v "$PWD/dockerized/core-keeper/data:/opt/corekeeper" \
   ghcr.io/sudo-ivan/dockerized-game-servers/core-keeper:latest
 ```
@@ -194,7 +201,7 @@ docker run -d --name core-keeper --restart unless-stopped --init \
 Factorio:
 
 ```bash
-docker run -d --name factorio --restart unless-stopped --init \
+podman run -d --name factorio --restart unless-stopped --init \
   -p 34197:34197/udp -p 27015:27015/tcp \
   -v "$PWD/dockerized/factorio/data:/opt/factorio" \
   -e RCON_PASSWORD=changeme \
@@ -204,7 +211,7 @@ docker run -d --name factorio --restart unless-stopped --init \
 Vintage Story:
 
 ```bash
-docker run -d --name vintage-story --restart unless-stopped --init \
+podman run -d --name vintage-story --restart unless-stopped --init \
   -p 42420:42420/tcp -p 42420:42420/udp \
   -v "$PWD/dockerized/vintage-story/data:/opt/vintage-story/data" \
   ghcr.io/sudo-ivan/dockerized-game-servers/vintage-story:latest
@@ -213,7 +220,7 @@ docker run -d --name vintage-story --restart unless-stopped --init \
 7 Days to Die:
 
 ```bash
-docker run -d --name 7-days-to-die --restart unless-stopped --init \
+podman run -d --name 7-days-to-die --restart unless-stopped --init \
   -p 26900:26900/tcp -p 26900:26900/udp \
   -p 26901-26903:26901-26903/udp \
   -v "$PWD/dockerized/7-days-to-die/data:/opt/7dtd" \
@@ -223,7 +230,7 @@ docker run -d --name 7-days-to-die --restart unless-stopped --init \
 Project Zomboid:
 
 ```bash
-docker run -d --name project-zomboid --restart unless-stopped --init \
+podman run -d --name project-zomboid --restart unless-stopped --init \
   -p 16261:16261/udp -p 16262:16262/udp \
   -v "$PWD/dockerized/project-zomboid/data:/opt/zomboid" \
   -e PZ_ADMIN_PASSWORD=changeme \
@@ -233,7 +240,7 @@ docker run -d --name project-zomboid --restart unless-stopped --init \
 Terraria:
 
 ```bash
-docker run -d --name terraria --restart unless-stopped --init \
+podman run -d --name terraria --restart unless-stopped --init \
   -p 7777:7777/tcp \
   -v "$PWD/dockerized/terraria/data:/opt/terraria" \
   ghcr.io/sudo-ivan/dockerized-game-servers/terraria:latest
@@ -242,7 +249,7 @@ docker run -d --name terraria --restart unless-stopped --init \
 Left 4 Dead 2:
 
 ```bash
-docker run -d --name l4d2 --restart unless-stopped --init \
+podman run -d --name l4d2 --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
   -v "$PWD/dockerized/l4d2/data:/opt/l4d2" \
   ghcr.io/sudo-ivan/dockerized-game-servers/l4d2:latest
@@ -251,7 +258,7 @@ docker run -d --name l4d2 --restart unless-stopped --init \
 Insurgency (Source):
 
 ```bash
-docker run -d --name insurgency-source --restart unless-stopped --init \
+podman run -d --name insurgency-source --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27016:27016/udp \
   -v "$PWD/dockerized/insurgency-source/data:/opt/insurgency-source" \
   ghcr.io/sudo-ivan/dockerized-game-servers/insurgency-source:latest
@@ -260,7 +267,7 @@ docker run -d --name insurgency-source --restart unless-stopped --init \
 Insurgency: Sandstorm:
 
 ```bash
-docker run -d --name insurgency-sandstorm --restart unless-stopped --init \
+podman run -d --name insurgency-sandstorm --restart unless-stopped --init \
   -p 27102:27102/udp -p 27131:27131/udp \
   -v "$PWD/dockerized/insurgency-sandstorm/data:/opt/insurgency-sandstorm" \
   ghcr.io/sudo-ivan/dockerized-game-servers/insurgency-sandstorm:latest
@@ -269,7 +276,7 @@ docker run -d --name insurgency-sandstorm --restart unless-stopped --init \
 Counter-Strike: Source:
 
 ```bash
-docker run -d --name cs-source --restart unless-stopped --init \
+podman run -d --name cs-source --restart unless-stopped --init \
   -p 27015:27015/tcp -p 27015:27015/udp -p 27005:27005/udp \
   -v "$PWD/dockerized/cs-source/data:/opt/cs-source" \
   -e CSS_GSLT="${CSS_GSLT:-}" \
@@ -279,7 +286,7 @@ docker run -d --name cs-source --restart unless-stopped --init \
 Killing Floor 2:
 
 ```bash
-docker run -d --name kf2 --restart unless-stopped --init \
+podman run -d --name kf2 --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp -p 8080:8080/tcp -p 20560:20560/udp \
   -v "$PWD/dockerized/kf2/data:/opt/kf2" \
   ghcr.io/sudo-ivan/dockerized-game-servers/kf2:latest
@@ -288,7 +295,7 @@ docker run -d --name kf2 --restart unless-stopped --init \
 Icarus:
 
 ```bash
-docker run -d --name icarus --restart unless-stopped --init \
+podman run -d --name icarus --restart unless-stopped --init \
   -p 17777:17777/udp -p 27015:27015/udp \
   -v "$PWD/dockerized/icarus/data:/opt/icarus" \
   ghcr.io/sudo-ivan/dockerized-game-servers/icarus:latest
@@ -297,7 +304,7 @@ docker run -d --name icarus --restart unless-stopped --init \
 The Forest:
 
 ```bash
-docker run -d --name the-forest --restart unless-stopped --init \
+podman run -d --name the-forest --restart unless-stopped --init \
   -p 8766:8766/tcp -p 8766:8766/udp \
   -p 27015:27015/tcp -p 27015:27015/udp \
   -p 27016:27016/tcp -p 27016:27016/udp \
@@ -308,7 +315,7 @@ docker run -d --name the-forest --restart unless-stopped --init \
 Sons Of The Forest:
 
 ```bash
-docker run -d --name sons-of-the-forest --restart unless-stopped --init \
+podman run -d --name sons-of-the-forest --restart unless-stopped --init \
   -p 8766:8766/udp -p 27016:27016/udp -p 9700:9700/udp \
   -v "$PWD/dockerized/sons-of-the-forest/data:/opt/sotf" \
   ghcr.io/sudo-ivan/dockerized-game-servers/sons-of-the-forest:latest
@@ -317,7 +324,7 @@ docker run -d --name sons-of-the-forest --restart unless-stopped --init \
 Sniper Elite 4:
 
 ```bash
-docker run -d --name sniper-elite-4 --restart unless-stopped --init \
+podman run -d --name sniper-elite-4 --restart unless-stopped --init \
   -p 27000:27000/udp -p 27005:27005/udp -p 27010:27010/tcp -p 27015:27015/udp \
   -v "$PWD/dockerized/sniper-elite-4/data:/opt/se4" \
   ghcr.io/sudo-ivan/dockerized-game-servers/sniper-elite-4:latest
@@ -326,7 +333,7 @@ docker run -d --name sniper-elite-4 --restart unless-stopped --init \
 SuperTuxKart:
 
 ```bash
-docker run -d --name supertuxkart --restart unless-stopped --init \
+podman run -d --name supertuxkart --restart unless-stopped --init \
   -p 2759:2759/udp \
   -v "$PWD/dockerized/supertuxkart/data:/opt/supertuxkart/data" \
   ghcr.io/sudo-ivan/dockerized-game-servers/supertuxkart:latest
@@ -335,7 +342,7 @@ docker run -d --name supertuxkart --restart unless-stopped --init \
 Palworld:
 
 ```bash
-docker run -d --name palworld --restart unless-stopped --init \
+podman run -d --name palworld --restart unless-stopped --init \
   -p 8211:8211/udp \
   -v "$PWD/dockerized/palworld/data:/opt/palworld" \
   ghcr.io/sudo-ivan/dockerized-game-servers/palworld:latest
@@ -344,7 +351,7 @@ docker run -d --name palworld --restart unless-stopped --init \
 Starbound:
 
 ```bash
-docker run -d --name starbound --restart unless-stopped --init \
+podman run -d --name starbound --restart unless-stopped --init \
   -p 21025:21025/tcp \
   -v "$PWD/dockerized/starbound/data:/opt/starbound" \
   ghcr.io/sudo-ivan/dockerized-game-servers/starbound:latest
@@ -353,7 +360,7 @@ docker run -d --name starbound --restart unless-stopped --init \
 Longvinter:
 
 ```bash
-docker run -d --name longvinter --restart unless-stopped --init \
+podman run -d --name longvinter --restart unless-stopped --init \
   -p 7777:7777/udp \
   -v "$PWD/dockerized/longvinter/data:/opt/longvinter" \
   ghcr.io/sudo-ivan/dockerized-game-servers/longvinter:latest
@@ -362,7 +369,7 @@ docker run -d --name longvinter --restart unless-stopped --init \
 Don't Starve Together:
 
 ```bash
-docker run -d --name dont-starve-together --restart unless-stopped --init \
+podman run -d --name dont-starve-together --restart unless-stopped --init \
   -p 10999:10999/udp -p 11000:11000/udp -p 27016:27016/udp \
   -v "$PWD/dockerized/dont-starve-together/data:/opt/dst" \
   -e DST_CLUSTER_TOKEN="your-klei-cluster-token" \
@@ -372,7 +379,7 @@ docker run -d --name dont-starve-together --restart unless-stopped --init \
 Enshrouded:
 
 ```bash
-docker run -d --name enshrouded --restart unless-stopped --init \
+podman run -d --name enshrouded --restart unless-stopped --init \
   -p 15636:15636/udp -p 15637:15637/udp \
   -v "$PWD/dockerized/enshrouded/data:/opt/enshrouded" \
   ghcr.io/sudo-ivan/dockerized-game-servers/enshrouded:latest
@@ -381,7 +388,7 @@ docker run -d --name enshrouded --restart unless-stopped --init \
 VEIN:
 
 ```bash
-docker run -d --name vein --restart unless-stopped --init \
+podman run -d --name vein --restart unless-stopped --init \
   -p 7777:7777/udp -p 27015:27015/udp \
   -v "$PWD/dockerized/vein/data:/opt/vein" \
   ghcr.io/sudo-ivan/dockerized-game-servers/vein:latest
@@ -390,7 +397,7 @@ docker run -d --name vein --restart unless-stopped --init \
 V Rising:
 
 ```bash
-docker run -d --name v-rising --restart unless-stopped --init \
+podman run -d --name v-rising --restart unless-stopped --init \
   -p 9876:9876/udp -p 9877:9877/udp -p 9877:9877/tcp \
   -v "$PWD/dockerized/v-rising/data:/opt/vrising" \
   ghcr.io/sudo-ivan/dockerized-game-servers/v-rising:latest
@@ -399,7 +406,7 @@ docker run -d --name v-rising --restart unless-stopped --init \
 Windrose:
 
 ```bash
-docker run -d --name windrose --restart unless-stopped --init \
+podman run -d --name windrose --restart unless-stopped --init \
   -p 7777:7777/tcp -p 7777:7777/udp \
   -v "$PWD/dockerized/windrose/data:/opt/windrose" \
   ghcr.io/sudo-ivan/dockerized-game-servers/windrose:latest
@@ -408,7 +415,7 @@ docker run -d --name windrose --restart unless-stopped --init \
 OpenMoHAA (copy your owned MOHAA `main` / `mainta` / `maintt` PK3s into `dockerized/openmohaa/data` first):
 
 ```bash
-docker run -d --name openmohaa --restart unless-stopped --init \
+podman run -d --name openmohaa --restart unless-stopped --init \
   -p 12203:12203/udp -p 12300:12300/udp \
   -v "$PWD/dockerized/openmohaa/data:/usr/local/share/mohaa" \
   ghcr.io/sudo-ivan/dockerized-game-servers/openmohaa:latest
@@ -417,7 +424,7 @@ docker run -d --name openmohaa --restart unless-stopped --init \
 Arma 3:
 
 ```bash
-docker run -d --name arma3 --restart unless-stopped --init \
+podman run -d --name arma3 --restart unless-stopped --init \
   -p 2302-2306:2302-2306/udp \
   -v "$PWD/dockerized/arma/arma-3/server:/home/arma3/server" \
   -v "$PWD/dockerized/arma/arma-3/configs:/home/arma3/configs" \
@@ -431,7 +438,7 @@ docker run -d --name arma3 --restart unless-stopped --init \
 Hytale (external image):
 
 ```bash
-docker run -d --name hytale-server --restart unless-stopped \
+podman run -d --name hytale-server --restart unless-stopped \
   -p 5520:5520/udp \
   -v "$PWD/dockerized/hytale/data:/home/container" \
   -v /etc/machine-id:/etc/machine-id:ro \
@@ -445,8 +452,8 @@ Stardew Valley (JunimoServer, external images). Copy `dockerized/stardew-valley/
 ```bash
 cd dockerized/stardew-valley
 cp .env.example .env
-docker compose run --rm -it steam-auth setup
-docker compose up -d
+podman compose run --rm -it steam-auth setup
+podman compose up -d
 ```
 
 UDP **24642** (game), UDP **27015** (query), TCP **5800** (VNC), TCP **8080** (API). Saves and game files under `dockerized/stardew-valley/data/`. See [Stardew Valley docs](https://sudo-ivan.github.io/dockerized-game-servers/servers/stardew-valley/) and [JunimoServer](https://github.com/stardew-valley-dedicated-server/server).
@@ -456,8 +463,8 @@ AzerothCore (WoW 3.3.5a, external `acore/*` images). Copy `dockerized/azerothcor
 ```bash
 cd dockerized/azerothcore
 cp .env.example .env
-docker compose up -d
-docker attach azerothcore-worldserver
+podman compose up -d
+podman attach azerothcore-worldserver
 ```
 
 TCP **3724** (auth), TCP **8085** (world), TCP **7878** (SOAP). Data under `dockerized/azerothcore/data/`. Create accounts in the worldserver console (`account create ...`). See [AzerothCore docs](https://sudo-ivan.github.io/dockerized-game-servers/servers/azerothcore/) and the [installation guide](https://www.azerothcore.org/wiki/installation).
@@ -466,7 +473,7 @@ TCP **3724** (auth), TCP **8085** (world), TCP **7878** (SOAP). Data under `dock
 
 Accept the EULA with `EULA=true`. World and config live in each server's `./data` volume.
 
-Default game versions for the regular compose files are in `dockerized/minecraft/defaults.env` (vanilla and forge `26.2`, fabric `26.2` / loader `0.19.3`, forge build `65.0.9`, neoforge `26.2.0.35-beta`). To pick other versions, use `docker-compose.scaffold.yml` with a copied `.env.example`, or pass `-e VANILLA_VERSION=…` / `FABRIC_*` / `FORGE_*` / `NEOFORGE_VERSION` on `docker run`. See the [Minecraft docs](https://sudo-ivan.github.io/dockerized-game-servers/servers/minecraft/) for details.
+Default game versions for the regular compose files are in `dockerized/minecraft/defaults.env` (vanilla and forge `26.3`, fabric `26.3` / loader `0.19.5`, forge build `66.0.10`, neoforge `26.3.0.76`). To pick other versions, use `compose.scaffold.yml` with a copied `.env.example`, or pass `-e VANILLA_VERSION=…` / `FABRIC_*` / `FORGE_*` / `NEOFORGE_VERSION` on `podman run`. See the [Minecraft docs](https://sudo-ivan.github.io/dockerized-game-servers/servers/minecraft/) for details.
 
 ### Steam games
 
@@ -486,10 +493,10 @@ Steam App 1690800. Native Linux `FactoryServer.sh`. TCP/UDP 7777 and TCP 8888 (r
 
 ### Core Keeper
 
-Defaults to Steam Datagram Relay (SDR). No published ports are required. When ready, `docker logs` prints the Game ID and `Status: server is up and ready for players!`. Fallback:
+Defaults to Steam Datagram Relay (SDR). No published ports are required. When ready, `podman logs` prints the Game ID and `Status: server is up and ready for players!`. Fallback:
 
 ```bash
-docker exec -it core-keeper cat /opt/corekeeper/server/GameID.txt
+podman exec -it core-keeper cat /opt/corekeeper/server/GameID.txt
 ```
 
 For direct connect, set `SERVER_PORT` and publish that UDP port. World data lives under `dockerized/core-keeper/data/`. Uses XLibre `xlibre-xserver-xvfb` (not X.Org) for the virtual display.
@@ -568,7 +575,7 @@ Not Steam-based. Compiled from the official `stk-code` source tarball with `-DSE
 
 ### Battlefield 1942 / Vietnam
 
-Linux dedicated files from [LinuxGSM](http://linuxgsm.download/) (same archives as LinuxGSM `install_server_files.sh`). You must own the game. Images bake the server payload; first start copies into `dockerized/bf1942/data` or `dockerized/bfv/data`. BF1942: UDP 14567 and TCP 23000. BFV: see `dockerized/bfv/docker-compose.yml` for ports.
+Linux dedicated files from [LinuxGSM](http://linuxgsm.download/) (same archives as LinuxGSM `install_server_files.sh`). You must own the game. Images bake the server payload; first start copies into `dockerized/bf1942/data` or `dockerized/bfv/data`. BF1942: UDP 14567 and TCP 23000. BFV: see `dockerized/bfv/compose.yml` for ports.
 
 ### Call of Duty (1 / 2 / WaW / 4)
 
@@ -652,11 +659,11 @@ No SteamCMD dedicated server. **You must copy owned Windows game files** (`dfbhd
 
 ### Stardew Valley
 
-Uses [JunimoServer](https://github.com/stardew-valley-dedicated-server/server) (`sdvd/server` on Docker Hub), not a first-party image from this repo. Requires Steam credentials that own Stardew Valley. Two-service compose: `server` plus `steam-auth`. First-time `docker compose run --rm -it steam-auth setup` for Steam Guard and game download. Farm saves under `dockerized/stardew-valley/data/saves`, settings in `data/settings/server-settings.json`. Optional Discord bot: `docker compose --profile discord up -d`.
+Uses [JunimoServer](https://github.com/stardew-valley-dedicated-server/server) (`sdvd/server` on Docker Hub), not a first-party image from this repo. Requires Steam credentials that own Stardew Valley. Two-service compose: `server` plus `steam-auth`. First-time `podman compose run --rm -it steam-auth setup` for Steam Guard and game download. Farm saves under `dockerized/stardew-valley/data/saves`, settings in `data/settings/server-settings.json`. Optional Discord bot: `podman compose --profile discord up -d`.
 
 ### AzerothCore
 
-Uses pre-built [AzerothCore](https://www.azerothcore.org/) images (`acore/ac-wotlk-*` on Docker Hub), not a first-party image from this repo. Multi-service compose: MySQL, one-shot DB import and client-data init, `authserver`, and `worldserver`. First `docker compose up` downloads images and imports databases. Persist `dockerized/azerothcore/data/` (MySQL, maps, logs, config). Attach to `azerothcore-worldserver` to run `account create`. Players need a **3.3.5a** client pointed at your host. Optional phpMyAdmin: `docker compose --profile admin up -d`. See [AzerothCore installation](https://www.azerothcore.org/wiki/installation).
+Uses pre-built [AzerothCore](https://www.azerothcore.org/) images (`acore/ac-wotlk-*` on Docker Hub), not a first-party image from this repo. Multi-service compose: MySQL, one-shot DB import and client-data init, `authserver`, and `worldserver`. First `podman compose up` downloads images and imports databases. Persist `dockerized/azerothcore/data/` (MySQL, maps, logs, config). Attach to `azerothcore-worldserver` to run `account create`. Players need a **3.3.5a** client pointed at your host. Optional phpMyAdmin: `podman compose --profile admin up -d`. See [AzerothCore installation](https://www.azerothcore.org/wiki/installation).
 
 ### OpenMoHAA
 
@@ -737,29 +744,29 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `dayz` | DayZ dedicated |
 
 ```bash
-docker pull ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
+podman pull ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:latest
 ```
 
 ## CI
 
 - `ci` on push and pull request (docs-only changes are skipped), plus manual runs:
   - `repository checks`: `ci/ci-check.sh` (catalog-driven compose checks, ShellCheck, health/tools tests, GitHub matrix JSON)
-  - `trivy / dockerfiles`: Trivy Dockerfile config scans (MEDIUM, HIGH, CRITICAL)
-  - On pull requests: local Docker builds for shared base images (`verify-bases`, no registry push)
-- `build` runs weekly (Sunday 06:00 UTC), on Dockerfile/base/`ci` path changes to `master`/`main`, and manually: matrix is generated from `ci/image-matrix.sh` via `ci/github-matrix.py`, builds/pushes GHCR images through the reusable `docker-image` workflow, then Trivy-scans them (CRITICAL fail)
+  - `trivy / containerfiles`: Trivy Containerfile config scans (MEDIUM, HIGH, CRITICAL)
+  - On pull requests: local Podman builds for shared base images (`verify-bases`, no registry push)
+- `build` runs weekly (Sunday 06:00 UTC), on Containerfile/base/`ci` path changes to `master`/`main`, and manually: matrix is generated from `ci/image-matrix.sh` via `ci/github-matrix.py`, builds/pushes GHCR images through the reusable `container-image` workflow, then Trivy-scans them (CRITICAL fail)
 - `build-minecraft` is manual only: pick Fabric/Vanilla/Forge + a Minecraft version. Java is resolved from Mojang's `javaVersion`, Temurin Alpine JRE is pinned from Adoptium, Fabric loader/installer and Forge promos auto-fill when left blank. Publishes `dockerized/minecraft-base:javaN` and `dockerized/minecraft-<flavor>:<tag>` (tag defaults to the MC version, or `mc-forge` for Forge)
 
-Example tags after a versioned Fabric build for `26.2`:
+Example tags after a versioned Fabric build for `26.3`:
 
 ```text
 ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-base:java25
-ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:26.2
+ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-fabric:26.3
 ```
 
 Local resolve preview:
 
 ```bash
-./ci/resolve-minecraft-build.sh --flavor fabric --minecraft-version 26.2
+./ci/resolve-minecraft-build.sh --flavor fabric --minecraft-version 26.3
 ./ci/resolve-minecraft-build.sh --flavor vanilla --minecraft-version 1.20.4
 ./ci/resolve-minecraft-build.sh --flavor forge --minecraft-version 1.21.8 --forge-channel latest
 ```
@@ -772,7 +779,7 @@ After the first publish, set GHCR package visibility to public if the repo is pu
 
 ### GHCR push denied from Actions
 
-If `build` or `build-minecraft` logs show the image built then fails with `denied: installation not allowed to Write organization package` (or similar), the Docker build succeeded and GitHub blocked the registry push.
+If `build` or `build-minecraft` logs show the image built then fails with `denied: installation not allowed to Write organization package` (or similar), the image build succeeded and GitHub blocked the registry push.
 
 1. Repository **Settings → Actions → General → Workflow permissions**: choose **Read and write permissions** (not read-only). Workflows also declare `packages: write` on publish jobs, but the repo default must allow it.
 2. Open the package on GitHub (**Packages**, or the failed image under `ghcr.io/...`). **Package settings → Manage Actions access** (or link the package to this repository) and grant this repo **Write** access.
@@ -789,8 +796,8 @@ tools/           host ops CLI (gs)
 docs/            Starlight site (GitHub Pages)
 eggs/            Pterodactyl egg JSON (optional)
 dockerized/
-  bases/           shared Docker bases
-  trivy.yaml       Trivy scan config for Dockerfiles
+  bases/           shared container bases
+  trivy.yaml       Trivy scan config for Containerfiles
   minecraft/       Fabric, Vanilla, Forge, NeoForge
   valheim/         Vanilla and Plus
   ground-branch/   Ground Branch

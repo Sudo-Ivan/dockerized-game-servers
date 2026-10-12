@@ -50,7 +50,7 @@ The Wine prefix is baked into the image at build time, not stored in any mounted
 | SE_EXTRA_ARGS | (empty) | Extra flags appended to the launch command |
 | SE_PREMADE_CHECKPOINT | (dedicated)/Content/CustomWorlds/Earth Planet/PC | Starting scenario, used only when no save exists yet |
 
-When using docker run, you must pass SE_EXTRA_ARGS even if it is empty (-e SE_EXTRA_ARGS=). Without it the container exits immediately.
+When using podman run, you must pass SE_EXTRA_ARGS even if it is empty (-e SE_EXTRA_ARGS=). Without it the container exits immediately.
 
 ## Instance config
 
@@ -79,13 +79,13 @@ The container reports healthy while the Space Engineers server process is runnin
 ## Compose
 
 ```bash
-docker compose -f dockerized/space-engineers/docker-compose.yml up -d
+podman compose -f dockerized/space-engineers/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name space-engineers --restart unless-stopped --init \
+podman run -d --name space-engineers --restart unless-stopped --init \
   -p 27016:27016/udp \
   -v "$PWD/dockerized/space-engineers/data/dedicated:/opt/spaceengineers/dedicated" \
   -v "$PWD/dockerized/space-engineers/data/instances:/opt/spaceengineers/instances" \

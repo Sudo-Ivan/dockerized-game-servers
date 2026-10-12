@@ -18,7 +18,7 @@ while IFS= read -r root; do
   [ -n "${root}" ] || continue
   [ -d "${root}" ] || continue
   find "${root}" \( -path '*/data/*' -o -path '*/node_modules/*' \) -prune -o -type f \( \
-    -name '*.sh' -o -name 'entrypoint.sh' -o -name 'docker-entrypoint.sh' -o -name 'runtime.sh' \
+    -name '*.sh' -o -name 'entrypoint.sh' -o -name 'container-entrypoint.sh' -o -name 'runtime.sh' \
   \) -print >>"${tmp}" 2>/dev/null || true
 done <"${roots_tmp}"
 if [ -f tools/gs ]; then

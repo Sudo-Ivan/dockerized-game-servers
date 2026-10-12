@@ -55,13 +55,13 @@ Your data folder mounts to /opt/palworld inside the container. It holds the inst
 ## Compose
 
 ```bash
-docker compose -f dockerized/palworld/docker-compose.yml up -d
+podman compose -f dockerized/palworld/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name palworld --restart unless-stopped --init \
+podman run -d --name palworld --restart unless-stopped --init \
   -p 8211:8211/udp \
   -v "$PWD/dockerized/palworld/data:/opt/palworld" \
   {{IMAGE_PREFIX}}/palworld:latest

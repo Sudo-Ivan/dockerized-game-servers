@@ -10,12 +10,12 @@ on:
       - main
     paths:
       - "dockerized/bases/**"
-      - "**/Dockerfile"
+      - "**/Containerfile"
       - "ci/**"
       - "dockerized/trivy.yaml"
       - "dockerized/.trivyignore"
       - ".github/workflows/build.yml"
-      - ".github/workflows/docker-image.yml"
+      - ".github/workflows/container-image.yml"
       - ".github/workflows/ci.yml"
   workflow_dispatch:
     inputs:
@@ -43,7 +43,6 @@ env:
   GITHUB_REPOSITORY: ${{ github.repository }}
   TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || 'latest' }}
   PUSH: ${{ github.event_name != 'workflow_dispatch' && 'true' || (inputs.push && 'true' || 'false') }}
-  PLATFORM: linux/amd64
 
 jobs:
   matrix:
@@ -84,7 +83,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.matrix.outputs.bases) }}
-    uses: ./.github/workflows/docker-image.yml
+    uses: ./.github/workflows/container-image.yml
     with:
       name: ${{ matrix.name }}
       push: ${{ github.event_name != 'workflow_dispatch' || inputs.push }}
@@ -103,7 +102,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.matrix.outputs.images) }}
-    uses: ./.github/workflows/docker-image.yml
+    uses: ./.github/workflows/container-image.yml
     with:
       name: ${{ matrix.name }}
       push: ${{ github.event_name != 'workflow_dispatch' || inputs.push }}

@@ -13,7 +13,7 @@
     "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/valheim-plus:latest"
   },
   "file_denylist": [],
-  "startup": "/bin/bash -c 'export VALHEIM_DIR=/home/container; exec /docker-entrypoint.sh'",
+  "startup": "/bin/bash -c 'export VALHEIM_DIR=/home/container; exec /container-entrypoint.sh'",
   "config": {
     "files": "{}",
     "startup": "{\"done\": \"Starting Valheim Plus server\"}",
@@ -72,7 +72,7 @@
       "name": "Valheim Plus Version",
       "description": "Container environment VALHEIM_PLUS_VERSION.",
       "env_variable": "VALHEIM_PLUS_VERSION",
-      "default_value": "0.9.17.1",
+      "default_value": "0.10.2.0",
       "user_viewable": true,
       "user_editable": true,
       "rules": "required|string|max:512",

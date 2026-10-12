@@ -59,13 +59,13 @@ Your data folder mounts to /opt/starbound inside the container. It holds the ins
 ## Compose
 
 ```bash
-docker compose -f dockerized/starbound/docker-compose.yml up -d
+podman compose -f dockerized/starbound/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name starbound --restart unless-stopped --init \
+podman run -d --name starbound --restart unless-stopped --init \
   -p 21025:21025/tcp \
   -v "$PWD/dockerized/starbound/data:/opt/starbound" \
   {{IMAGE_PREFIX}}/starbound:latest

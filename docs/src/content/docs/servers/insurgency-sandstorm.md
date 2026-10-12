@@ -39,7 +39,7 @@ On first start the container downloads the Linux dedicated server (Steam app 581
 | INS_SANDSTORM_GAMESTATS_TOKEN | (empty) | Enables GameStats and passes the token to the server |
 | INS_SANDSTORM_EXTRA_ARGS | (empty) | Extra command-line flags (mutators, mods, travel, and so on) |
 
-Set tokens in docker-compose.yml, a .env file, or with -e on docker run. The container writes app id 581320 to steam_appid.txt on every start. That is the base game's Steamworks id (what GSLT tokens are issued against), not the 581330 dedicated server download id.
+Set tokens in compose.yml, a .env file, or with -e on podman run. The container writes app id 581320 to steam_appid.txt on every start. That is the base game's Steamworks id (what GSLT tokens are issued against), not the 581330 dedicated server download id.
 
 ## GSLT and GameStats token
 
@@ -136,13 +136,13 @@ Restart the container after changing config files or settings.
 ## Compose
 
 ```bash
-docker compose -f dockerized/insurgency-sandstorm/docker-compose.yml up -d
+podman compose -f dockerized/insurgency-sandstorm/compose.yml up -d
 ```
 
-## Docker run
+## podman run
 
 ```bash
-docker run -d --name insurgency-sandstorm --restart unless-stopped --init \
+podman run -d --name insurgency-sandstorm --restart unless-stopped --init \
   -p 27102:27102/udp -p 27131:27131/udp \
   -v "$PWD/dockerized/insurgency-sandstorm/data:/opt/insurgency-sandstorm" \
   -e INS_SANDSTORM_GSLT="your-gslt" \

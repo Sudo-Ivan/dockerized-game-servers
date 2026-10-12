@@ -13,7 +13,7 @@
     "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/core-keeper:latest"
   },
   "file_denylist": [],
-  "startup": "/bin/bash -c 'export CK_INSTALL_DIR=/home/container/server CK_DATA_DIR=/home/container/data; exec /docker-entrypoint.sh'",
+  "startup": "/bin/bash -c 'export CK_INSTALL_DIR=/home/container/server CK_DATA_DIR=/home/container/data; exec /container-entrypoint.sh'",
   "config": {
     "files": "{}",
     "startup": "{\"done\": \"Starting Core Keeper server\"}",

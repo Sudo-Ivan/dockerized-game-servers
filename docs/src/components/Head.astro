@@ -19,7 +19,7 @@ const author = entry.author || 'Sudo-Ivan'
 const lastUpdated = route.lastUpdated
 const title = entry.title
 const description =
-	entry.description || 'Dockerized dedicated game servers with small images and compose files.'
+	entry.description || 'Dedicated game servers as container images and compose files, built for Podman.'
 const siteOrigin = Astro.site ?? new URL(repo.siteUrl)
 const pageUrl = new URL(Astro.url.pathname, siteOrigin).href
 const logoUrl = new URL(`${base}icon.svg`, siteOrigin).href
