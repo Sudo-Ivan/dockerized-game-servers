@@ -54,6 +54,8 @@ jobs:
         env:
           TAG: ${{ inputs.tag }}
           IMAGE_NAME: ${{ inputs.name }}
+          TRIVY_USERNAME: ${{ github.actor }}
+          TRIVY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: |
           eval "$(./ci/repo-meta.sh)"
           ./ci/trivy-image.sh \

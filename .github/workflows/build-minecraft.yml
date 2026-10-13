@@ -208,6 +208,8 @@ jobs:
           BASE_TAG: ${{ steps.resolve.outputs.BASE_TAG }}
           IMAGE_TAG: ${{ steps.resolve.outputs.IMAGE_TAG }}
           IMAGE_NAME: ${{ steps.resolve.outputs.IMAGE_NAME }}
+          TRIVY_USERNAME: ${{ github.actor }}
+          TRIVY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: |
           eval "$(./ci/repo-meta.sh)"
           ./ci/trivy-image.sh \
