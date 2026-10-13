@@ -1,0 +1,147 @@
+# Poderized Game Servers documentation site.
+#
+# Preview locally:  zensical serve
+# Build:            zensical build --strict
+
+[project]
+site_name = "Poderized Game Servers"
+site_description = "Container images and compose files for dedicated game servers, built for Podman."
+site_url = "https://sudo-ivan.github.io/poderized-game-servers/"
+site_author = "Sudo-Ivan"
+copyright = "&copy; 2026 Sudo-Ivan. Released under the 0BSD license."
+repo_url = "https://github.com/Sudo-Ivan/poderized-game-servers"
+repo_name = "Sudo-Ivan/poderized-game-servers"
+edit_uri = "edit/master/docs/"
+docs_dir = "docs"
+site_dir = "site"
+extra_css = ["stylesheets/extra.css"]
+
+nav = [
+  { "Home" = "index.md" },
+  { "Quick start" = "guides/quick-start.md" },
+  { "Ops" = "guides/ops.md" },
+  { "Servers" = [
+    "servers/7-days-to-die.md",
+    "servers/arma-3.md",
+    "servers/arma-reforger.md",
+    "servers/azerothcore.md",
+    "servers/barotrauma.md",
+    "servers/bf1942.md",
+    "servers/bfv.md",
+    "servers/cod.md",
+    "servers/cod2.md",
+    "servers/cod4.md",
+    "servers/codwaw.md",
+    "servers/core-keeper.md",
+    "servers/cs2.md",
+    "servers/cs-source.md",
+    "servers/dayz.md",
+    "servers/delta-force-bhd.md",
+    "servers/dod-source.md",
+    "servers/dont-starve-together.md",
+    "servers/eco.md",
+    "servers/enshrouded.md",
+    "servers/etl.md",
+    "servers/factorio.md",
+    "servers/gmod.md",
+    "servers/ground-branch.md",
+    "servers/hytale.md",
+    "servers/icarus.md",
+    "servers/insurgency-sandstorm.md",
+    "servers/insurgency-source.md",
+    "servers/joint-operations.md",
+    "servers/kf2.md",
+    "servers/l4d2.md",
+    "servers/longvinter.md",
+    "servers/minecraft.md",
+    "servers/openmohaa.md",
+    "servers/palworld.md",
+    "servers/project-zomboid.md",
+    "servers/pumpkin.md",
+    "servers/quake3.md",
+    "servers/rtcw.md",
+    "servers/rtcwcoop.md",
+    "servers/satisfactory.md",
+    "servers/sniper-elite-4.md",
+    "servers/sons-of-the-forest.md",
+    "servers/space-engineers.md",
+    "servers/starbound.md",
+    "servers/stardew-valley.md",
+    "servers/supertuxkart.md",
+    "servers/terraria.md",
+    "servers/tf2.md",
+    "servers/the-forest.md",
+    "servers/unturned.md",
+    "servers/valheim.md",
+    "servers/vein.md",
+    "servers/vintage-story.md",
+    "servers/v-rising.md",
+    "servers/windrose.md",
+  ] },
+  { "Tools" = [
+    "tools/index.md",
+    "tools/arma-3-config-generator.md",
+    "tools/minecraft-server-properties-generator.md",
+    "tools/podman-run-generator.md",
+  ] },
+  { "Reference" = [
+    "reference/servers.md",
+    "reference/images.md",
+    "reference/ci.md",
+    "reference/repository-layout.md",
+    "reference/license.md",
+  ] },
+]
+
+[project.theme]
+custom_dir = "overrides"
+language = "en"
+logo = "icon.svg"
+favicon = "favicon.svg"
+features = [
+  "navigation.instant",
+  "navigation.instant.prefetch",
+  "navigation.instant.progress",
+  "navigation.path",
+  "navigation.top",
+  "navigation.footer",
+  "navigation.tracking",
+  "content.action.edit",
+  "content.action.view",
+  "content.action.copy",
+  "content.code.copy",
+  "content.tooltips",
+  "search.highlight",
+  "toc.follow",
+]
+
+[project.theme.icon]
+repo = "fontawesome/brands/github"
+
+# Automatic mode, then light and dark. The dark palette is tuned to a
+# neutral gray in docs/stylesheets/extra.css.
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "black"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "black"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+[project.validation]
+invalid_links = true
+invalid_link_anchors = true
+
+[project.plugins.macros]
+include_yaml = ["macros.yml"]

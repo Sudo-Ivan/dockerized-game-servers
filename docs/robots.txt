@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sudo-ivan.github.io/poderized-game-servers/sitemap.xml

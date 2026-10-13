@@ -23,7 +23,7 @@ ADOPTIUM_LATEST = (
 
 
 def http_json(url: str):
-    req = urllib.request.Request(url, headers={"User-Agent": "dockerized-game-servers-resolver"})
+    req = urllib.request.Request(url, headers={"User-Agent": "poderized-game-servers-resolver"})
     with urllib.request.urlopen(req, timeout=60) as resp:
         return json.load(resp)
 

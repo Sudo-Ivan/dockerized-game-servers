@@ -1,5 +1,5 @@
 {
-  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "_comment": "Pterodactyl egg for poderized-game-servers",
   "meta": {
     "version": "PTDL_v2",
     "update_url": null
@@ -7,7 +7,7 @@
   "exported_at": "2026-08-04T01:53:12+00:00",
   "name": "Hytale",
   "author": "sudo-ivan@users.noreply.github.com",
-  "description": "Hytale using the dockerized-game-servers image. Docker image: deinfreu/hytale-server:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 5520/udp External image maintained outside this repository.",
+  "description": "Hytale using the poderized-game-servers image. Docker image: deinfreu/hytale-server:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 5520/udp External image maintained outside this repository.",
   "features": null,
   "docker_images": {
     "Latest": "deinfreu/hytale-server:latest"

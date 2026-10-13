@@ -1,0 +1,43 @@
+ARG BASE_IMAGE=ghcr.io/sudo-ivan/poderized-game-servers/runtime-base:latest
+FROM ${BASE_IMAGE} AS fetch
+
+ARG PUMPKIN_VERSION="0.2.0+26.3-26.51"
+ARG PUMPKIN_SHA256="798fc1aee4ebe005f029b7cb7144064f77d927c52c417554f74bd325de400b65"
+
+RUN set -eu; \
+  tag="$(printf '%s' "${PUMPKIN_VERSION}" | sed 's/+/%2B/g')"; \
+  . /usr/local/bin/http-download.sh; \
+  http_download_file \
+    "https://github.com/Pumpkin-MC/Pumpkin/releases/download/${tag}/pumpkin-X64-Linux-musl" \
+    /tmp/pumpkin; \
+  echo "${PUMPKIN_SHA256}  /tmp/pumpkin" | sha256sum -c -
+
+ARG BASE_IMAGE=ghcr.io/sudo-ivan/poderized-game-servers/runtime-base:latest
+FROM ${BASE_IMAGE}
+
+LABEL org.opencontainers.image.title="pumpkin" \
+      org.opencontainers.image.description="Pumpkin dedicated server (Rust Minecraft server, Java and Bedrock)" \
+      org.opencontainers.image.licenses="ISC"
+
+RUN useradd -m -u 1000 pumpkin \
+  && mkdir -p /data \
+  && chown -R pumpkin:pumpkin /data
+
+COPY --from=fetch --chown=pumpkin:pumpkin --chmod=755 /tmp/pumpkin /opt/pumpkin/pumpkin
+
+ENV PUMPKIN_DIR="/data"
+
+COPY --chmod=755 container-entrypoint.sh /container-entrypoint.sh
+COPY --chown=pumpkin:pumpkin --chmod=755 entrypoint.sh /home/pumpkin/entrypoint.sh
+COPY --chmod=755 healthcheck.sh /healthcheck.sh
+
+WORKDIR ${PUMPKIN_DIR}
+
+EXPOSE 25565/tcp 19132/udp 19133/udp
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD ["/healthcheck.sh"]
+
+STOPSIGNAL SIGTERM
+
+ENTRYPOINT ["/container-entrypoint.sh"]

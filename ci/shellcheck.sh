@@ -27,7 +27,7 @@ fi
 rm -f "${roots_tmp}"
 
 sort -u "${tmp}" -o "${tmp}"
-printf '%s\n' dockerized/bases/steam/steamcmd-app-update.sh dockerized/bases/runtime/http-download.sh dockerized/bases/runtime/linuxgsm-tar-install.sh dockerized/bases/runtime/install-legacy32-libs.sh >>"${tmp}"
+printf '%s\n' poderized/bases/steam/steamcmd-app-update.sh poderized/bases/runtime/http-download.sh poderized/bases/runtime/linuxgsm-tar-install.sh poderized/bases/runtime/install-legacy32-libs.sh >>"${tmp}"
 sort -u "${tmp}" -o "${tmp}"
 fail=0
 while IFS= read -r script; do

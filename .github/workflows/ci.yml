@@ -7,9 +7,9 @@ on:
       - ".github/workflows/container-image.yml"
       - "ci/**"
       - "tools/**"
-      - "dockerized/**"
-      - "dockerized/trivy.yaml"
-      - "dockerized/.trivyignore"
+      - "poderized/**"
+      - "poderized/trivy.yaml"
+      - "poderized/.trivyignore"
       - "**/*.sh"
   pull_request:
     paths:
@@ -17,9 +17,9 @@ on:
       - ".github/workflows/container-image.yml"
       - "ci/**"
       - "tools/**"
-      - "dockerized/**"
-      - "dockerized/trivy.yaml"
-      - "dockerized/.trivyignore"
+      - "poderized/**"
+      - "poderized/trivy.yaml"
+      - "poderized/.trivyignore"
       - "**/*.sh"
   workflow_dispatch:
 
@@ -95,18 +95,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          version: 11.17.0
-          run_install: false
+          python-version: "3.13"
 
-      - name: Setup Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 22.13.0
-          cache: pnpm
-          cache-dependency-path: docs/pnpm-lock.yaml
+      - name: Install Zensical
+        run: pip install zensical==0.0.68
 
       - name: Install ShellCheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck

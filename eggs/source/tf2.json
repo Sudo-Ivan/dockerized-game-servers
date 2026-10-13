@@ -1,5 +1,5 @@
 {
-  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "_comment": "Pterodactyl egg for poderized-game-servers",
   "meta": {
     "version": "PTDL_v2",
     "update_url": null
@@ -7,10 +7,10 @@
   "exported_at": "2026-08-04T01:53:12+00:00",
   "name": "Team Fortress 2",
   "author": "sudo-ivan@users.noreply.github.com",
-  "description": "Team Fortress 2 using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/tf2:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 27015/tcp, 27015/udp, 27005/udp",
+  "description": "Team Fortress 2 using the poderized-game-servers image. Docker image: ghcr.io/sudo-ivan/poderized-game-servers/tf2:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 27015/tcp, 27015/udp, 27005/udp",
   "features": null,
   "docker_images": {
-    "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/tf2:latest"
+    "Latest": "ghcr.io/sudo-ivan/poderized-game-servers/tf2:latest"
   },
   "file_denylist": [],
   "startup": "/bin/bash -c 'export TF2_DIR=/home/container; exec /container-entrypoint.sh'",

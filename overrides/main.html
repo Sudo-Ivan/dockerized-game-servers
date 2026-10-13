@@ -1,0 +1,20 @@
+{#-
+  Page template override.
+
+  Adds a game art banner to pages that set game_icon in their front matter.
+  Server pages set game_icon to an image under docs/game-icons, fetched at
+  build time by docs/scripts/fetch_game_icons.py. Set game_icon_fit to
+  contain for logo style art that should not be cropped.
+-#}
+{% extends "base.html" %}
+
+{% block content %}
+  {% if page.meta and page.meta.game_icon %}
+    <div class="game-header{% if page.meta.game_icon_fit == 'contain' %} game-header--contain{% endif %}" style="--game-art: url('{{ page.meta.game_icon | url }}')">
+      <span class="game-header__icon">
+        <img src="{{ page.meta.game_icon | url }}" alt="" decoding="async">
+      </span>
+    </div>
+  {% endif %}
+  {% include "partials/content.html" %}
+{% endblock %}

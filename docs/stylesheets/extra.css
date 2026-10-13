@@ -1,0 +1,75 @@
+/* Game art banner shown on server pages (see overrides/main.html). */
+.game-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 8rem;
+  margin: 0.25rem 0 1.5rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0f0f0f;
+}
+
+.game-header::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  z-index: -2;
+  background-image: var(--game-art);
+  background-size: cover;
+  background-position: center 30%;
+  filter: blur(30px) saturate(1.7) brightness(0.6);
+  transform: scale(1.15);
+}
+
+.game-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(120deg, rgb(10 10 10 / 0.35) 0%, rgb(10 10 10 / 0.82) 75%),
+    radial-gradient(140% 160% at 0% 0%, rgb(255 255 255 / 0.06), transparent 55%);
+}
+
+.game-header__icon {
+  position: relative;
+  display: block;
+  height: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: #141414;
+  border-right: 1px solid rgb(255 255 255 / 0.08);
+  box-shadow: 1px 0 0 rgb(0 0 0 / 0.35);
+}
+
+.game-header__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.game-header--contain .game-header__icon {
+  aspect-ratio: 1;
+  padding: 0.5rem;
+  background: #101010;
+}
+
+.game-header--contain .game-header__icon img {
+  object-fit: contain;
+}
+
+/* Grayscale dark palette, closer to the rest of the project. */
+[data-md-color-scheme="slate"] {
+  --md-hue: 0;
+}
+
+@media (min-width: 50rem) {
+  .game-header {
+    height: 10rem;
+  }
+}

@@ -12,9 +12,9 @@ export PATH="${HOME}/.local/bin:${PATH}"
 
 echo "==> Trivy Containerfile config scan"
 trivy config \
-  --config dockerized/trivy.yaml \
-  --ignorefile dockerized/.trivyignore \
+  --config poderized/trivy.yaml \
+  --ignorefile poderized/.trivyignore \
   --misconfig-scanners dockerfile \
   --severity MEDIUM,HIGH,CRITICAL \
   --exit-code 1 \
-  dockerized
+  poderized

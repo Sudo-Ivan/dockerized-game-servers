@@ -139,8 +139,8 @@ jobs:
           chmod +x ci/*.sh
           ./ci/build-image.sh \
             minecraft-base \
-            dockerized/bases/minecraft \
-            dockerized/bases/minecraft/Containerfile
+            poderized/bases/minecraft \
+            poderized/bases/minecraft/Containerfile
 
       - name: Write game build args
         env:
@@ -158,26 +158,26 @@ jobs:
                 echo "FABRIC_LOADER_VERSION=${FABRIC_LOADER_VERSION}"
                 echo "FABRIC_INSTALLER_VERSION=${FABRIC_INSTALLER_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=dockerized/minecraft/fabric/Containerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=poderized/minecraft/fabric/Containerfile" >> "${GITHUB_ENV}"
               ;;
             vanilla)
               {
                 echo "VANILLA_VERSION=${MINECRAFT_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=dockerized/minecraft/vanilla/Containerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=poderized/minecraft/vanilla/Containerfile" >> "${GITHUB_ENV}"
               ;;
             forge)
               {
                 echo "FORGE_MINECRAFT_VERSION=${MINECRAFT_VERSION}"
                 echo "FORGE_VERSION=${FORGE_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=dockerized/minecraft/forge/Containerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=poderized/minecraft/forge/Containerfile" >> "${GITHUB_ENV}"
               ;;
             neoforge)
               {
                 echo "NEOFORGE_VERSION=${NEOFORGE_VERSION}"
               } > /tmp/mc-game.args
-              echo "DOCKERFILE=dockerized/minecraft/neoforge/Containerfile" >> "${GITHUB_ENV}"
+              echo "DOCKERFILE=poderized/minecraft/neoforge/Containerfile" >> "${GITHUB_ENV}"
               ;;
             *)
               echo "unknown flavor: ${FLAVOR}" >&2
@@ -198,7 +198,7 @@ jobs:
           base_image="${REGISTRY}/${IMAGE_OWNER}/minecraft-base:${BASE_TAG}"
           ./ci/build-image.sh \
             "${IMAGE_NAME}" \
-            dockerized/minecraft \
+            poderized/minecraft \
             "${DOCKERFILE}" \
             "${base_image}"
 

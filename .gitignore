@@ -2,19 +2,19 @@
 **/data/*
 !**/data/.gitkeep
 
-dockerized/arma/arma-3/server/*
-!dockerized/arma/arma-3/server/.gitkeep
-dockerized/arma/arma-3/configs/*
-!dockerized/arma/arma-3/configs/.gitkeep
-dockerized/arma/arma-3/profiles/*
-!dockerized/arma/arma-3/profiles/.gitkeep
-dockerized/arma/arma-3/cache/*
-!dockerized/arma/arma-3/cache/.gitkeep
+poderized/arma/arma-3/server/*
+!poderized/arma/arma-3/server/.gitkeep
+poderized/arma/arma-3/configs/*
+!poderized/arma/arma-3/configs/.gitkeep
+poderized/arma/arma-3/profiles/*
+!poderized/arma/arma-3/profiles/.gitkeep
+poderized/arma/arma-3/cache/*
+!poderized/arma/arma-3/cache/.gitkeep
 
 .env
 *.env
 !.env.example
-!dockerized/minecraft/defaults.env
+!poderized/minecraft/defaults.env
 *.log
 .DS_Store
 
@@ -25,8 +25,7 @@ __pycache__/
 # Host tool backups
 backups/
 
-# Docs (Starlight / Astro)
-docs/node_modules/
-docs/dist/
-docs/.astro/
-docs/package-lock.json
+# Docs (Zensical)
+site/
+docs/game-icons/
+.venv/

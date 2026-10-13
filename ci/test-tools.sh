@@ -42,7 +42,7 @@ printf 'hello\n' >"${stub_root}/fake-game/data/world.txt"
 cp -a "${ROOT}/tools/." "${stub_root}/tools/"
 
 GS_ROOT="${stub_root}" GS_TEST_MODE=1 GS_BACKUP_DIR="${backup_dir}" \
-  GITHUB_REPOSITORY="example/dockerized-game-servers" \
+  GITHUB_REPOSITORY="example/poderized-game-servers" \
   "${stub_root}/tools/gs" backup fake >/dev/null
 
 archive="$(find "${backup_dir}/fake" -type f -name '*.tar.gz' | head -n 1)"
@@ -52,7 +52,7 @@ if [ -z "${archive}" ]; then
 else
   rm -f "${stub_root}/fake-game/data/world.txt"
   GS_ROOT="${stub_root}" GS_TEST_MODE=1 \
-    GITHUB_REPOSITORY="example/dockerized-game-servers" \
+    GITHUB_REPOSITORY="example/poderized-game-servers" \
     "${stub_root}/tools/gs" restore fake "${archive}" >/dev/null
   if [ ! -f "${stub_root}/fake-game/data/world.txt" ]; then
     echo "restore did not recreate world.txt" >&2
@@ -62,7 +62,7 @@ fi
 
 echo "==> update dry-run prints force env"
 update_out="$(GS_ROOT="${stub_root}" GS_TEST_MODE=1 GS_DRY_RUN=1 \
-  GITHUB_REPOSITORY="example/dockerized-game-servers" \
+  GITHUB_REPOSITORY="example/poderized-game-servers" \
   "${stub_root}/tools/gs" update fake 2>&1 || true)"
 printf '%s\n' "${update_out}" | grep -q 'FAKE_FORCE_UPDATE=true' || {
   echo "update dry-run missing force env" >&2

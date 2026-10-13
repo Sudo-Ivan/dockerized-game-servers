@@ -7,12 +7,22 @@ on:
       - main
     paths:
       - "docs/**"
-      - "ci/repo-meta.sh"
+      - "overrides/**"
+      - "zensical.toml"
+      - "macros.yml"
+      - "ci/fetch-game-icons.py"
+      - "ci/check-doc-catalog.py"
+      - "ci/test-docs.sh"
       - ".github/workflows/docs.yml"
   pull_request:
     paths:
       - "docs/**"
-      - "ci/repo-meta.sh"
+      - "overrides/**"
+      - "zensical.toml"
+      - "macros.yml"
+      - "ci/fetch-game-icons.py"
+      - "ci/check-doc-catalog.py"
+      - "ci/test-docs.sh"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
@@ -35,55 +45,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
           persist-credentials: false
 
-      - name: Resolve site identity
-        id: meta
-        run: |
-          chmod +x ci/repo-meta.sh
-          eval "$(./ci/repo-meta.sh)"
-          {
-            echo "site_url=${SITE_URL}"
-            echo "site_base=${SITE_BASE}"
-            echo "github_url=${GITHUB_URL}"
-            echo "image_prefix=${IMAGE_PREFIX}"
-          } >> "${GITHUB_OUTPUT}"
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          version: 11.17.0
-          run_install: false
+          python-version: "3.13"
 
-      - name: Setup Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 22.13.0
-          cache: pnpm
-          cache-dependency-path: docs/pnpm-lock.yaml
+      - name: Install Zensical
+        run: pip install zensical==0.0.68
 
-      - name: Install dependencies
-        working-directory: docs
-        run: pnpm install --frozen-lockfile
-
-      - name: Audit production dependencies
-        working-directory: docs
-        run: pnpm audit --prod
+      - name: Fetch game icons
+        run: python3 ci/fetch-game-icons.py
 
       - name: Build site
-        working-directory: docs
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          SITE_URL: ${{ steps.meta.outputs.site_url }}
-          SITE_BASE: ${{ steps.meta.outputs.site_base }}
-        run: pnpm run build
+        run: zensical build --strict --clean
+
+      - name: Check doc catalog
+        run: python3 ci/check-doc-catalog.py
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: docs/dist
+          path: site
 
   deploy:
     name: deploy

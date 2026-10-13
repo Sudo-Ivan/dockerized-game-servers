@@ -54,12 +54,12 @@ chmod +x ci/check-minecraft-defaults.sh
 echo "==> Minecraft scaffold compose"
 if command -v podman >/dev/null 2>&1; then
   for scaffold in \
-    dockerized/minecraft/fabric/compose.scaffold.yml \
-    dockerized/minecraft/vanilla/compose.scaffold.yml \
-    dockerized/minecraft/forge/compose.scaffold.yml \
-    dockerized/minecraft/neoforge/compose.scaffold.yml
+    poderized/minecraft/fabric/compose.scaffold.yml \
+    poderized/minecraft/vanilla/compose.scaffold.yml \
+    poderized/minecraft/forge/compose.scaffold.yml \
+    poderized/minecraft/neoforge/compose.scaffold.yml
   do
-    if ! podman compose -f "${scaffold}" --env-file dockerized/minecraft/defaults.env config >/dev/null; then
+    if ! podman compose -f "${scaffold}" --env-file poderized/minecraft/defaults.env config >/dev/null; then
       echo "compose invalid: ${scaffold}" >&2
       fail=1
     fi
@@ -83,7 +83,7 @@ if [ "${hardcoded}" -ne 0 ]; then
 fi
 
 echo "==> Checking for Nomad leftovers"
-if [ -n "$(find . \( -path './docs/node_modules' -o -path '*/data/*' \) -prune -o -name '*.nomad' -print -quit 2>/dev/null)" ]; then
+if [ -n "$(find . \( -path './site' -o -path '*/data/*' \) -prune -o -name '*.nomad' -print -quit 2>/dev/null)" ]; then
   echo "nomad files still present" >&2
   fail=1
 fi
@@ -131,11 +131,15 @@ if ! python3 -m py_compile ci/github-matrix.py; then
   echo "python syntax error: ci/github-matrix.py" >&2
   fail=1
 fi
-if ! python3 -m py_compile dockerized/arma/arma-3/modlist.py dockerized/arma/arma-3/test_modlist.py; then
+if ! python3 -m py_compile ci/fetch-game-icons.py ci/check-doc-catalog.py; then
+  echo "python syntax error: docs scripts" >&2
+  fail=1
+fi
+if ! python3 -m py_compile poderized/arma/arma-3/modlist.py poderized/arma/arma-3/test_modlist.py; then
   echo "python syntax error: arma-3 modlist tests" >&2
   fail=1
 fi
-if ! python3 dockerized/arma/arma-3/test_modlist.py; then
+if ! python3 poderized/arma/arma-3/test_modlist.py; then
   echo "arma-3 modlist tests failed" >&2
   fail=1
 fi
@@ -155,17 +159,17 @@ if ! python3 ci/github-matrix.py images | python3 -c "import json,sys; json.load
   fail=1
 fi
 
-echo "==> Docs package manager"
-if [ ! -f docs/pnpm-lock.yaml ]; then
-  echo "missing docs/pnpm-lock.yaml" >&2
+echo "==> Docs configuration"
+if [ ! -f zensical.toml ]; then
+  echo "missing zensical.toml" >&2
   fail=1
 fi
-if [ -f docs/package-lock.json ]; then
-  echo "docs/package-lock.json must not exist when using pnpm" >&2
+if [ ! -f macros.yml ]; then
+  echo "missing macros.yml" >&2
   fail=1
 fi
-if ! grep -q 'pnpm@11\.' docs/package.json; then
-  echo "docs/package.json must pin pnpm 11+" >&2
+if [ ! -f docs/index.md ]; then
+  echo "missing docs/index.md" >&2
   fail=1
 fi
 

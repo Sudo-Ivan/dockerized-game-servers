@@ -1,7 +1,7 @@
 {
   "_comment": "Import eggs from eggs/<folder>/*.json via Admin > Nests > Import Egg",
-  "name": "Dockerized Game Servers",
-  "description": "Dedicated servers from the dockerized-game-servers project (GHCR images).",
+  "name": "Poderized Game Servers",
+  "description": "Dedicated servers from the poderized-game-servers project (GHCR images).",
   "author": "sudo-ivan@users.noreply.github.com",
   "eggs": [
     "minecraft/fabric.json",

@@ -1,5 +1,5 @@
 {
-  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "_comment": "Pterodactyl egg for poderized-game-servers",
   "meta": {
     "version": "PTDL_v2",
     "update_url": null
@@ -7,13 +7,13 @@
   "exported_at": "2026-08-04T01:53:12+00:00",
   "name": "Minecraft Forge",
   "author": "sudo-ivan@users.noreply.github.com",
-  "description": "Minecraft Forge using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-forge:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 25565/tcp",
+  "description": "Minecraft Forge using the poderized-game-servers image. Docker image: ghcr.io/sudo-ivan/poderized-game-servers/minecraft-forge:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 25565/tcp",
   "features": [
     "eula",
     "java_version"
   ],
   "docker_images": {
-    "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/minecraft-forge:latest"
+    "Latest": "ghcr.io/sudo-ivan/poderized-game-servers/minecraft-forge:latest"
   },
   "file_denylist": [],
   "startup": "/bin/sh -c 'rm -rf /data 2>/dev/null; ln -sfn /home/container /data; exec /entrypoint.sh'",

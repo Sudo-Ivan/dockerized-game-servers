@@ -15,7 +15,7 @@ EGGS_DIR = Path(__file__).resolve().parent
 CATALOG = ROOT / "ci" / "server-catalog.sh"
 
 AUTHOR = "sudo-ivan@users.noreply.github.com"
-DEFAULT_IMAGE_PREFIX = "ghcr.io/sudo-ivan/dockerized-game-servers"
+DEFAULT_IMAGE_PREFIX = "ghcr.io/sudo-ivan/poderized-game-servers"
 
 INSTALL_SCRIPT = """#!/bin/bash
 # Server files: /mnt/server
@@ -642,7 +642,7 @@ def human_key(key: str) -> str:
 def build_description(game_id: str, image: str, ports: list[dict[str, str]], first_party: str) -> str:
     name = DISPLAY_NAMES.get(game_id, game_id.replace("-", " ").title())
     lines = [
-        f"{name} using the dockerized-game-servers image.",
+        f"{name} using the poderized-game-servers image.",
         f"Docker image: {image}.",
         "Persistent data is stored under /home/container (mapped from the image data directory on startup).",
     ]
@@ -686,7 +686,7 @@ def build_egg(row: dict[str, str], image_prefix: str) -> dict:
     name = DISPLAY_NAMES.get(game_id, game_id.replace("-", " ").title())
 
     egg = {
-        "_comment": "Pterodactyl egg for dockerized-game-servers",
+        "_comment": "Pterodactyl egg for poderized-game-servers",
         "meta": {
             "version": "PTDL_v2",
             "update_url": None,
@@ -780,8 +780,8 @@ def main() -> int:
 
     nest = {
         "_comment": "Import eggs from eggs/<folder>/*.json via Admin > Nests > Import Egg",
-        "name": "Dockerized Game Servers",
-        "description": "Dedicated servers from the dockerized-game-servers project (GHCR images).",
+        "name": "Poderized Game Servers",
+        "description": "Dedicated servers from the poderized-game-servers project (GHCR images).",
         "author": AUTHOR,
         "eggs": generated,
     }

@@ -1,5 +1,5 @@
 {
-  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "_comment": "Pterodactyl egg for poderized-game-servers",
   "meta": {
     "version": "PTDL_v2",
     "update_url": null
@@ -7,10 +7,10 @@
   "exported_at": "2026-08-04T01:53:12+00:00",
   "name": "Eco",
   "author": "sudo-ivan@users.noreply.github.com",
-  "description": "Eco using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/eco:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 3000/udp, 3000/tcp, 3001/tcp",
+  "description": "Eco using the poderized-game-servers image. Docker image: ghcr.io/sudo-ivan/poderized-game-servers/eco:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 3000/udp, 3000/tcp, 3001/tcp",
   "features": null,
   "docker_images": {
-    "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/eco:latest"
+    "Latest": "ghcr.io/sudo-ivan/poderized-game-servers/eco:latest"
   },
   "file_denylist": [],
   "startup": "/bin/bash -c 'export ECO_DIR=/home/container; exec /container-entrypoint.sh'",

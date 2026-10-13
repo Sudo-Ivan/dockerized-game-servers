@@ -1,0 +1,8 @@
+# Variables for the macros plugin.
+#
+# The values are rendered into pages through the {{IMAGE_PREFIX}} and
+# {{GITHUB_URL}} tokens used in docs/. Change them here if you fork the
+# repository and publish images under a different owner.
+
+IMAGE_PREFIX: ghcr.io/sudo-ivan/poderized-game-servers
+GITHUB_URL: https://github.com/Sudo-Ivan/poderized-game-servers

@@ -18,7 +18,7 @@ match_workflow() {
     .github/workflows/ci.yml|.github/workflows/container-image.yml) return 0 ;;
     ci/*) return 0 ;;
     tools/*) return 0 ;;
-    dockerized/*) return 0 ;;
+    poderized/*) return 0 ;;
     */compose.yml) return 0 ;;
     */Containerfile) return 0 ;;
   esac
@@ -32,7 +32,7 @@ match_image_verify() {
   file="$1"
   case "${file}" in
     .github/workflows/container-image.yml|.github/workflows/ci.yml) return 0 ;;
-    dockerized/*) return 0 ;;
+    poderized/*) return 0 ;;
     ci/build-image.sh|ci/build-one-image.sh|ci/image-matrix.sh|ci/github-matrix.py) return 0 ;;
   esac
   return 1

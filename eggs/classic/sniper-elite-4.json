@@ -1,5 +1,5 @@
 {
-  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "_comment": "Pterodactyl egg for poderized-game-servers",
   "meta": {
     "version": "PTDL_v2",
     "update_url": null
@@ -7,10 +7,10 @@
   "exported_at": "2026-08-04T01:53:12+00:00",
   "name": "Sniper Elite 4",
   "author": "sudo-ivan@users.noreply.github.com",
-  "description": "Sniper Elite 4 using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/sniper-elite-4:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 27000/udp, 27005/udp, 27010/tcp, 27015/udp",
+  "description": "Sniper Elite 4 using the poderized-game-servers image. Docker image: ghcr.io/sudo-ivan/poderized-game-servers/sniper-elite-4:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 27000/udp, 27005/udp, 27010/tcp, 27015/udp",
   "features": null,
   "docker_images": {
-    "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/sniper-elite-4:latest"
+    "Latest": "ghcr.io/sudo-ivan/poderized-game-servers/sniper-elite-4:latest"
   },
   "file_denylist": [],
   "startup": "/bin/bash -c 'export SE4_DIR=/home/container; exec /container-entrypoint.sh'",

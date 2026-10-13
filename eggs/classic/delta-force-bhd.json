@@ -1,5 +1,5 @@
 {
-  "_comment": "Pterodactyl egg for dockerized-game-servers",
+  "_comment": "Pterodactyl egg for poderized-game-servers",
   "meta": {
     "version": "PTDL_v2",
     "update_url": null
@@ -7,10 +7,10 @@
   "exported_at": "2026-08-04T01:53:12+00:00",
   "name": "Delta Force: Black Hawk Down",
   "author": "sudo-ivan@users.noreply.github.com",
-  "description": "Delta Force: Black Hawk Down using the dockerized-game-servers image. Docker image: ghcr.io/sudo-ivan/dockerized-game-servers/delta-force-bhd:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 3568/udp Requires owned Windows game files copied into the data volume before the server can start.",
+  "description": "Delta Force: Black Hawk Down using the poderized-game-servers image. Docker image: ghcr.io/sudo-ivan/poderized-game-servers/delta-force-bhd:latest. Persistent data is stored under /home/container (mapped from the image data directory on startup). Default ports: 3568/udp Requires owned Windows game files copied into the data volume before the server can start.",
   "features": null,
   "docker_images": {
-    "Latest": "ghcr.io/sudo-ivan/dockerized-game-servers/delta-force-bhd:latest"
+    "Latest": "ghcr.io/sudo-ivan/poderized-game-servers/delta-force-bhd:latest"
   },
   "file_denylist": [],
   "startup": "/bin/bash -c 'export BHD_DIR=/home/container; exec /container-entrypoint.sh'",

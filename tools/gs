@@ -1,5 +1,5 @@
 #!/bin/sh
-# Host ops CLI for dockerized game servers.
+# Host ops CLI for poderized game servers.
 # Usage: tools/gs <list|backup|restore|update|help> ...
 
 # shellcheck shell=sh source-path=SCRIPTDIR

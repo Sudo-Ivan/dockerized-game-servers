@@ -37,8 +37,8 @@ fi
 
 trivy image \
   --image-src podman \
-  --config dockerized/trivy.yaml \
-  --ignorefile dockerized/.trivyignore \
+  --config poderized/trivy.yaml \
+  --ignorefile poderized/.trivyignore \
   --scanners vuln,secret,misconfig \
   --misconfig-scanners dockerfile \
   --severity CRITICAL \

@@ -14,8 +14,8 @@ Eggs are sorted into folders by category (minecraft, source, survival, and so on
 
 ## Import
 
-1. Create a nest in the panel (for example Dockerized Game Servers).
-2. Import each JSON from the category folders (Admin → Nests → Import Egg).
+1. Create a nest in the panel (for example Poderized Game Servers).
+2. Import each JSON from the category folders (Admin > Nests > Import Egg).
 3. Make sure your Wings nodes can pull the Docker image for each egg (GHCR login if needed).
 
 CLI example:
