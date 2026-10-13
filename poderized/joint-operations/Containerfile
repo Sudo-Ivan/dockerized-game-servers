@@ -37,9 +37,6 @@ WORKDIR ${JO_DIR}
 
 EXPOSE 7597/udp 32768/udp 49152/udp 64206/udp
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/container-entrypoint.sh"]

@@ -23,9 +23,6 @@ WORKDIR ${INS_SANDSTORM_DIR}
 
 EXPOSE 27102/udp 27131/udp
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=900s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/container-entrypoint.sh"]

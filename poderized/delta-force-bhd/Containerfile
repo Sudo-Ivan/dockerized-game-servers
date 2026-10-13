@@ -37,9 +37,6 @@ WORKDIR ${BHD_DIR}
 
 EXPOSE 3568/udp
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/container-entrypoint.sh"]

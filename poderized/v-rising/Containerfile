@@ -39,9 +39,6 @@ WORKDIR ${VRISING_DIR}
 
 EXPOSE 9876/udp 9877/tcp 9877/udp
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=900s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/container-entrypoint.sh"]

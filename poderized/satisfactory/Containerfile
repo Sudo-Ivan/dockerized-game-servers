@@ -24,9 +24,6 @@ WORKDIR ${SATISFACTORY_DIR}
 
 EXPOSE 7777/tcp 7777/udp 8888/tcp
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=900s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/container-entrypoint.sh"]

@@ -24,7 +24,7 @@ This page describes the automated checks and image builds that run on GitHub. Yo
 - Reject fixed GHCR owners in first-party compose files
 - Shell syntax over catalog-discovered server roots
 - ShellCheck (`ci/shellcheck.sh`)
-- Healthcheck presence and offline probes (`ci/test-healthchecks.sh`)
+- Compose healthcheck wiring and offline probes (`ci/test-healthchecks.sh`)
 - Host tools catalog and tar round-trip (`ci/test-tools.sh`)
 - Docs configuration checks (`zensical.toml`, `macros.yml`, `docs/index.md`)
 - Docs static build with strict link validation and server catalog guide coverage (`ci/test-docs.sh`)

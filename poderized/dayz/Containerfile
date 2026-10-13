@@ -25,9 +25,6 @@ WORKDIR ${DAYZ_DIR}
 
 EXPOSE 2302/udp 2303/udp 2304/udp 2305/udp 2306/udp
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=1200s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/container-entrypoint.sh"]

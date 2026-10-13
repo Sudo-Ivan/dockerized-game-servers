@@ -30,9 +30,6 @@ WORKDIR ${SE4_DIR}
 
 EXPOSE 27000/udp 27005/udp 27010/tcp 27015/udp
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/container-entrypoint.sh"]

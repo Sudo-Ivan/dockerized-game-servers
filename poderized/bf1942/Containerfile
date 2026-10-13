@@ -14,6 +14,5 @@ COPY --chmod=755 healthcheck.sh /healthcheck.sh
 WORKDIR ${BF1942_DIR}
 EXPOSE 14567/udp
 EXPOSE 23000/tcp
-HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 CMD ["/healthcheck.sh"]
 STOPSIGNAL SIGTERM
 ENTRYPOINT ["/container-entrypoint.sh"]

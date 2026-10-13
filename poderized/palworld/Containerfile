@@ -26,9 +26,6 @@ WORKDIR ${PALWORLD_DIR}
 
 EXPOSE 8211/udp
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=900s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/container-entrypoint.sh"]

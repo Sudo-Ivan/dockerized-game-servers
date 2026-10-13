@@ -1,8 +1,8 @@
 ARG BASE_IMAGE=ghcr.io/sudo-ivan/poderized-game-servers/runtime-base:latest
 FROM ${BASE_IMAGE} AS fetch
 
-ARG ETL_BUNDLE_URL="https://github.com/GameServerManagers/etlserver-build/releases/download/latest/etlegacy-latest-i386-et-260b.tar.xz"
-ARG ETL_BUNDLE_MD5="b0737629e5ebdc99523db9429184c9e4"
+ARG ETL_BUNDLE_URL="https://github.com/GameServerManagers/etlserver-build/releases/download/v2.86.2/etlegacy-v2.86.2-i386-et-260b.tar.xz"
+ARG ETL_BUNDLE_MD5="d07141c3c47bb7e28f49b6659b516f62"
 
 RUN ETL_BUNDLE_URL="${ETL_BUNDLE_URL}" ETL_BUNDLE_MD5="${ETL_BUNDLE_MD5}" bash -c 'set -eu; . /usr/local/bin/linuxgsm-tar-install.sh; lgsm_tar_install "${ETL_BUNDLE_URL}" "${ETL_BUNDLE_MD5}" /opt/etl' \
   && chmod -R a+rX /opt/etl \
@@ -23,8 +23,8 @@ COPY --from=fetch --chown=etl:etl /opt/etl /usr/share/etl-seed
 
 ENV ETL_DIR="/opt/etl" \
     ETL_SEED_DIR="/usr/share/etl-seed" \
-    ETL_BUNDLE_URL="https://github.com/GameServerManagers/etlserver-build/releases/download/latest/etlegacy-latest-i386-et-260b.tar.xz" \
-    ETL_BUNDLE_MD5="b0737629e5ebdc99523db9429184c9e4"
+    ETL_BUNDLE_URL="https://github.com/GameServerManagers/etlserver-build/releases/download/v2.86.2/etlegacy-v2.86.2-i386-et-260b.tar.xz" \
+    ETL_BUNDLE_MD5="d07141c3c47bb7e28f49b6659b516f62"
 
 COPY --chmod=755 container-entrypoint.sh /container-entrypoint.sh
 COPY --chown=etl:etl --chmod=755 entrypoint.sh /home/etl/entrypoint.sh
@@ -33,9 +33,6 @@ COPY --chmod=755 healthcheck.sh /healthcheck.sh
 WORKDIR ${ETL_DIR}
 
 EXPOSE 27960/udp 27961/udp
-
-HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 \
-  CMD ["/healthcheck.sh"]
 
 STOPSIGNAL SIGTERM
 

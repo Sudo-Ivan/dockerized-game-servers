@@ -113,6 +113,8 @@ Compose files reference `ghcr.io/${IMAGE_OWNER}/...` and keep build contexts for
 
 Image prefix: `ghcr.io/sudo-ivan/poderized-game-servers` (replace `sudo-ivan/poderized-game-servers` in the examples if you use another registry namespace).
 
+Images ship `/healthcheck.sh`. Compose wires it up as the health check. With plain `podman run`, add `--health-cmd /healthcheck.sh` to get health status.
+
 Minecraft Fabric:
 
 ```bash

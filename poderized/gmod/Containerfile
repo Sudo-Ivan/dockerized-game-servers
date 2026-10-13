@@ -23,9 +23,6 @@ WORKDIR ${GMOD_DIR}
 
 EXPOSE 27015/tcp 27015/udp 27005/udp
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=900s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGINT
 
 ENTRYPOINT ["/container-entrypoint.sh"]

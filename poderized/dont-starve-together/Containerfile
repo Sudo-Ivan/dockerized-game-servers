@@ -24,9 +24,6 @@ WORKDIR ${DST_DIR}
 
 EXPOSE 10999/udp 11000/udp 27016/udp
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=900s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/container-entrypoint.sh"]

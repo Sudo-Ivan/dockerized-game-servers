@@ -63,9 +63,6 @@ WORKDIR ${STK_DATA_DIR}
 
 EXPOSE 2759/udp
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-  CMD ["/healthcheck.sh"]
-
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/container-entrypoint.sh"]

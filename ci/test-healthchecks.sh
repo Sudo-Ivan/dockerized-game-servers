@@ -1,5 +1,5 @@
 #!/bin/sh
-# Healthcheck presence and offline probe tests.
+# Healthcheck wiring and offline probe tests.
 
 set -eu
 
@@ -8,7 +8,7 @@ cd "${ROOT}"
 
 fail=0
 
-echo "==> HEALTHCHECK presence for first-party servers"
+echo "==> Healthcheck wiring for first-party servers"
 ./ci/server-catalog.sh | while IFS="$(printf '\t')" read -r id compose _container _volumes _update_envs _health first_party; do
   [ -n "${id}" ] || continue
   [ "${first_party}" = "1" ] || continue
@@ -25,12 +25,12 @@ echo "==> HEALTHCHECK presence for first-party servers"
     echo "missing Containerfile for ${id}: ${containerfile}" >&2
     exit 1
   fi
-  if ! grep -q 'HEALTHCHECK' "${containerfile}"; then
-    echo "missing HEALTHCHECK in ${containerfile}" >&2
+  if ! grep -q 'healthcheck.sh /healthcheck.sh' "${containerfile}"; then
+    echo "healthcheck.sh is not copied into the image: ${containerfile}" >&2
     exit 1
   fi
-  if ! grep -q 'healthcheck:' "${compose}"; then
-    echo "missing compose healthcheck for ${id}: ${compose}" >&2
+  if ! grep -q 'test: \["CMD", "/healthcheck.sh"\]' "${compose}"; then
+    echo "compose does not run /healthcheck.sh for ${id}: ${compose}" >&2
     exit 1
   fi
 done || fail=1

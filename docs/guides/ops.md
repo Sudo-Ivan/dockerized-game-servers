@@ -43,12 +43,14 @@ Games without update flags (for example Arma 3) cannot use gs update.
 
 ## Health checks
 
-First-party images run a health check script. Compose mirrors the same check.
+Every first-party compose file runs the /healthcheck.sh script shipped in the image. Start the server with compose and the status shows up in podman:
 
 ```bash
 podman compose -f poderized/core-keeper/compose.yml ps
 podman inspect --format '{% raw %}{{.State.Health.Status}}{% endraw %}' core-keeper
 ```
+
+Published images are OCI manifests, which cannot carry a healthcheck, so compose defines it. With plain podman run, pass --health-cmd /healthcheck.sh to get the same status.
 
 Check types used by different games:
 
