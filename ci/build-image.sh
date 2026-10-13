@@ -7,9 +7,14 @@
 #   EXTRA_TAGS       space-separated extra image tags (full refs or bare tags)
 #   OCI_LICENSES     override license label (default ISC)
 #   PODMAN_PULL      podman build --pull policy (default missing)
+#   COMPRESSION_FORMAT  layer compression on push (default zstd)
 #
 # PUSH=true pushes every tag with podman push after the build. PUSH=false
 # builds locally only so locally loaded bases are visible to later FROM stages.
+#
+# Images build and push as OCI manifests, and pushes compress every layer with
+# zstd (application/vnd.oci.image.layer.v1.tar+zstd). GHCR supports zstd
+# layers in OCI manifests. Docker manifests cannot carry zstd layers.
 #
 # OCI provenance labels are owner-agnostic (resolved via repo-meta.sh).
 
@@ -30,6 +35,7 @@ REGISTRY="${REGISTRY:-ghcr.io}"
 TAG="${TAG:-latest}"
 PUSH="${PUSH:-false}"
 PLATFORM="${PLATFORM:-}"
+COMPRESSION_FORMAT="${COMPRESSION_FORMAT:-zstd}"
 
 IMAGE="${REGISTRY}/${IMAGE_OWNER}/${NAME}:${TAG}"
 SHA_TAG="${REGISTRY}/${IMAGE_OWNER}/${NAME}:sha-${GITHUB_SHA:-local}"
@@ -49,7 +55,7 @@ TAGS="${IMAGE} ${SHA_TAG}"
 set -- \
   podman build \
   "--pull=${PODMAN_PULL:-missing}" \
-  --format docker \
+  --format oci \
   --file "${CONTAINERFILE}" \
   --tag "${IMAGE}" \
   --tag "${SHA_TAG}" \
@@ -109,9 +115,13 @@ set -- "$@" "${CONTEXT}"
 
 if [ "${PUSH}" = "true" ]; then
   for ref in ${TAGS}; do
-    echo "Pushing ${ref}"
+    echo "Pushing ${ref} (${COMPRESSION_FORMAT})"
     attempt=1
-    while ! podman push "${ref}"; do
+    while ! podman push \
+      --format oci \
+      --compression-format "${COMPRESSION_FORMAT}" \
+      --force-compression \
+      "${ref}"; do
       attempt=$((attempt + 1))
       if [ "${attempt}" -gt 3 ]; then
         echo "Push failed after 3 attempts: ${ref}" >&2

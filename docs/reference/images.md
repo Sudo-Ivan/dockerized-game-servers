@@ -7,6 +7,8 @@ description: Published GHCR images and how to pull them.
 
 Game server images are published to GitHub Container Registry (GHCR). Compose files in this repo pull them automatically when you set IMAGE_OWNER. You can also pull an image by hand if you run containers without compose.
 
+Images are OCI manifests with zstd-compressed layers. Podman pulls them natively, and Docker Engine 24 or newer can too.
+
 Image prefix: {{IMAGE_PREFIX}}
 
 | Name | Notes |

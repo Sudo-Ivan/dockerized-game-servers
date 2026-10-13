@@ -761,6 +761,8 @@ Steam App 223350. Requires `STEAM_USERNAME` / `STEAM_PASSWORD` for an account th
 | `arma-reforger` | Arma Reforger dedicated |
 | `dayz` | DayZ dedicated |
 
+Images are OCI manifests with zstd-compressed layers. Podman pulls them natively, and Docker Engine 24 or newer can too.
+
 ```bash
 podman pull ghcr.io/sudo-ivan/poderized-game-servers/minecraft-fabric:latest
 ```
